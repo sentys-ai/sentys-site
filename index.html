@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sensory — Predictive maintenance that actually deploys</title>
+<style>
+  :root {
+    --accent:#0f6e78;          /* deep teal */
+    --accent-ink:#0a4d54;
+    --accent-soft:#e3f0f1;
+    --bg:#ffffff;
+    --panel:#f6f8f9;
+    --line:#e2e7ea;
+    --ink:#16232b;
+    --dim:#5c6b74;
+    --green:#2e7d46;
+    --amber:#b47500;
+    --red:#c0392b;
+    --shadow:0 1px 2px rgba(16,35,43,.05), 0 4px 16px rgba(16,35,43,.05);
+    --maxw:960px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --accent:#4bb7c1;
+      --accent-ink:#7fd2da;
+      --accent-soft:#0f2e31;
+      --bg:#0e1518;
+      --panel:#151f23;
+      --line:#243138;
+      --ink:#e7eef1;
+      --dim:#9aa9b1;
+      --green:#4caf6a;
+      --amber:#d9a13a;
+      --red:#e5695c;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 4px 20px rgba(0,0,0,.35);
+    }
+  }
+
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a { color:var(--accent-ink); }
+  h1,h2,h3 { line-height:1.2; letter-spacing:-.01em; }
+
+  .wrap { max-width:var(--maxw); margin:0 auto; padding:0 24px; }
+
+  /* ---- nav ---- */
+  nav {
+    border-bottom:1px solid var(--line);
+    position:sticky; top:0; background:var(--bg); z-index:10;
+  }
+  nav .wrap { display:flex; align-items:center; justify-content:space-between; height:60px; }
+  .brand { font-weight:700; font-size:18px; letter-spacing:.2px; }
+  .brand span { color:var(--accent); }
+  .nav-links { display:flex; gap:22px; font-size:14px; }
+  .nav-links a { color:var(--dim); text-decoration:none; }
+  .nav-links a:hover { color:var(--ink); }
+  @media (max-width:620px){ .nav-links { display:none; } }
+
+  /* ---- hero ---- */
+  header.hero { padding:72px 0 48px; }
+  .kicker {
+    display:inline-block; font-size:13px; font-weight:600; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--accent); background:var(--accent-soft);
+    padding:5px 12px; border-radius:999px; margin-bottom:22px;
+  }
+  header.hero h1 { font-size:clamp(32px, 5.5vw, 52px); margin:0 0 18px; max-width:14ch; }
+  header.hero .sub { font-size:clamp(17px,2.4vw,21px); color:var(--dim); max-width:52ch; margin:0 0 32px; }
+  .cta-row { display:flex; flex-wrap:wrap; gap:14px; }
+  .btn {
+    display:inline-block; padding:13px 22px; border-radius:8px; font-weight:600;
+    font-size:15px; text-decoration:none; cursor:pointer; border:1px solid transparent;
+    transition:transform .05s ease, background .15s ease;
+  }
+  .btn:active { transform:translateY(1px); }
+  .btn-primary { background:var(--accent); color:#fff; }
+  .btn-primary:hover { background:var(--accent-ink); }
+  @media (prefers-color-scheme: dark){ .btn-primary { color:#04191c; } }
+  .btn-ghost { background:transparent; color:var(--ink); border-color:var(--line); }
+  .btn-ghost:hover { border-color:var(--accent); }
+
+  /* ---- video placeholder ---- */
+  .video-frame {
+    margin-top:44px; border:1px solid var(--line); border-radius:14px;
+    background:var(--panel); box-shadow:var(--shadow); overflow:hidden;
+  }
+  .video-16x9 {
+    position:relative; width:100%; aspect-ratio:16/9;
+    display:flex; align-items:center; justify-content:center;
+    background:
+      radial-gradient(120% 120% at 50% -10%, var(--accent-soft) 0%, transparent 60%),
+      var(--panel);
+    text-align:center;
+  }
+  .play-badge {
+    width:64px; height:64px; border-radius:50%; background:var(--accent); color:#fff;
+    display:flex; align-items:center; justify-content:center; margin:0 auto 16px;
+    box-shadow:0 6px 20px rgba(15,110,120,.35);
+  }
+  .play-badge svg { margin-left:4px; }
+  .video-16x9 .vp-text { color:var(--dim); font-size:15px; padding:0 20px; }
+
+  /* ---- sections ---- */
+  section { padding:56px 0; border-top:1px solid var(--line); }
+  section h2 { font-size:clamp(24px,3.4vw,32px); margin:0 0 10px; }
+  .section-lead { color:var(--dim); max-width:60ch; margin:0 0 36px; font-size:17px; }
+
+  /* ---- three blocks ---- */
+  .blocks { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  @media (max-width:800px){ .blocks { grid-template-columns:1fr; } }
+  .block {
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:26px 24px; box-shadow:var(--shadow);
+  }
+  .block .icon {
+    width:40px; height:40px; border-radius:9px; background:var(--accent-soft);
+    color:var(--accent); display:flex; align-items:center; justify-content:center; margin-bottom:16px;
+  }
+  .block h3 { font-size:19px; margin:0 0 10px; }
+  .block p { margin:0; color:var(--dim); font-size:15.5px; }
+
+  /* ---- demo embed ---- */
+  .demo-embed {
+    border:1px solid var(--line); border-radius:14px; overflow:hidden;
+    box-shadow:var(--shadow); background:var(--panel);
+  }
+  .demo-embed iframe { width:100%; height:620px; border:0; display:block; background:var(--panel); }
+  @media (max-width:620px){ .demo-embed iframe { height:520px; } }
+  .demo-caption { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-top:16px; }
+  .demo-caption p { margin:0; color:var(--dim); font-size:14px; max-width:46ch; }
+
+  /* ---- validation ---- */
+  .val-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-bottom:26px; }
+  @media (max-width:800px){ .val-grid { grid-template-columns:1fr; } }
+  .val-card {
+    background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:24px;
+  }
+  .val-card .metric { font-size:30px; font-weight:700; color:var(--accent); letter-spacing:-.02em; }
+  .val-card .metric small { font-size:14px; font-weight:600; color:var(--dim); }
+  .val-card h3 { font-size:16px; margin:6px 0 8px; }
+  .val-card p { margin:0; font-size:14.5px; color:var(--dim); }
+  .honest {
+    display:flex; gap:14px; align-items:flex-start;
+    background:var(--accent-soft); border:1px solid var(--line);
+    border-left:4px solid var(--accent); border-radius:10px; padding:18px 20px;
+  }
+  .honest svg { flex:none; color:var(--accent); margin-top:2px; }
+  .honest p { margin:0; font-size:15.5px; color:var(--ink); }
+  .honest strong { color:var(--ink); }
+
+  /* ---- ask ---- */
+  .ask {
+    text-align:center; background:
+      radial-gradient(130% 120% at 50% 0%, var(--accent-soft) 0%, transparent 55%), var(--panel);
+    border:1px solid var(--line); border-radius:16px; padding:52px 28px; box-shadow:var(--shadow);
+  }
+  .ask h2 { font-size:clamp(24px,3.6vw,34px); margin:0 auto 16px; max-width:20ch; }
+  .ask p { color:var(--dim); font-size:18px; max-width:54ch; margin:0 auto 28px; }
+  .ask .fine { font-size:14px; color:var(--dim); margin-top:18px; }
+
+  /* ---- about / footer ---- */
+  footer { border-top:1px solid var(--line); padding:52px 0 60px; }
+  .about { display:flex; gap:24px; align-items:center; flex-wrap:wrap; }
+  .avatar {
+    width:84px; height:84px; border-radius:50%; overflow:hidden; flex:none;
+    background:var(--accent-soft); border:1px solid var(--line);
+  }
+  .avatar svg { width:100%; height:100%; display:block; }
+  .about h3 { margin:0 0 4px; font-size:20px; }
+  .about .role { color:var(--dim); font-size:15px; margin:0 0 10px; }
+  .about-links { display:flex; gap:18px; font-size:14px; }
+  .about-links a { color:var(--accent-ink); text-decoration:none; }
+  .about-links a:hover { text-decoration:underline; }
+  .copyright { color:var(--dim); font-size:13px; margin-top:36px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand"><span>Sensory</span></div>
+    <div class="nav-links">
+      <a href="#what">What it does</a>
+      <a href="#demo">Live demo</a>
+      <a href="#validation">Validation</a>
+      <a href="#ask">Get an analysis</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">Sensor-agnostic predictive maintenance</span>
+    <h1>Predictive maintenance that actually deploys.</h1>
+    <p class="sub">Integration-first failure prediction for mid-size industry. Weeks to deploy, not months.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#ask">Send me one CSV — free analysis</a>
+      <a class="btn btn-ghost" href="#demo">See it run</a>
+    </div>
+
+    <!-- Hero demo video placeholder. To publish a real video, replace the
+         .video-16x9 block below with:
+         <video controls poster="poster.jpg" style="width:100%;display:block">
+           <source src="demo.mp4" type="video/mp4">
+         </video>
+    -->
+    <div class="video-frame">
+      <div class="video-16x9">
+        <div>
+          <div class="play-badge" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <div class="vp-text">Demo video coming — try the live demo below.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= WHAT / WHY ================= -->
+<section id="what">
+  <div class="wrap">
+    <h2>Built to fit the plant you already have</h2>
+    <p class="section-lead">No labeled failure history. No data-science team. No rip-and-replace. Sensory works with the sensor data you're already collecting.</p>
+    <div class="blocks">
+      <div class="block">
+        <div class="icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
+        </div>
+        <h3>What it does</h3>
+        <p>Predicts failures from your existing sensor and historian data. It learns each machine's normal behavior unsupervised — no failure labels, no data-science project on your side — and reports deviations in plain language, per sensor.</p>
+      </div>
+      <div class="block">
+        <div class="icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/><circle cx="18" cy="17" r="2.4"/></svg>
+        </div>
+        <h3>Why it's different</h3>
+        <p>Built by an integration engineer, so it solves the data problem first. Sensor-agnostic ingestion — MQTT, historian exports, CSV — where new sensor types flow in without code changes. Runs on-prem, no GPU required.</p>
+      </div>
+      <div class="block">
+        <div class="icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        </div>
+        <h3>What it's validated on</h3>
+        <p>Three independent NASA and DCASE benchmark datasets — turbofan, bearing vibration, and industrial pump audio — all run through the same unmodified pipeline, trained on healthy data only. Numbers below.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DEMO ================= -->
+<section id="demo">
+  <div class="wrap">
+    <h2>See it run</h2>
+    <p class="section-lead">A playable fleet dashboard of 30 turbofan engines the model had never seen. Press play and watch each one climb from green to red as it degrades — click any engine for its per-sensor triage.</p>
+    <div class="demo-embed">
+      <!-- The demo is a self-contained page in the sibling ../demo/ folder.
+           Deploy website/ and demo/ side by side and this relative src resolves. -->
+      <iframe src="demo/index.html" title="Sensory live fleet dashboard demo" loading="lazy"></iframe>
+    </div>
+    <div class="demo-caption">
+      <p>If the embedded view is cramped, open it full-screen in its own tab.</p>
+      <a class="btn btn-ghost" href="demo/index.html" target="_blank" rel="noopener">Open the live demo</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= VALIDATION ================= -->
+<section id="validation">
+  <div class="wrap">
+    <h2>What it's validated on</h2>
+    <p class="section-lead">Public benchmark datasets, healthy-data-only training, zero model-code changes between machine types.</p>
+    <div class="val-grid">
+      <div class="val-card">
+        <div class="metric">0.996 <small>AUC</small></div>
+        <h3>C-MAPSS turbofan (NASA)</h3>
+        <p>Held-out engines separated healthy from end-of-life at 0.996 AUC — trained on healthy data only, never having seen those engines.</p>
+      </div>
+      <div class="val-card">
+        <div class="metric">Right bearing<small>, unsupervised</small></div>
+        <h3>NASA IMS bearing vibration</h3>
+        <p>The failing bearing was correctly identified, and known defect-frequency physics were reproduced from the raw signal with no labels.</p>
+      </div>
+      <div class="val-card">
+        <div class="metric">2 of 4 <small>machines</small></div>
+        <h3>MIMII industrial pump audio</h3>
+        <p>Beats the purpose-built DCASE audio-autoencoder baseline outright on 2 of 4 real pumps — with no audio-specific engineering.</p>
+      </div>
+    </div>
+    <div class="honest">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
+      <p><strong>Validated on public benchmarks. We're seeking our first real-world pilot — that honesty is the point.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= THE ASK ================= -->
+<section id="ask">
+  <div class="wrap">
+    <div class="ask">
+      <h2>Have a machine that keeps surprising you?</h2>
+      <p>Send me one CSV export of its history — under NDA — and I'll tell you what I find. Free. Worst case, you've lost an hour.</p>
+      <a class="btn btn-primary"
+         href="mailto:frixos.andreou.dk@gmail.com?subject=Machine%20history%20%E2%80%94%20free%20analysis">
+        Email me a CSV export
+      </a>
+      <div class="fine">frixos.andreou.dk@gmail.com · reply within a day or two</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT / FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <div class="about">
+      <div class="avatar">
+        <img src="data:image/jpeg;base64,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" alt="Frixos Andreou" style="width:100%;height:100%;object-fit:cover">
+      </div>
+      <div>
+        <h3>Frixos Andreou</h3>
+        <p class="role">Integration specialist, 5+ years enterprise systems, based in Denmark</p>
+        <div class="about-links">
+          <a href="https://www.linkedin.com/in/frixosandreou" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="mailto:frixos.andreou.dk@gmail.com">frixos.andreou.dk@gmail.com</a>
+        </div>
+      </div>
+    </div>
+    <div class="copyright">© 2026 Sensory · Sensor-agnostic predictive maintenance</div>
+  </div>
+</footer>
+
+</body>
+</html>

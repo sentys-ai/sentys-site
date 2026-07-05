@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sensory — Fleet Perception Demo</title>
+<style>
+  :root {
+    --bg:#0d1117; --panel:#161b22; --line:#232a34; --ink:#e6edf3; --dim:#8b949e;
+    --green:#2ea043; --amber:#d29922; --red:#f85149; --accent:#58a6ff;
+    --gridw: 6;
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  header { padding:18px 24px; border-bottom:1px solid var(--line); }
+  header h1 { margin:0; font-size:18px; letter-spacing:.2px; }
+  header h1 span { color:var(--accent); }
+  header p { margin:4px 0 0; color:var(--dim); font-size:13px; max-width:900px; }
+  .wrap { display:grid; grid-template-columns: 1fr 360px; gap:0; height:calc(100vh - 78px); }
+  .left { padding:20px 24px; overflow:auto; }
+  .right { border-left:1px solid var(--line); background:var(--panel); padding:20px; overflow:auto; }
+
+  .controls { display:flex; align-items:center; gap:14px; margin-bottom:18px; flex-wrap:wrap; }
+  button {
+    background:#21262d; color:var(--ink); border:1px solid var(--line);
+    border-radius:6px; padding:7px 14px; cursor:pointer; font-size:13px;
+  }
+  button:hover { border-color:var(--accent); }
+  button.primary { background:var(--accent); color:#0d1117; border-color:var(--accent); font-weight:600; }
+  input[type=range] { flex:1; min-width:180px; accent-color:var(--accent); }
+  .clock { font-variant-numeric:tabular-nums; color:var(--dim); min-width:150px; }
+  .clock b { color:var(--ink); }
+
+  .legend { display:flex; gap:16px; margin-bottom:14px; font-size:12px; color:var(--dim); }
+  .legend i { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px; vertical-align:middle; }
+
+  .fleet {
+    display:grid; grid-template-columns:repeat(var(--gridw), 1fr); gap:10px;
+  }
+  .tile {
+    background:var(--panel); border:1px solid var(--line); border-radius:8px;
+    padding:10px; cursor:pointer; position:relative; transition:border-color .1s;
+  }
+  .tile:hover { border-color:var(--accent); }
+  .tile.sel { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent); }
+  .tile .dot { width:11px; height:11px; border-radius:50%; position:absolute; top:10px; right:10px; }
+  .tile .eid { font-size:12px; color:var(--dim); }
+  .tile .sv { font-size:20px; font-weight:600; font-variant-numeric:tabular-nums; margin-top:2px; }
+  .tile .sv small { font-size:11px; color:var(--dim); font-weight:400; }
+  .tile .status { font-size:11px; margin-top:4px; text-transform:uppercase; letter-spacing:.4px; }
+  .tile.failed { opacity:.5; }
+  .tile.failed .sv { color:var(--dim); }
+
+  .kpis { display:flex; gap:10px; margin-top:18px; flex-wrap:wrap; }
+  .kpi { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:10px 14px; flex:1; min-width:120px; }
+  .kpi .n { font-size:22px; font-weight:700; }
+  .kpi .l { font-size:11px; color:var(--dim); text-transform:uppercase; letter-spacing:.4px; }
+
+  .detail h2 { margin:0 0 2px; font-size:16px; }
+  .detail .sub { color:var(--dim); font-size:12px; margin-bottom:16px; }
+  .narr {
+    background:#0d1117; border:1px solid var(--line); border-left:3px solid var(--accent);
+    border-radius:6px; padding:12px 14px; font-size:13.5px; line-height:1.55; margin-bottom:18px;
+  }
+  .sense { margin-bottom:12px; }
+  .sense .row { display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px; }
+  .sense .row b { font-variant-numeric:tabular-nums; }
+  .bar { height:8px; background:#0d1117; border-radius:4px; overflow:hidden; border:1px solid var(--line); }
+  .bar > i { display:block; height:100%; border-radius:4px; }
+  .spark { margin-top:16px; }
+  .spark svg { width:100%; height:90px; display:block; }
+  .muted { color:var(--dim); font-size:12px; }
+  .placeholder { color:var(--dim); text-align:center; margin-top:60px; }
+  .foot { color:var(--dim); font-size:11px; margin-top:18px; border-top:1px solid var(--line); padding-top:12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1><span>Sensory</span> — Fleet Perception</h1>
+  <p id="tagline">Self-training machine-health monitoring. The system was trained on healthy operation only — no failure labels, no per-engine tuning — and has never seen these engines. Watch it flag each one before it fails.</p>
+</header>
+
+<div class="wrap">
+  <div class="left">
+    <div class="controls">
+      <button id="play" class="primary">▶ Play</button>
+      <button id="reset">⟲ Reset</button>
+      <input type="range" id="scrub" min="1" value="1">
+      <span class="clock">cycle <b id="cyc">1</b> / <span id="maxc">—</span></span>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="fleet" id="fleet"></div>
+    <div class="kpis" id="kpis"></div>
+    <div class="foot" id="foot"></div>
+  </div>
+
+  <div class="right">
+    <div id="detail" class="placeholder">Select an engine to inspect its senses.</div>
+  </div>
+</div>
+
+<script src="fleet_data.js"></script>
+<script>
+(function () {
+  const D = window.FLEET_DATA;
+  if (!D) { document.body.innerHTML = "<p style='padding:24px'>fleet_data.js not found — run <code>cortex/experiments/pdm_demo_data.py</code> first.</p>"; return; }
+
+  const AMBER = D.meta.thresholds.amber, RED = D.meta.thresholds.red;
+  const DOMS = D.meta.domains, DLAB = D.meta.domain_labels;
+  const engines = D.engines.slice().sort((a,b)=>a.id-b.id);
+  const maxLife = D.meta.max_life;
+
+  const css = getComputedStyle(document.documentElement);
+  const GREEN = css.getPropertyValue('--green').trim();
+  const AMBERC = css.getPropertyValue('--amber').trim();
+  const REDC = css.getPropertyValue('--red').trim();
+
+  document.documentElement.style.setProperty('--gridw', Math.min(6, Math.ceil(Math.sqrt(engines.length))));
+  document.getElementById('legend').innerHTML =
+    `<span><i style="background:var(--green)"></i>Nominal (&lt;${AMBER}× healthy)</span>
+     <span><i style="background:var(--amber)"></i>Warning (${AMBER}–${RED}×)</span>
+     <span><i style="background:var(--red)"></i>Critical (&gt;${RED}×)</span>
+     <span><i style="background:#30363d"></i>Failed</span>`;
+  document.getElementById('maxc').textContent = maxLife;
+  const scrub = document.getElementById('scrub');
+  scrub.max = maxLife;
+
+  let cycle = 1, sel = null, timer = null;
+
+  // value of engine at global cycle c (1-indexed); null if failed (past its life)
+  function valAt(e, c) {
+    if (c > e.life) return null;
+    return e.overall[c - 1];
+  }
+  function statusOf(v) {
+    if (v == null) return 'failed';
+    if (v >= RED) return 'critical';
+    if (v >= AMBER) return 'warning';
+    return 'nominal';
+  }
+  function colorOf(st) {
+    return st === 'critical' ? REDC : st === 'warning' ? AMBERC : st === 'nominal' ? GREEN : '#30363d';
+  }
+
+  // ---- fleet grid ----
+  const fleetEl = document.getElementById('fleet');
+  engines.forEach(e => {
+    const t = document.createElement('div');
+    t.className = 'tile'; t.dataset.id = e.id;
+    t.innerHTML = `<div class="dot"></div><div class="eid">Engine ${String(e.id).padStart(2,'0')}</div>
+      <div class="sv">—</div><div class="status"></div>`;
+    t.onclick = () => { sel = e.id; renderDetail(); renderFleet(); };
+    fleetEl.appendChild(t);
+  });
+
+  function renderFleet() {
+    engines.forEach(e => {
+      const t = fleetEl.querySelector(`[data-id="${e.id}"]`);
+      const v = valAt(e, cycle), st = statusOf(v);
+      t.className = 'tile' + (st==='failed'?' failed':'') + (sel===e.id?' sel':'');
+      t.querySelector('.dot').style.background = colorOf(st);
+      t.querySelector('.sv').innerHTML = v==null ? 'FAILED'
+        : `${v.toFixed(1)}<small>×</small>`;
+      const s = t.querySelector('.status');
+      s.textContent = st; s.style.color = colorOf(st);
+    });
+    renderKpis();
+  }
+
+  function renderKpis() {
+    let nominal=0, warn=0, crit=0, failed=0;
+    engines.forEach(e => {
+      const st = statusOf(valAt(e, cycle));
+      if (st==='nominal') nominal++; else if (st==='warning') warn++;
+      else if (st==='critical') crit++; else failed++;
+    });
+    document.getElementById('kpis').innerHTML =
+      kpi(nominal, 'nominal', GREEN) + kpi(warn, 'warning', AMBERC) +
+      kpi(crit, 'critical', REDC) + kpi(failed, 'failed', '#8b949e');
+  }
+  const kpi = (n,l,c) => `<div class="kpi"><div class="n" style="color:${c}">${n}</div><div class="l">${l}</div></div>`;
+
+  // ---- detail panel ----
+  function narrate(e, c) {
+    if (c > e.life) return `Engine ${e.id} reached end of run at cycle ${e.life}. In service, this is where a failure would have occurred — the health index had been climbing for ${e.lead_cycles || '—'} cycles.`;
+    const ranked = DOMS.map(d => ({d, v:e.domains[d][c-1]})).sort((a,b)=>b.v-a.v);
+    const top = ranked[0], overall = e.overall[c-1];
+    if (overall < AMBER)
+      return `All senses nominal. Nothing stands out from healthy operation (${DLAB[top.d].toLowerCase()} highest at ${top.v.toFixed(1)}× baseline).`;
+    const others = ranked.slice(1).filter(r=>r.v < AMBER).map(r=>DLAB[r.d].toLowerCase());
+    const sev = overall >= RED ? 'strongly' : 'increasingly';
+    let s = `My ${DLAB[top.d].toLowerCase()} sense is ${sev} surprised — ${top.v.toFixed(1)}× what healthy feels like`;
+    if (others.length) s += `, while ${others.join(', ')} feel normal`;
+    s += '.';
+    if (overall >= RED) s += ` This engine is deep into degradation; failure is near.`;
+    return s;
+  }
+
+  function renderDetail() {
+    const el = document.getElementById('detail');
+    if (sel == null) { el.className='placeholder'; el.textContent='Select an engine to inspect its senses.'; return; }
+    const e = engines.find(x=>x.id===sel);
+    const c = Math.min(cycle, e.life);
+    const v = valAt(e, cycle), st = statusOf(v);
+    el.className = 'detail';
+
+    let senses = DOMS.map(d => {
+      const dv = e.domains[d][c-1];
+      const dst = dv>=RED?'critical':dv>=AMBER?'warning':'nominal';
+      const w = Math.min(100, (dv/ (RED*1.5)) * 100);
+      return `<div class="sense">
+        <div class="row"><span>${DLAB[d]}</span><b style="color:${colorOf(dst)}">${dv.toFixed(1)}×</b></div>
+        <div class="bar"><i style="width:${w}%;background:${colorOf(dst)}"></i></div>
+      </div>`;
+    }).join('');
+
+    el.innerHTML = `
+      <h2>Engine ${String(e.id).padStart(2,'0')}
+        <span style="color:${colorOf(st)};font-size:13px">● ${st}</span></h2>
+      <div class="sub">${e.unseen?'unseen in training · ':''}life ${e.life} cycles ·
+        ${v==null?'run ended':'health index '+v.toFixed(1)+'× healthy'}</div>
+      <div class="narr">${narrate(e, cycle)}</div>
+      <div class="muted" style="margin-bottom:8px">Per-sense surprise (× healthy baseline)</div>
+      ${senses}
+      ${sparkline(e)}
+      <div class="foot">${e.overall[0] >= AMBER
+        ? 'Read hot from its first cycle — unit-to-unit variation, never looked healthy to the fleet model'
+        : `First warning at cycle ${e.first_amber_cycle||'—'}${e.lead_cycles?` · ${e.lead_cycles} cycles before end of run`:''}`}</div>`;
+  }
+
+  function sparkline(e) {
+    const W=320, H=90, pad=4, n=e.life;
+    const maxv = Math.max(RED*1.2, ...e.overall);
+    const x = i => pad + (i/(n-1))*(W-2*pad);
+    const y = v => H-pad - (Math.min(v,maxv)/maxv)*(H-2*pad);
+    const pts = e.overall.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+    const cur = Math.min(cycle, e.life);
+    const ay = y(AMBER), ry = y(RED);
+    return `<div class="spark"><div class="muted" style="margin-bottom:4px">Health index over life</div>
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+        <line x1="0" y1="${ay}" x2="${W}" y2="${ay}" stroke="${AMBERC}" stroke-dasharray="3 3" stroke-width="1" opacity=".5"/>
+        <line x1="0" y1="${ry}" x2="${W}" y2="${ry}" stroke="${REDC}" stroke-dasharray="3 3" stroke-width="1" opacity=".5"/>
+        <polyline points="${pts}" fill="none" stroke="${css.getPropertyValue('--accent').trim()}" stroke-width="1.5"/>
+        <line x1="${x(cur-1)}" y1="0" x2="${x(cur-1)}" y2="${H}" stroke="#fff" stroke-width="1" opacity=".6"/>
+      </svg></div>`;
+  }
+
+  // ---- playback ----
+  function setCycle(c) {
+    cycle = Math.max(1, Math.min(maxLife, c));
+    scrub.value = cycle;
+    document.getElementById('cyc').textContent = cycle;
+    renderFleet(); renderDetail();
+  }
+  function play() {
+    if (timer) return stop();
+    if (cycle >= maxLife) setCycle(1);
+    document.getElementById('play').textContent = '⏸ Pause';
+    timer = setInterval(() => {
+      if (cycle >= maxLife) return stop();
+      setCycle(cycle + 1);
+    }, 60);
+  }
+  function stop() {
+    clearInterval(timer); timer = null;
+    document.getElementById('play').textContent = '▶ Play';
+  }
+  document.getElementById('play').onclick = play;
+  document.getElementById('reset').onclick = () => { stop(); sel=null; setCycle(1); renderDetail(); };
+  scrub.oninput = () => { stop(); setCycle(+scrub.value); };
+
+  document.getElementById('foot').textContent =
+    `${D.meta.dataset} · ${D.meta.n_unseen} unseen engines · trained on healthy data only (first ${Math.round(D.meta.healthy_frac*100)}% of ${D.meta.n_train_engines} other engines' lives), zero failure labels · ${D.meta.caught_climbing}/${D.meta.n_started_green} engines that started nominal were flagged before failure (median ${D.meta.median_lead_cycles} cycles ahead) · surprise = 1.0 means average healthy · fingerprint ${D.meta.device_type_fingerprint}`;
+
+  setCycle(1);
+})();
+</script>
+</body>
+</html>
