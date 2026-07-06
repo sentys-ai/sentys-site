@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!-- Source for og.png — render at 1200x630 in headless Chrome and screenshot.
+     Not linked from the site; kept in the repo so the card is reproducible. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family:'Nippo'; src:url('assets/fonts/Nippo-Medium.woff2') format('woff2'); font-weight:500; }
+  @font-face { font-family:'PlexMono'; src:url('assets/fonts/PlexMono-400.woff2') format('woff2'); font-weight:400; }
+  @font-face { font-family:'PlexMono'; src:url('assets/fonts/PlexMono-500.woff2') format('woff2'); font-weight:500; }
+  * { margin:0; box-sizing:border-box; }
+  body { width:1200px; height:630px; background:#0b0e11; overflow:hidden; position:relative; color:#eceff1; }
+  .photo { position:absolute; inset:0; }
+  .photo img { width:100%; height:100%; object-fit:cover; object-position:80% 45%; }
+  .photo::after { content:""; position:absolute; inset:0;
+    background:linear-gradient(97deg, #0b0e11 0%, rgba(11,14,17,.97) 34%, rgba(11,14,17,.45) 70%, rgba(11,14,17,.06) 100%),
+               linear-gradient(to bottom, rgba(11,14,17,.3), rgba(11,14,17,0) 30%, rgba(11,14,17,.82) 92%); }
+  .inner { position:absolute; inset:0; z-index:1; padding:52px 72px 46px; display:flex; flex-direction:column; }
+  .brand { font:500 22px/1 'Nippo'; letter-spacing:.24em; }
+  .brand em { font-style:normal; color:#e2a445; }
+  .eyebrow { margin-top:40px; font:500 15px/1 'PlexMono'; letter-spacing:.16em; color:#96a1aa;
+             display:flex; align-items:center; gap:12px; }
+  .eyebrow::before { content:""; width:20px; height:3px; background:#e2a445; }
+  h1 { font:500 56px/1.08 'Nippo'; margin-top:22px; max-width:15ch; letter-spacing:.005em; }
+  h1 b { font-weight:500; color:#e2a445; }
+  .trend { position:absolute; left:72px; bottom:88px; width:620px; }
+  .trend svg { width:100%; display:block; }
+  .cap { position:absolute; left:72px; bottom:40px; font:500 15px/1.4 'PlexMono',monospace; color:#a7b1ba; letter-spacing:.02em; }
+  .cap b { color:#eceff1; font-weight:500; }
+</style>
+</head>
+<body>
+  <div class="photo"><img src="assets/img/hero-bearing.webp" alt=""></div>
+  <div class="inner">
+    <div class="brand">SENSORY<em>.</em></div>
+    <div class="eyebrow">PREDICTIVE MAINTENANCE · ANY MACHINE · ANY SENSORS</div>
+    <h1>The data you already log knows what's <b>about to break</b>.</h1>
+    <div class="trend">
+      <!-- Real Engine-03 output — same polyline as the site hero, cropped vertically -->
+      <svg viewBox="0 0 760 150">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#4caf6a"/><stop offset=".62" stop-color="#4caf6a"/>
+            <stop offset=".74" stop-color="#e2a445"/><stop offset=".86" stop-color="#e5695c"/>
+            <stop offset="1" stop-color="#e5695c"/>
+          </linearGradient>
+        </defs>
+        <g transform="translate(0,9)">
+          <line x1="6" y1="78.3" x2="754" y2="78.3" stroke="#e2a445" stroke-dasharray="4 4" stroke-width="1" opacity=".55"/>
+          <polyline fill="none" stroke="url(#g)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="6.0,90.4 14.4,87.7 22.8,89.8 31.2,90.5 39.6,92.8 48.0,91.5 56.4,89.8 64.8,88.8 73.2,87.3 81.6,87.6 90.0,89.4 98.4,91.6 106.9,92.0 115.3,91.9 123.7,89.9 132.1,90.3 140.5,92.7 148.9,93.0 157.3,89.2 165.7,89.0 174.1,87.9 182.5,86.6 190.9,86.7 199.3,91.9 207.7,91.9 216.1,92.0 224.5,92.0 232.9,90.8 241.3,92.5 249.7,92.0 258.1,92.1 266.5,90.3 274.9,91.7 283.3,89.8 291.8,90.5 300.2,90.4 308.6,85.4 317.0,86.5 325.4,88.3 333.8,90.5 342.2,88.4 350.6,89.2 359.0,88.7 367.4,91.3 375.8,89.5 384.2,90.1 392.6,87.8 401.0,84.2 409.4,84.6 417.8,92.0 426.2,91.5 434.6,89.2 443.0,89.6 451.4,88.4 459.8,85.3 468.2,86.4 476.7,85.6 485.1,86.4 493.5,84.3 501.9,83.1 510.3,79.0 518.7,76.5 527.1,73.7 535.5,72.9 543.9,70.9 552.3,67.5 560.7,66.6 569.1,66.6 577.5,64.2 585.9,63.0 594.3,60.9 602.7,59.1 611.1,55.8 619.5,53.1 627.9,50.8 636.3,48.6 644.7,46.5 653.1,43.3 661.6,41.1 670.0,38.3 678.4,35.3 686.8,33.3 695.2,29.8 703.6,26.3 712.0,22.9 720.4,19.7 728.8,16.4 737.2,13.9 745.6,10.3 754.0,6.5"/>
+          <line x1="518.7" y1="20" x2="518.7" y2="110" stroke="#e2a445" stroke-width="1.5" opacity=".7"/>
+          <circle cx="754" cy="6.5" r="4.5" fill="#e5695c"/>
+        </g>
+      </svg>
+    </div>
+    <div class="cap">REAL MODEL OUTPUT · first warning <b>56 cycles before failure</b> · 30/30 flagged · 1 false alarm</div>
+  </div>
+</body>
+</html>
