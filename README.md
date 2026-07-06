@@ -1,11 +1,11 @@
-# Sensory — outreach site
+# Sentys — outreach site
 
-Public site for **Sensory**: sensor-agnostic predictive maintenance for
+Public site for **Sentys**: sensor-agnostic predictive maintenance for
 European industry — pumps, bearings, turbomachinery, and anything else that
 logs sensor data. Learns each machine's normal from its own history — no
 failure labels — and reports drift in plain language, per sensor.
 
-**Live:** https://freakysauce.github.io/sensory-site/
+**Live:** https://sentys.ai/
 
 - `index.html` — the one-page site. Design: dual-band "precision instrument"
   (dark machine bands + light instrument-paper body), signal-amber accent,
@@ -27,4 +27,4 @@ failure labels — and reports drift in plain language, per sensor.
   and screenshot; text lives in HTML, never in generated pixels).
 
 The platform itself lives in a private repository. Contact:
-frixos.andreou.dk@gmail.com
+frixos@sentys.ai
