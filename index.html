@@ -84,6 +84,15 @@
   /* eyebrow: mono readout with amber tick — the page's one structural device */
   .eyebrow { font:500 12px/1.4 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--dim); display:flex; align-items:center; gap:10px; margin:0 0 18px; }
   .eyebrow::before { content:""; width:16px; height:2px; background:var(--signal); flex:none; }
+  /* hero eyebrow: reveal each phrase one-by-one on load, amber ticks between */
+  .eyebrow-seq { flex-wrap:wrap; }
+  .eyebrow-seq .sep { color:var(--signal); }
+  .js .eyebrow-seq .ph, .js .eyebrow-seq .sep { opacity:0; transform:translateY(4px); transition:opacity .5s ease, transform .5s ease; }
+  .js .eyebrow-seq.in .ph, .js .eyebrow-seq.in .sep { opacity:1; transform:none; }
+  .js .eyebrow-seq.in > :nth-child(1){ transition-delay:.12s } .js .eyebrow-seq.in > :nth-child(2){ transition-delay:.40s }
+  .js .eyebrow-seq.in > :nth-child(3){ transition-delay:.52s } .js .eyebrow-seq.in > :nth-child(4){ transition-delay:.80s }
+  .js .eyebrow-seq.in > :nth-child(5){ transition-delay:.92s }
+  @media (prefers-reduced-motion: reduce){ .js .eyebrow-seq .ph, .js .eyebrow-seq .sep { opacity:1; transform:none; transition:none; } }
 
   /* reveal-on-scroll (JS-gated; no-JS never hides content) */
   .js .reveal { opacity:0; transform:translateY(14px); transition:opacity .55s ease, transform .55s ease; }
@@ -108,6 +117,9 @@
   header.hero { position:relative; background:var(--coal); color:var(--coal-ink); overflow:hidden; padding:64px 0 0; }
   .hero-photo { position:absolute; inset:0; z-index:0; }
   .hero-photo img { width:100%; height:100%; object-fit:cover; object-position:78% 38%; }
+  /* hero ambient loop: desktop + motion-allowed only; mobile & reduced-motion keep the still */
+  .hero-vid { display:none; position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:78% 38%; }
+  @media (min-width:720px) and (prefers-reduced-motion: no-preference){ .hero-vid { display:block; } }
   .hero-photo::after { content:""; position:absolute; inset:0;
     background:linear-gradient(100deg, var(--coal) 0%, rgba(11,14,17,.94) 30%, rgba(11,14,17,.38) 62%, rgba(11,14,17,.08) 100%),
                linear-gradient(to bottom, rgba(11,14,17,.18), rgba(11,14,17,0) 26%, rgba(11,14,17,.55) 72%, rgba(11,14,17,.88) 100%); }
@@ -323,12 +335,16 @@
       <source media="(min-width:720px)" srcset="assets/img/hero-bearing.webp">
       <img src="assets/img/hero-bearing-m.webp" alt="" fetchpriority="high" decoding="async">
     </picture>
+    <video class="hero-vid" autoplay muted loop playsinline preload="none" poster="assets/img/hero-bearing.webp">
+      <source src="assets/vid/hero-loop.webm" type="video/webm">
+      <source src="assets/vid/hero-loop.mp4" type="video/mp4">
+    </video>
   </div>
   <div class="wrap hero-inner">
-    <p class="eyebrow">Predictive maintenance · any machine · any sensors</p>
-    <h1>The data you already log knows what's <b>about to break</b>.</h1>
-    <p class="sub">Sentys learns each machine's healthy behaviour from its own sensor history — no failure labels, no data-science project on your side — and tells you, in plain language, which machine is drifting and which sensor saw it first.</p>
-    <div class="cta-row">
+    <p class="eyebrow eyebrow-seq" aria-label="Predictive maintenance · any machine · any sensors"><span class="ph">Predictive maintenance</span><span class="sep" aria-hidden="true">·</span><span class="ph">any machine</span><span class="sep" aria-hidden="true">·</span><span class="ph">any sensors</span></p>
+    <h1 class="reveal">The data you already log knows what's <b>about to break</b>.</h1>
+    <p class="sub reveal d1">Sentys learns each machine's healthy behaviour from its own sensor history — no failure labels, no data-science project on your side — and tells you, in plain language, which machine is drifting and which sensor saw it first.</p>
+    <div class="cta-row reveal d2">
       <a class="btn btn-primary" href="#ask">Send one export — get a free analysis</a>
       <a class="btn btn-ghost" href="sample-report.html">See a sample report</a>
     </div>
@@ -676,7 +692,7 @@
   var io = new IntersectionObserver(function(entries){
     entries.forEach(function(en){ if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
   }, {threshold:.12, rootMargin:'0px 0px -6% 0px'});
-  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  document.querySelectorAll('.reveal, .eyebrow-seq').forEach(function(el){ io.observe(el); });
 
   // count-up readouts
   function countUp(el){
