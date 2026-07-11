@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Concept C — Resonance · Sentys</title>
+<style>
+@font-face { font-family:'Clash'; src:url('../fonts/ClashDisplay-400.woff2') format('woff2'); font-weight:400; font-display:swap; }
+@font-face { font-family:'Clash'; src:url('../fonts/ClashDisplay-500.woff2') format('woff2'); font-weight:500; font-display:swap; }
+@font-face { font-family:'Clash'; src:url('../fonts/ClashDisplay-600.woff2') format('woff2'); font-weight:600; font-display:swap; }
+@font-face { font-family:'Supreme'; src:url('../../assets/fonts/Supreme-Regular.woff2') format('woff2'); font-weight:400; font-display:swap; }
+@font-face { font-family:'PlexMono'; src:url('../../assets/fonts/PlexMono-400.woff2') format('woff2'); font-weight:400; font-display:swap; }
+@font-face { font-family:'PlexMono'; src:url('../../assets/fonts/PlexMono-500.woff2') format('woff2'); font-weight:500; font-display:swap; }
+
+:root {
+  --plate:#101318;
+  --dust:#efe7d8;
+  --dust-dim:#93958f;
+  --ember:#f2a53e;
+  --line:#252a33;
+  --display:'Clash', -apple-system, sans-serif;
+  --sans:'Supreme', -apple-system, sans-serif;
+  --mono:'PlexMono', ui-monospace, monospace;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--plate); color:var(--dust); font:400 16px/1.65 var(--sans); -webkit-font-smoothing:antialiased; }
+
+nav { position:absolute; top:0; left:0; right:0; z-index:10; display:flex; justify-content:space-between; align-items:center; padding:22px 36px; }
+.brand { font:600 15px/1 var(--display); letter-spacing:.38em; color:var(--dust); text-decoration:none; }
+.brand i { font-style:normal; color:var(--ember); }
+.navlinks { display:flex; gap:26px; font:400 13.5px var(--sans); }
+.navlinks a { color:var(--dust-dim); text-decoration:none; }
+.navlinks a.cta { color:#140f06; background:var(--ember); padding:9px 16px; border-radius:3px; font-weight:500; }
+@media (max-width:780px){ .navlinks a:not(.cta){ display:none; } }
+
+.hero { position:relative; min-height:100vh; display:flex; flex-direction:column; justify-content:center; overflow:hidden; }
+#plate { position:absolute; inset:0; width:100%; height:100%; display:block; }
+.scrim { position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(90% 70% at 50% 52%, rgba(16,19,24,0) 30%, rgba(16,19,24,.78) 100%); }
+
+.copy { position:relative; z-index:2; text-align:center; margin:0 auto; padding:96px 24px 40px; max-width:900px; }
+.eyebrow { font:500 11.5px var(--mono); letter-spacing:.3em; color:var(--ember); text-transform:uppercase; margin-bottom:24px; }
+h1 { font:500 clamp(40px, 6.4vw, 84px)/1.02 var(--display); letter-spacing:.005em; margin:0 0 22px; }
+h1 em { font-style:normal; color:var(--ember); }
+.sub { color:var(--dust-dim); font-size:clamp(16px,1.9vw,18.5px); max-width:56ch; margin:0 auto 34px; }
+.sub b { color:var(--dust); font-weight:500; }
+.ctas { display:flex; flex-wrap:wrap; gap:14px; justify-content:center; }
+.btn { font:500 15px/1.2 var(--sans); text-decoration:none; padding:14px 24px; border-radius:3px; }
+.btn-a { background:var(--ember); color:#140f06; }
+.btn-b { color:var(--dust); border:1px solid var(--line); background:rgba(16,19,24,.5); }
+
+.freq { position:relative; z-index:2; text-align:center; font:400 11.5px/1.7 var(--mono); letter-spacing:.18em; color:var(--dust-dim); text-transform:uppercase; }
+.freq b { color:var(--dust); font-weight:500; }
+
+.readouts { position:absolute; z-index:2; left:0; right:0; bottom:0; border-top:1px solid var(--line); background:rgba(16,19,24,.72); backdrop-filter:blur(4px); }
+.rgrid { display:grid; grid-template-columns:repeat(4,1fr); }
+.r { padding:18px 26px 20px; border-right:1px solid var(--line); }
+.r:last-child { border-right:0; }
+.r .n { font:500 30px/1.05 var(--display); color:var(--dust); }
+.r .n i { font-style:normal; color:var(--ember); }
+.r .l { font:400 12px/1.5 var(--mono); letter-spacing:.04em; color:var(--dust-dim); margin-top:6px; }
+@media (max-width:860px){
+  .rgrid { grid-template-columns:1fr 1fr; }
+  .r:nth-child(2n){ border-right:0; } .r:nth-child(-n+2){ border-bottom:1px solid var(--line); }
+}
+@media (prefers-reduced-motion: reduce){ #plate { display:none; }
+  .hero { background:radial-gradient(80% 60% at 50% 45%, #1a1f27 0%, var(--plate) 100%); } }
+</style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="#">SENTY<i>S</i></a>
+  <div class="navlinks">
+    <a href="#">How it works</a><a href="#">Evidence</a><a href="#">Sample report</a>
+    <a class="cta" href="#">Free analysis</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <canvas id="plate" aria-hidden="true"></canvas>
+  <div class="scrim"></div>
+
+  <div class="copy">
+    <p class="eyebrow">Vibration, made visible</p>
+    <h1>Every machine has a <em>feeling</em> of healthy.</h1>
+    <p class="sub">Sentys learns it from the sensor data you already log — <b>no failure labels,
+      no data-science project</b> — and tells you in plain language which machine is drifting,
+      and which sensor felt it first.</p>
+    <div class="ctas">
+      <a class="btn btn-a" href="#">Send one export — free analysis</a>
+      <a class="btn btn-b" href="#">See a sample report</a>
+    </div>
+  </div>
+  <p class="freq">Plate resonance — <b id="mode">mode 5:3</b> · <span id="state">stable</span></p>
+
+  <div class="readouts">
+    <div class="rgrid">
+      <div class="r"><div class="n">30<i>/30</i></div><div class="l">unseen engines flagged before failure</div></div>
+      <div class="r"><div class="n">59</div><div class="l">operating cycles median warning</div></div>
+      <div class="r"><div class="n">1</div><div class="l">false-alarm engine, fleet-wide</div></div>
+      <div class="r"><div class="n">6</div><div class="l">public benchmarks · one pipeline</div></div>
+    </div>
+  </div>
+</header>
+
+<script>
+(() => {
+  const cv = document.getElementById('plate');
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const gl = cv.getContext('webgl', { antialias:false, alpha:false });
+  if (!gl) { cv.style.display = 'none'; return; }
+
+  const vs = `attribute vec2 p; void main(){ gl_Position = vec4(p,0.,1.); }`;
+  const fs = `
+precision highp float;
+uniform vec2 uRes; uniform float uT; uniform vec2 uMouse; uniform float uDrift;
+uniform vec4 uMode; // m1 n1 m2 n2 (morph pair)
+uniform float uMix;
+
+// Chladni standing wave on a plate
+float chladni(vec2 p, float m, float n){
+  return cos(m*3.14159*p.x)*cos(n*3.14159*p.y) - cos(n*3.14159*p.x)*cos(m*3.14159*p.y);
+}
+float hash(vec2 q){ return fract(sin(dot(q, vec2(127.1,311.7)))*43758.5453); }
+
+void main(){
+  vec2 uv = gl_FragCoord.xy / uRes;
+  float asp = uRes.x / uRes.y;
+  vec2 p = (uv - .5) * vec2(asp, 1.0) * 1.9;   // plate coords, centered
+
+  // drift warps the plate geometry from the upper-right
+  vec2 warpC = vec2(.62*asp, .55);
+  float wd = length(p - warpC);
+  vec2 pw = p + uDrift * .22 * exp(-wd*1.6) * vec2(sin(uT*.9+wd*5.), cos(uT*.7+wd*4.));
+
+  float c1 = chladni(pw, uMode.x, uMode.y);
+  float c2 = chladni(pw, uMode.z, uMode.w);
+  float c  = mix(c1, c2, uMix);
+
+  // cursor excitation: local ripple
+  vec2 m = (uMouse - .5) * vec2(asp,1.) * 1.9;
+  float md = length(p - m);
+  c += .35 * exp(-md*3.) * sin(uT*6. - md*14.);
+
+  // dust accumulates on nodal lines (|c| small)
+  float dust = 1.0 - smoothstep(0.0, 0.16, abs(c));
+  float grain = hash(gl_FragCoord.xy + floor(uT*8.)) * .5 + hash(gl_FragCoord.xy*1.7) * .5;
+  dust *= .55 + .45*grain;
+
+  // base plate: subtle brushed gradient + faint field
+  vec3 plate = mix(vec3(.055,.062,.075), vec3(.075,.085,.10), uv.y + .06*sin(uv.x*7.));
+  plate += .012*sin(gl_FragCoord.y*.8);
+  float field = smoothstep(.9, .0, abs(c)) * .05;
+
+  vec3 dustCol = vec3(.937,.906,.847);
+  // drift heat: dust near the warp centre glows ember→red
+  float heat = uDrift * exp(-wd*1.3);
+  dustCol = mix(dustCol, vec3(.99,.62,.28), clamp(heat*1.6,0.,1.));
+  dustCol = mix(dustCol, vec3(1.,.42,.25), clamp(heat*heat*1.8,0.,1.));
+
+  vec3 col = plate + field + dust * dustCol * (.75 + .35*heat);
+  // vignette
+  float vig = smoothstep(1.55, .45, length((uv-.5)*vec2(asp,1.)*1.6));
+  col *= .55 + .45*vig;
+  gl_FragColor = vec4(col, 1.);
+}`;
+
+  function sh(type, src){ const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(s)); return s; }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, sh(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog); gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(prog, 'p');
+  gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  const U = n => gl.getUniformLocation(prog, n);
+  const uRes = U('uRes'), uT = U('uT'), uMouse = U('uMouse'), uDrift = U('uDrift'), uMode = U('uMode'), uMix = U('uMix');
+
+  let W, H;
+  function resize(){
+    const dpr = Math.min(devicePixelRatio||1, 1.5);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = W*dpr; cv.height = H*dpr;
+    gl.viewport(0,0,cv.width,cv.height);
+  }
+  addEventListener('resize', resize); resize();
+
+  let mouse = [.5,.5], tgt = [.5,.5];
+  addEventListener('pointermove', e => { tgt = [e.clientX/W, 1 - e.clientY/H]; });
+
+  // mode sequence (m,n pairs) — plate "songs"
+  const modes = [[5,3],[6,2],[4,3],[7,2],[5,4],[3,2]];
+  const modeEl = document.getElementById('mode');
+  const stateEl = document.getElementById('state');
+
+  function frame(now){
+    const t = now/1000;
+    // morph between modes every 7s
+    const seg = 7, k = Math.floor(t/seg), f = (t - k*seg)/seg;
+    const a = modes[k % modes.length], b = modes[(k+1) % modes.length];
+    const mixv = f < .75 ? 0 : (f-.75)/.25;
+    // drift event: 14s period, active 8..12.5
+    const dp = t % 14;
+    const drift = dp > 8 ? Math.min(1,(dp-8)/1.8) * (dp > 11.6 ? Math.max(0,(12.5-dp)/0.9) : 1) : 0;
+
+    mouse[0] += (tgt[0]-mouse[0])*.06; mouse[1] += (tgt[1]-mouse[1])*.06;
+
+    gl.uniform2f(uRes, cv.width, cv.height);
+    gl.uniform1f(uT, t);
+    gl.uniform2f(uMouse, mouse[0], mouse[1]);
+    gl.uniform1f(uDrift, drift);
+    gl.uniform4f(uMode, a[0],a[1],b[0],b[1]);
+    gl.uniform1f(uMix, mixv);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+    modeEl.textContent = 'mode ' + a[0] + ':' + a[1];
+    stateEl.textContent = drift > .1 ? 'surprise rising — vibration sense' : 'stable';
+    stateEl.style.color = drift > .1 ? '#f2a53e' : '';
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

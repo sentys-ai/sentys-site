@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Concept A — Afferent · Sentys</title>
+<style>
+@font-face { font-family:'Sentient'; src:url('../fonts/Sentient-400.woff2') format('woff2'); font-weight:400; font-display:swap; }
+@font-face { font-family:'Sentient'; src:url('../fonts/Sentient-500.woff2') format('woff2'); font-weight:500; font-display:swap; }
+@font-face { font-family:'Sentient'; src:url('../fonts/Sentient-700.woff2') format('woff2'); font-weight:700; font-display:swap; }
+@font-face { font-family:'Supreme'; src:url('../../assets/fonts/Supreme-Regular.woff2') format('woff2'); font-weight:400; font-display:swap; }
+@font-face { font-family:'Supreme'; src:url('../../assets/fonts/Supreme-Medium.woff2') format('woff2'); font-weight:500; font-display:swap; }
+@font-face { font-family:'PlexMono'; src:url('../../assets/fonts/PlexMono-400.woff2') format('woff2'); font-weight:400; font-display:swap; }
+@font-face { font-family:'PlexMono'; src:url('../../assets/fonts/PlexMono-500.woff2') format('woff2'); font-weight:500; font-display:swap; }
+
+:root {
+  --ink:#08100f;          /* deep organ-cavity green-black */
+  --ink-2:#0d1715;
+  --bone:#e9e2d2;         /* atlas-plate paper, on dark */
+  --bone-dim:#8f9a90;
+  --nerve:#79e8c8;        /* bioluminescent afferent signal */
+  --nerve-deep:#3aa88c;
+  --alarm:#f0a848;        /* surprise amber */
+  --hairline:#22322d;
+  --serif:'Sentient', Georgia, serif;
+  --sans:'Supreme', -apple-system, sans-serif;
+  --mono:'PlexMono', ui-monospace, monospace;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--ink); color:var(--bone); font:400 16px/1.65 var(--sans); -webkit-font-smoothing:antialiased; }
+
+nav { position:absolute; top:0; left:0; right:0; z-index:10; display:flex; justify-content:space-between; align-items:center; padding:22px 34px; }
+.brand { font:500 15px/1 var(--mono); letter-spacing:.34em; color:var(--bone); text-decoration:none; }
+.brand i { font-style:normal; color:var(--nerve); }
+.navlinks { display:flex; gap:26px; font:400 13.5px var(--sans); }
+.navlinks a { color:var(--bone-dim); text-decoration:none; }
+.navlinks a.cta { color:var(--ink); background:var(--nerve); padding:9px 16px; border-radius:3px; font-weight:500; }
+@media (max-width:780px){ .navlinks a:not(.cta){ display:none; } }
+
+.hero { position:relative; min-height:100vh; display:flex; align-items:stretch; overflow:hidden; }
+#nerves { position:absolute; inset:0; width:100%; height:100%; display:block; }
+.vignette { position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(120% 90% at 72% 42%, transparent 40%, rgba(8,16,15,.72) 100%),
+             linear-gradient(90deg, rgba(8,16,15,.92) 0%, rgba(8,16,15,.55) 34%, rgba(8,16,15,0) 58%); }
+
+.copy { position:relative; z-index:2; align-self:center; padding:110px 34px 120px; max-width:640px; }
+.fig { font:500 11.5px var(--mono); letter-spacing:.22em; color:var(--nerve); text-transform:uppercase; display:flex; align-items:center; gap:12px; margin-bottom:26px; }
+.fig::before { content:""; width:34px; height:1px; background:var(--nerve-deep); }
+h1 { font:500 clamp(38px, 5.4vw, 66px)/1.06 var(--serif); letter-spacing:.002em; margin:0 0 22px; max-width:14ch; }
+h1 em { font-style:italic; color:var(--nerve); }
+.sub { color:var(--bone-dim); font-size:clamp(16px, 1.9vw, 18.5px); max-width:46ch; margin:0 0 34px; }
+.sub b { color:var(--bone); font-weight:500; }
+.ctas { display:flex; flex-wrap:wrap; gap:14px; }
+.btn { font:500 15px/1.2 var(--sans); text-decoration:none; padding:14px 24px; border-radius:3px; }
+.btn-a { background:var(--nerve); color:var(--ink); }
+.btn-b { color:var(--bone); border:1px solid var(--hairline); }
+
+.plate-label { position:absolute; z-index:2; right:34px; top:96px; text-align:right; font:400 11.5px/1.9 var(--mono); color:var(--bone-dim); letter-spacing:.12em; }
+.plate-label b { color:var(--bone); font-weight:500; }
+
+.readouts { position:absolute; z-index:2; left:0; right:0; bottom:0; border-top:1px solid var(--hairline); background:rgba(8,16,15,.78); backdrop-filter:blur(4px); }
+.rgrid { display:grid; grid-template-columns:repeat(4,1fr); }
+.r { padding:18px 26px 20px; border-right:1px solid var(--hairline); }
+.r:last-child { border-right:0; }
+.r .n { font:500 30px/1.05 var(--serif); color:var(--bone); }
+.r .n i { font-style:normal; color:var(--nerve); }
+.r .l { font:400 12px/1.5 var(--mono); letter-spacing:.06em; color:var(--bone-dim); margin-top:6px; }
+@media (max-width:860px){
+  .rgrid { grid-template-columns:1fr 1fr; }
+  .r:nth-child(2n){ border-right:0; } .r:nth-child(-n+2){ border-bottom:1px solid var(--hairline); }
+  .plate-label { display:none; }
+  .copy { padding-bottom:220px; }
+}
+@media (prefers-reduced-motion: reduce){ #nerves { display:none; } .vignette { background:rgba(8,16,15,.3); } }
+</style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="#">SENTY<i>S</i></a>
+  <div class="navlinks">
+    <a href="#">How it works</a><a href="#">Evidence</a><a href="#">Sample report</a>
+    <a class="cta" href="#">Free analysis</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <canvas id="nerves" aria-hidden="true"></canvas>
+  <div class="vignette"></div>
+
+  <div class="copy">
+    <p class="fig">Fig. 01 — the missing organ</p>
+    <h1>Machines that can <em>feel</em> something is wrong.</h1>
+    <p class="sub">Sentys is a nervous system for industrial equipment. It learns each machine's
+      <b>healthy baseline</b> from the sensor history you already log — no failure labels, no
+      data-science project — and says, in plain language, which sense is surprised when that changes.</p>
+    <div class="ctas">
+      <a class="btn btn-a" href="#">Send one export — free analysis</a>
+      <a class="btn btn-b" href="#">See a sample report</a>
+    </div>
+  </div>
+
+  <div class="plate-label">
+    <b>PLATE I. — CENTRIFUGAL PUMP,</b><br>
+    afferent pathways exposed.<br>
+    a. vibration &nbsp; b. thermal &nbsp; c. pressure<br>
+    d. ganglion (learned baseline)
+  </div>
+
+  <div class="readouts">
+    <div class="rgrid">
+      <div class="r"><div class="n">30<i>/30</i></div><div class="l">unseen engines flagged before failure</div></div>
+      <div class="r"><div class="n">59</div><div class="l">operating cycles median warning</div></div>
+      <div class="r"><div class="n">1</div><div class="l">false-alarm engine, fleet-wide</div></div>
+      <div class="r"><div class="n">6</div><div class="l">public benchmarks · one pipeline</div></div>
+    </div>
+  </div>
+</header>
+
+<script>
+(() => {
+  const cv = document.getElementById('nerves');
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const ctx = cv.getContext('2d');
+  let W, H, dpr;
+
+  // machine anchor (pump cross-section) + ganglion position, in unit coords
+  const MACH = { x:.72, y:.46, s:.30 };      // pump centre + scale
+  const GANG = { x:.475, y:.30 };            // ganglion (learned baseline)
+
+  // sensor sites on the machine: angle on volute, label letter
+  const sensors = [
+    { a:-2.35, r:1.05, sense:'vibration', ph:0 },
+    { a:-0.55, r:1.12, sense:'thermal',   ph:2.1 },
+    { a: 1.25, r:1.02, sense:'pressure',  ph:4.2 },
+    { a: 2.75, r:0.62, sense:'flow',      ph:5.6 },
+  ];
+  let fibers = [];
+
+  function resize(){
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    const mx = MACH.x*W, my = MACH.y*H, s = MACH.s*Math.min(W,H);
+    const gx = GANG.x*W, gy = GANG.y*H;
+    fibers = sensors.map(sn => {
+      const sx = mx + Math.cos(sn.a)*s*sn.r, sy = my + Math.sin(sn.a)*s*sn.r;
+      // one bezier from sensor to ganglion, bowing outward
+      const midx = (sx+gx)/2, midy = (sy+gy)/2;
+      const dx = gx-sx, dy = gy-sy, L = Math.hypot(dx,dy);
+      const nx = -dy/L, ny = dx/L, bow = L*.22*(sn.a>0?1:-1);
+      return { sn, sx, sy, cx:midx+nx*bow, cy:midy+ny*bow, gx, gy };
+    });
+  }
+  addEventListener('resize', resize); resize();
+
+  const bez = (f,t) => {
+    const u = 1-t;
+    return [ u*u*f.sx + 2*u*t*f.cx + t*t*f.gx, u*u*f.sy + 2*u*t*f.cy + t*t*f.gy ];
+  };
+
+  function drawMachine(t){
+    const mx = MACH.x*W, my = MACH.y*H, s = MACH.s*Math.min(W,H);
+    ctx.save();
+    ctx.translate(mx,my);
+    ctx.strokeStyle = 'rgba(233,226,210,.34)';
+    ctx.lineWidth = 1;
+    // volute spiral
+    ctx.beginPath();
+    for (let i=0;i<=200;i++){
+      const a = i/200 * Math.PI*2.15 - 1.2;
+      const r = s*(.42 + .26*(i/200));
+      const x = Math.cos(a)*r, y = Math.sin(a)*r;
+      i ? ctx.lineTo(x,y) : ctx.moveTo(x,y);
+    }
+    ctx.stroke();
+    // discharge nozzle
+    ctx.beginPath();
+    ctx.moveTo(s*.30, -s*.62); ctx.lineTo(s*.30, -s*1.12);
+    ctx.moveTo(s*.62, -s*.50); ctx.lineTo(s*.62, -s*1.12);
+    ctx.stroke();
+    // impeller: 6 curved vanes, slow rotation
+    const rot = t*.00012;
+    ctx.strokeStyle = 'rgba(233,226,210,.5)';
+    for (let v=0; v<6; v++){
+      ctx.beginPath();
+      for (let i=0;i<=30;i++){
+        const p = i/30;
+        const a = rot + v*Math.PI/3 + p*1.15;
+        const r = s*(.09 + p*.30);
+        const x = Math.cos(a)*r, y = Math.sin(a)*r;
+        i ? ctx.lineTo(x,y) : ctx.moveTo(x,y);
+      }
+      ctx.stroke();
+    }
+    // hub + shaft
+    ctx.beginPath(); ctx.arc(0,0,s*.085,0,7); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0,0,s*.42,0,7); ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawGanglion(t, excite){
+    const gx = GANG.x*W, gy = GANG.y*H;
+    const s = MACH.s*Math.min(W,H);
+    const breathe = 1 + Math.sin(t*.0016)*.06 + excite*.35;
+    // radial burst
+    ctx.save();
+    ctx.translate(gx,gy);
+    for (let i=0;i<14;i++){
+      const a = i/14*Math.PI*2 + t*.00005;
+      const r0 = s*.05*breathe, r1 = s*(.10+.02*Math.sin(t*.001+i))*breathe;
+      ctx.strokeStyle = `rgba(121,232,200,${.35+excite*.4})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(a)*r0, Math.sin(a)*r0);
+      ctx.lineTo(Math.cos(a)*r1, Math.sin(a)*r1);
+      ctx.stroke();
+    }
+    const g = ctx.createRadialGradient(0,0,0, 0,0,s*.09*breathe);
+    g.addColorStop(0, `rgba(121,232,200,${.9})`);
+    g.addColorStop(1, 'rgba(121,232,200,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(0,0,s*.09*breathe,0,7); ctx.fill();
+    ctx.restore();
+  }
+
+  // drift event: every ~9s one fiber goes amber for 3s
+  function driftState(t){
+    const period = 9000, k = Math.floor(t/period);
+    const local = t - k*period;
+    const fi = k % fibers.length;
+    const on = local > 5200 && local < 8600;
+    const env = on ? Math.sin((local-5200)/3400*Math.PI) : 0;
+    return { fi, env };
+  }
+
+  function frame(t){
+    ctx.clearRect(0,0,W,H);
+    const drift = driftState(t);
+
+    drawMachine(t);
+
+    fibers.forEach((f, i) => {
+      const isDrift = i === drift.fi && drift.env > 0;
+      const col = isDrift ? `rgba(240,168,72,` : `rgba(121,232,200,`;
+      // fiber path — layered strokes for glow
+      for (const [w, a] of [[3.2,.05],[1.4,.14],[.7,.5]]){
+        ctx.strokeStyle = col + (a + (isDrift?drift.env*.25:0)) + ')';
+        ctx.lineWidth = w;
+        ctx.beginPath();
+        ctx.moveTo(f.sx,f.sy);
+        ctx.quadraticCurveTo(f.cx,f.cy,f.gx,f.gy);
+        ctx.stroke();
+      }
+      // sensor node
+      ctx.fillStyle = col + '.9)';
+      ctx.beginPath(); ctx.arc(f.sx,f.sy,2.6,0,7); ctx.fill();
+      // pulses travelling toward ganglion (afferent)
+      const rate = isDrift ? 1400 : 3200;
+      for (let p=0;p<(isDrift?4:2);p++){
+        const tt = ((t + f.sn.ph*1000 + p*rate/(isDrift?4:2)) % rate) / rate;
+        const [x,y] = bez(f,tt);
+        const r = isDrift ? 3.2 : 2.2;
+        const g = ctx.createRadialGradient(x,y,0,x,y,r*4);
+        g.addColorStop(0, col + '.95)');
+        g.addColorStop(1, col + '0)');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(x,y,r*4,0,7); ctx.fill();
+      }
+      // sense label
+      ctx.font = '500 11px PlexMono, monospace';
+      ctx.fillStyle = isDrift ? 'rgba(240,168,72,.95)' : 'rgba(143,154,144,.85)';
+      const lx = f.sx + (f.sx > f.gx ? 12 : -12);
+      ctx.textAlign = f.sx > f.gx ? 'left' : 'right';
+      ctx.fillText(f.sn.sense + (isDrift ? ' · surprised' : ''), lx, f.sy + 4);
+    });
+
+    drawGanglion(t, drift.env);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

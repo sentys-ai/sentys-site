@@ -4,16 +4,28 @@
 **Prompt:** RUN_PROMPT.md (untracked, kept out of git via .git/info/exclude along with sensory/)
 
 ## Current milestone
-M1 — Concept bake-off (3 hero prototypes under /concepts, screenshot, judge, pick winner)
+M2 — Full site build from winning concept C ("Resonance")
 
 ## Done
 - [x] M0 Setup: read ONE_PAGER/VISION/MANIFESTO/EVIDENCE/WORLD_MODEL + current site copy;
       branch `redesign`; 5 staggered resume pings armed (03:00/04:15/05:45/07:15/08:45);
       tasks #1–#9 created (TaskList); Chrome + GEMINI_API_KEY + python3/node verified.
+- [x] M1 Bake-off: 3 prototypes in /concepts/{a,b,c} (fonts in /concepts/fonts), screenshotted
+      1440+390. **VERDICT: C "Resonance" wins** — Chladni-plate WebGL shader (vibration made
+      visible; healthy = stable standing wave, drift = pattern deforms + heats). Physically true,
+      highest craft ceiling, most distinctive. A "Afferent" (anatomy-plate nerves) lost: sparse
+      diagram feel, moody-dark-AI risk. B "Recorder" (strip chart) lost: print-nostalgia fights
+      the WebGL brief — but its instrument furniture is absorbed into the winner (mono readouts,
+      alarm annotations, strip-chart evidence device), as is A's plain-language sense-voice.
+      User mid-run note: fetched ui-ux-pro-max-skill.nextlevelbuilder.io — page empty, nothing taken.
 
 ## Next step
-Build 3 genuinely different hero prototypes in /concepts/{a,b,c}/index.html,
-screenshot at 1440px + 390px with headless Chrome, judge, record verdict here.
+M2: build full index.html from Concept C. Type: Clash Display + Supreme + PlexMono.
+Palette: plate graphite #101318, dust #efe7d8, ember #f2a53e→#ff6a45 heat ramp; light
+instrument-paper sections for readability. Asymmetric hero (NOT centered), plate confined
+with vignette, drift narrated by typed sense-voice line. Watch mobile horizontal overflow
+(C prototype had real overflow at 390px — find with document.scrollWidth during build).
+Preserve demo/ iframe, sample-report.html, data-spec.html, CNAME, SEO meta.
 
 ## Milestone map
 M1 bake-off → M2 full site build → M3 media assets → M4 guide+concepts notes →

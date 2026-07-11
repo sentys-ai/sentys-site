@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Concept B — The Recorder · Sentys</title>
+<style>
+@font-face { font-family:'Tanker'; src:url('../fonts/Tanker-400.woff2') format('woff2'); font-weight:400; font-display:swap; }
+@font-face { font-family:'Supreme'; src:url('../../assets/fonts/Supreme-Regular.woff2') format('woff2'); font-weight:400; font-display:swap; }
+@font-face { font-family:'Supreme'; src:url('../../assets/fonts/Supreme-Medium.woff2') format('woff2'); font-weight:500; font-display:swap; }
+@font-face { font-family:'PlexMono'; src:url('../../assets/fonts/PlexMono-400.woff2') format('woff2'); font-weight:400; font-display:swap; }
+@font-face { font-family:'PlexMono'; src:url('../../assets/fonts/PlexMono-500.woff2') format('woff2'); font-weight:500; font-display:swap; }
+
+:root {
+  --paper:#f2edda;        /* aged chart paper */
+  --grid:#cfd8b8;         /* pale chart-grid green */
+  --grid-major:#b9c69c;
+  --ink:#211d15;
+  --ink-dim:#6d675a;
+  --pen:#d64b1e;          /* recorder pen red-orange */
+  --stamp:#2b4a8f;        /* inspection-stamp blue */
+  --display:'Tanker', 'Arial Narrow', sans-serif;
+  --sans:'Supreme', -apple-system, sans-serif;
+  --mono:'PlexMono', ui-monospace, monospace;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--paper); color:var(--ink); font:400 16px/1.65 var(--sans); -webkit-font-smoothing:antialiased; }
+
+/* the whole hero IS chart paper */
+.hero { position:relative; min-height:100vh; overflow:hidden;
+  background:
+    repeating-linear-gradient(to right,  transparent 0 9px,  var(--grid) 9px 10px),
+    repeating-linear-gradient(to bottom, transparent 0 9px,  var(--grid) 9px 10px),
+    repeating-linear-gradient(to right,  transparent 0 90px, var(--grid-major) 90px 91px),
+    repeating-linear-gradient(to bottom, transparent 0 90px, var(--grid-major) 90px 91px),
+    var(--paper);
+}
+/* sprocket-hole margins */
+.hero::before, .hero::after { content:""; position:absolute; top:0; bottom:0; width:34px; z-index:5;
+  background:
+    radial-gradient(circle 5.5px at 17px 20px, var(--ink) 0 4.5px, transparent 5.5px);
+  background-color:#e7e0c8;
+  background-size:34px 64px; background-repeat:repeat-y;
+  border-right:1px solid var(--grid-major);
+  opacity:.9;
+}
+.hero::before { left:0; }
+.hero::after { right:0; border-right:0; border-left:1px solid var(--grid-major); }
+
+nav { position:relative; z-index:6; display:flex; justify-content:space-between; align-items:center; padding:18px 56px; border-bottom:1.5px solid var(--ink); background:rgba(242,237,218,.92); }
+.brand { font:400 20px/1 var(--display); letter-spacing:.3em; color:var(--ink); text-decoration:none; }
+.brand i { font-style:normal; color:var(--pen); }
+.navlinks { display:flex; gap:24px; font:500 13px var(--mono); letter-spacing:.03em; }
+.navlinks a { color:var(--ink-dim); text-decoration:none; text-transform:uppercase; }
+.navlinks a.cta { color:var(--paper); background:var(--pen); padding:9px 15px; }
+@media (max-width:820px){ .navlinks a:not(.cta){ display:none; } nav{ padding:16px 44px; } }
+
+.head-row { position:relative; z-index:4; display:flex; justify-content:space-between; gap:20px; padding:10px 56px; font:500 11px/1.6 var(--mono); letter-spacing:.14em; color:var(--ink-dim); text-transform:uppercase; border-bottom:1px dashed var(--grid-major); }
+@media (max-width:820px){ .head-row span:nth-child(2){ display:none; } .head-row{ padding:10px 44px; } }
+
+.copy { position:relative; z-index:4; padding:52px 56px 12px; max-width:1220px; }
+@media (max-width:820px){ .copy { padding:40px 44px 8px; } }
+h1 { font:400 clamp(46px, 8.4vw, 118px)/0.98 var(--display); text-transform:uppercase; letter-spacing:.005em; margin:0 0 22px; max-width:16ch; }
+h1 .pen { color:var(--pen); }
+.sub { font-size:clamp(16px,2vw,19px); color:var(--ink-dim); max-width:56ch; margin:0 0 26px; }
+.sub b { color:var(--ink); font-weight:500; }
+.ctas { display:flex; flex-wrap:wrap; gap:14px; align-items:center; margin-bottom:20px; }
+.btn { font:500 14px/1.2 var(--mono); letter-spacing:.04em; text-transform:uppercase; text-decoration:none; padding:15px 22px; }
+.btn-a { background:var(--ink); color:var(--paper); }
+.btn-b { color:var(--ink); border:1.5px solid var(--ink); }
+
+/* rubber stamp */
+.stamp { position:absolute; z-index:4; right:72px; top:118px; transform:rotate(6deg);
+  border:2.5px solid var(--stamp); color:var(--stamp); padding:10px 16px; text-align:center;
+  font:500 13px/1.45 var(--mono); letter-spacing:.16em; text-transform:uppercase; opacity:.82;
+  border-radius:4px; mix-blend-mode:multiply; }
+.stamp b { display:block; font-size:17px; }
+@media (max-width:1050px){ .stamp { display:none; } }
+
+/* the strip chart itself */
+.chart-band { position:relative; z-index:3; margin-top:14px; border-top:1.5px solid var(--ink); border-bottom:1.5px solid var(--ink); background:rgba(242,237,218,.55); }
+#strip { display:block; width:100%; height:300px; }
+@media (max-width:820px){ #strip { height:240px; } }
+.chart-meta { position:absolute; top:10px; left:56px; font:500 11px/1.7 var(--mono); letter-spacing:.1em; color:var(--ink-dim); text-transform:uppercase; }
+.chart-meta b { color:var(--pen); }
+
+/* log-entry readouts */
+.log { position:relative; z-index:4; display:grid; grid-template-columns:repeat(4,1fr); gap:0; padding:0 56px; border-bottom:1px solid var(--grid-major); background:rgba(242,237,218,.9); }
+.log .e { padding:18px 20px 20px; border-right:1px dashed var(--grid-major); }
+.log .e:first-child { padding-left:0; }
+.log .e:last-child { border-right:0; }
+.log .n { font:400 34px/1 var(--display); }
+.log .n i { font-style:normal; color:var(--pen); }
+.log .l { font:400 12px/1.55 var(--mono); color:var(--ink-dim); margin-top:6px; }
+@media (max-width:860px){
+  .log { grid-template-columns:1fr 1fr; padding:0 44px; }
+  .log .e:nth-child(2n){ border-right:0; } .log .e{ padding-left:0; }
+}
+@media (prefers-reduced-motion: reduce){ #strip { display:none; } .chart-band{ min-height:80px; } }
+</style>
+</head>
+<body>
+<header class="hero">
+  <nav>
+    <a class="brand" href="#">SENTY<i>S</i></a>
+    <div class="navlinks">
+      <a href="#">How it works</a><a href="#">Evidence</a><a href="#">Sample report</a>
+      <a class="cta" href="#">Free analysis</a>
+    </div>
+  </nav>
+  <div class="head-row">
+    <span>Continuous recorder · CH 01 — vibration · unit: × healthy baseline</span>
+    <span>Chart speed 20 mm/min</span>
+    <span>Sentys · Denmark</span>
+  </div>
+
+  <div class="copy">
+    <h1>The data you already log knows what's about <span class="pen">to break.</span></h1>
+    <p class="sub">Sentys learns each machine's <b>healthy behaviour</b> from its own sensor history —
+      no failure labels, no data-science project on your side — and writes down, in plain language,
+      which machine is drifting and which sensor saw it first.</p>
+    <div class="ctas">
+      <a class="btn btn-a" href="#">Send one export — free analysis</a>
+      <a class="btn btn-b" href="#">See a sample report</a>
+    </div>
+  </div>
+
+  <div class="stamp"><b>FIRST ANALYSIS</b>FREE · NO STRINGS<br>ONE CSV EXPORT</div>
+
+  <div class="chart-band">
+    <div class="chart-meta">Recording — <b>pen 1</b> · surprise vs healthy</div>
+    <canvas id="strip" aria-hidden="true"></canvas>
+  </div>
+
+  <div class="log">
+    <div class="e"><div class="n">30<i>/30</i></div><div class="l">unseen engines flagged before failure</div></div>
+    <div class="e"><div class="n">59</div><div class="l">operating cycles median warning</div></div>
+    <div class="e"><div class="n">1</div><div class="l">false-alarm engine, fleet-wide</div></div>
+    <div class="e"><div class="n">6</div><div class="l">public benchmarks · one pipeline</div></div>
+  </div>
+</header>
+
+<script>
+(() => {
+  const cv = document.getElementById('strip');
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const ctx = cv.getContext('2d');
+  let W, H, dpr;
+  function resize(){
+    dpr = Math.min(devicePixelRatio||1, 2);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = W*dpr; cv.height = H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  addEventListener('resize', resize); resize();
+
+  // signal model: calm noise, every ~11s a drift ramps up, annotation types, resolves
+  const SPEED = 60;               // px/s paper speed
+  const samples = [];             // {v (0..1), drift}
+  let tPrev = performance.now(), acc = 0, phase = 0;
+  const drift = t => {            // envelope 0..1, period 11s, active 6..10.4s
+    const p = (t/1000) % 11;
+    return p > 6 ? Math.min(1, (p-6)/2.6) * (p > 9.6 ? Math.max(0,(10.4-p)/0.8) : 1) : 0;
+  };
+  const noise = t => Math.sin(t*.0021)*.16 + Math.sin(t*.0057+1.7)*.09 + Math.sin(t*.013+4)*.05;
+
+  // annotation state
+  const ANN = "vibration: 3.2× healthy baseline — first warning";
+  function frame(now){
+    const dt = Math.min(50, now - tPrev); tPrev = now;
+    acc += dt/1000 * SPEED;
+    while (acc >= 1){                // one sample per px of paper travel
+      acc -= 1; phase += 1000/SPEED;
+      const d = drift(phase);
+      const v = .5 + noise(phase)*.35 + d*( .28 + Math.sin(phase*.02)*.06 );
+      samples.push({ v: Math.min(.96, v), d });
+      if (samples.length > 4000) samples.shift();
+    }
+
+    ctx.clearRect(0,0,W,H);
+    const penX = W * .82;            // pen position
+    const y0 = H*.86, y1 = H*.10;    // value 0.., value 1 (top)
+    const Y = v => y0 + (y1-y0)*v;
+
+    // baseline (healthy = 1.0×) & threshold line
+    ctx.strokeStyle = 'rgba(33,29,21,.30)'; ctx.lineWidth = 1; ctx.setLineDash([1,0]);
+    ctx.beginPath(); ctx.moveTo(0, Y(.5)); ctx.lineTo(W, Y(.5)); ctx.stroke();
+    ctx.setLineDash([5,5]);
+    ctx.strokeStyle = 'rgba(214,75,30,.5)';
+    ctx.beginPath(); ctx.moveTo(0, Y(.78)); ctx.lineTo(W, Y(.78)); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.font = '500 10px PlexMono, monospace';
+    ctx.fillStyle = 'rgba(33,29,21,.55)';
+    ctx.fillText('1.0× healthy', 8, Y(.5)-6);
+    ctx.fillStyle = 'rgba(214,75,30,.8)';
+    ctx.fillText('alarm — set from healthy data alone', 8, Y(.78)-6);
+
+    // the trace: newest sample at pen, history flows left
+    const n = samples.length;
+    ctx.lineWidth = 2.2; ctx.lineJoin = 'round'; ctx.lineCap='round';
+    ctx.strokeStyle = 'var(--pen)';
+    ctx.strokeStyle = '#d64b1e';
+    ctx.beginPath();
+    let annX = null, annY = null;
+    for (let i=0;i<n;i++){
+      const x = penX - (n-1-i);
+      if (x < -4) continue;
+      const s = samples[i];
+      const y = Y(s.v);
+      i ? ctx.lineTo(x,y) : ctx.moveTo(x,y);
+      if (s.d > .9 && annX === null){ annX = x; annY = y; }
+    }
+    ctx.stroke();
+
+    // pen head + arm
+    const cur = samples[n-1];
+    if (cur){
+      const py = Y(cur.v);
+      ctx.strokeStyle = 'rgba(33,29,21,.85)'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(penX + 46, 4); ctx.lineTo(penX + 6, py); ctx.stroke();
+      ctx.fillStyle = '#d64b1e';
+      ctx.beginPath(); ctx.arc(penX, py, 4.4, 0, 7); ctx.fill();
+      ctx.fillStyle = 'rgba(33,29,21,.9)';
+      ctx.fillRect(penX + 40, 0, 14, 10);
+    }
+
+    // typed annotation while drift is active on-screen
+    if (annX !== null && annX > 60){
+      const d = cur ? cur.d : 0;
+      const progress = Math.min(1, samples.slice(-1)[0].d * 1.4);
+      const chars = Math.floor(ANN.length * progress);
+      if (chars > 0){
+        ctx.font = '500 12.5px PlexMono, monospace';
+        ctx.fillStyle = '#d64b1e';
+        const tx = Math.max(60, annX - 130), ty = Math.max(22, annY - 34);
+        ctx.fillText(ANN.slice(0, chars) + (progress < 1 ? '▏' : ''), tx, ty);
+        ctx.strokeStyle = 'rgba(214,75,30,.65)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(annX, annY-6); ctx.lineTo(annX, ty+6); ctx.stroke();
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
