@@ -461,10 +461,10 @@ void main(){
     const osense = document.getElementById('osense');
     const GANG = { x:.175, y:.44 };
     const SENSORS = [
-      { x:.500, y:.400, sense:'a. rotation', key:'rotation', lx:-12, ly:-24, align:'right', ph:0   },
-      { x:.688, y:.268, sense:'b. thermal',  key:'thermal',  lx:-12, ly:-12, align:'right', ph:2.1 },
-      { x:.735, y:.120, sense:'c. pressure', key:'pressure', lx:-14, ly:  3, align:'right', ph:4.2 },
-      { x:.780, y:.855, sense:'d. flow',     key:'flow',     lx:-30, ly: 30, align:'right', ph:5.6 },
+      { x:.450, y:.385, sense:'a. rotation', key:'rotation', lx:-12, ly:-24, align:'right', ph:0   },
+      { x:.712, y:.205, sense:'b. thermal',  key:'thermal',  lx:-12, ly:-14, align:'right', ph:2.1 },
+      { x:.752, y:.085, sense:'c. pressure', key:'pressure', lx:-20, ly:  3, align:'right', ph:4.2 },
+      { x:.700, y:.890, sense:'d. flow',     key:'flow',     lx:-16, ly: 26, align:'right', ph:5.6 },
     ];
     let W, H, fibers = [];
 

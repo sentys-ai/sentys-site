@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SENTYS — Weekly fleet report</title>
+<style>
+:root { --surface:#fcfcfb;--page:#f9f9f7;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--grid:#e1e0d9;--axis:#c3c2b7;--series:#2a78d6;--good:#0ca30c;--alert:#c23b3b;--warnc:#a97a00;--border:rgba(11,11,11,0.10); }
+@media (prefers-color-scheme: dark) { :root { --surface:#1a1a19;--page:#0d0d0d;--ink:#ffffff;--ink2:#c3c2b7;--muted:#898781;--grid:#2c2c2a;--axis:#383835;--series:#3987e5;--good:#0ca30c;--alert:#e05252;--warnc:#d6a51e;--border:rgba(255,255,255,0.10); } }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--page); color:var(--ink);
+  font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif; }
+.wrap { max-width: 880px; margin: 0 auto; padding: 28px 20px 56px; }
+header.rep { padding: 8px 0 20px; border-bottom: 1px solid var(--grid); }
+.brand { font-size:13px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink2); font-weight:600; }
+h1 { font-size:26px; margin:6px 0 2px; }
+h2 { font-size:19px; margin:34px 0 10px; }
+.sub { color:var(--ink2); margin:0; }
+.draft { background:var(--surface); border:1px solid var(--warnc);
+  color:var(--warnc); border-radius:8px; padding:8px 14px; margin:16px 0 0;
+  font-weight:600; font-size:13.5px; }
+.tiles { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px; margin:22px 0 6px; }
+.tile { background:var(--surface); border:1px solid var(--border);
+  border-radius:10px; padding:14px 16px; }
+.tile .lab { font-size:12.5px; color:var(--ink2); }
+.tile .val { font-size:30px; font-weight:600; margin-top:2px; }
+.tile .val.alert { color:var(--alert); }
+.tile .val.warn { color:var(--warnc); }
+.tile .val.good { color:var(--good); }
+.tile .note { font-size:12px; color:var(--muted); margin-top:2px; }
+.card { background:var(--surface); border:1px solid var(--border);
+  border-radius:10px; padding:18px 20px; margin:14px 0; }
+.card h2 { margin-top:0; }
+.unit { border-left:3px solid var(--series); }
+.unit.act_now { border-left-color:var(--alert); }
+.unit.watch { border-left-color:var(--warnc); }
+.unit .flag { font-size:12px; letter-spacing:.1em; text-transform:uppercase;
+  font-weight:700; }
+.unit.act_now .flag { color:var(--alert); }
+.unit.watch .flag { color:var(--warnc); }
+.unit h2 { margin:2px 0 8px; }
+.headline { font-weight:600; }
+.facts { list-style:none; padding:0; margin:10px 0; font-size:13.5px;
+  color:var(--ink2); }
+.facts li { padding:2px 0; }
+.facts .k { color:var(--muted); }
+.action { margin-top:10px; padding:10px 12px; border:1px solid var(--border);
+  border-radius:8px; font-size:14px; background:var(--page); }
+svg { width:100%; height:auto; display:block; }
+svg.spark { max-width:300px; margin:10px 0 2px; }
+.tick { font:11px system-ui,sans-serif; fill:var(--muted);
+  font-variant-numeric: tabular-nums; }
+.dlabel { font:11.5px system-ui,sans-serif; fill:var(--ink2); }
+.axis-title { font:12px system-ui,sans-serif; fill:var(--ink2); }
+.mark:hover { opacity:.85; }
+.healthy-list { color:var(--ink2); font-size:14px; }
+.caveat { border-left:3px solid var(--axis); }
+footer.rep { margin-top:36px; padding-top:14px; border-top:1px solid var(--grid);
+  color:var(--muted); font-size:12.5px; }
+#tip { position:fixed; pointer-events:none; background:var(--surface);
+  color:var(--ink); border:1px solid var(--border); border-radius:6px;
+  padding:4px 9px; font-size:12.5px; display:none; z-index:9;
+  box-shadow:0 2px 8px rgba(0,0,0,.15); }
+</style><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f1216'/%3E%3Cpath d='M6 16c3.3 0 3.3-6 6.7-6s3.3 6 6.6 6 3.4-6 6.7-6' fill='none' stroke='%23f0a43c' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+/* Sentys paper skin — same palette + type as sample-report.html */
+@font-face { font-family:'Clash'; src:url('assets/fonts/ClashDisplay-500.woff2') format('woff2'); font-weight:500; font-display:swap; }
+@font-face { font-family:'Supreme'; src:url('assets/fonts/Supreme-Regular.woff2') format('woff2'); font-weight:400; font-display:swap; }
+@font-face { font-family:'Supreme'; src:url('assets/fonts/Supreme-Bold.woff2') format('woff2'); font-weight:700; font-display:swap; }
+@font-face { font-family:'PlexMono'; src:url('assets/fonts/PlexMono-400.woff2') format('woff2'); font-weight:400; font-display:swap; }
+:root { --surface:#fbfaf6;--page:#f2efe8;--ink:#181b1f;--ink2:#565f68;--muted:#7d868f;--grid:#ddd8ca;--axis:#c4bfae;--series:#8a5c0a;--good:#3d8f5c;--alert:#b03a2e;--warnc:#8a5c0a;--border:rgba(24,27,31,0.12); }
+@media (prefers-color-scheme: dark) { :root { --surface:#151a21;--page:#0f1216;--ink:#ece5d6;--ink2:#98a1aa;--muted:#98a1aa;--grid:#242b35;--axis:#3a4450;--series:#f0a43c;--good:#57c07e;--alert:#e05252;--warnc:#f0a43c;--border:rgba(236,229,214,0.12); } }
+body { font-family:'Supreme',system-ui,-apple-system,"Segoe UI",sans-serif; }
+h1, h2, h3 { font-family:'Clash','Supreme',sans-serif; font-weight:500; }
+.brand { font:500 13px 'Clash',sans-serif; letter-spacing:.4em; text-transform:uppercase; color:var(--ink2); }
+.brand i { font-style:normal; color:#f0a43c; }
+.backlink { float:right; font:500 13px 'Supreme',sans-serif; color:var(--ink2); text-decoration:none; }
+.backlink:hover { color:var(--ink); }
+</style>
+</head>
+<body><div id="tip"></div><div class="wrap">
+
+<header class="rep">
+  <div class="brand"><a class="backlink" href="./#action">← back to sentys.ai</a>SENTY<i>S</i></div>
+  <h1>Weekly fleet report</h1>
+  <p class="sub">NASA C-MAPSS demo fleet · viewed at cycle 120 &nbsp;·&nbsp; 30 machines
+  &nbsp;·&nbsp; generated 2026-07-12</p>
+  <div class="draft">DRAFT — pending human approval. Agents propose, humans approve; no automatic derate or shutdown, ever.</div>
+</header>
+
+<div class="tiles">
+  <div class="tile"><div class="lab">Machines reviewed</div>
+    <div class="val">30</div></div>
+  <div class="tile"><div class="lab">Act now</div>
+    <div class="val alert">7</div><div class="note">sustained firing,
+    unambiguous evidence</div></div>
+  <div class="tile"><div class="lab">Watch</div>
+    <div class="val warn">10</div><div class="note">firing, pattern not
+    yet unambiguous</div></div>
+  <div class="tile"><div class="lab">Healthy</div>
+    <div class="val good">13</div><div class="note">never crossed
+    threshold</div></div>
+</div>
+
+<div class="card">
+  <h2>This week</h2>
+  <p>Of 30 monitored units, 13 are healthy and have not crossed the surprise threshold. 7 units are in act_now status with sustained, unambiguous anomaly patterns, and 10 more are in watch status where the pattern is less clear-cut. The most urgent is unit 58, firing fleet-wide 11 cycles ago with rotation-domain deviation now at 4.93x baseline and still rising, and already triaged for escalation.</p>
+</div>
+
+<div class="card">
+  <h2>The whole fleet at a glance</h2>
+  <p class="sub">Each machine's surprise score vs its own learned "normal", at
+  the latest reading — ranked most-to-least urgent.</p>
+  <svg viewBox="0 0 680 286" role="img" aria-label="Surprise vs baseline at the latest observed cycle, per machine, in attention-rank order"><line x1="52" y1="246.0" x2="664" y2="246.0" stroke="var(--grid)" stroke-width="1"/><text x="44" y="249.5" text-anchor="end" class="tick">0</text><line x1="52" y1="172.7" x2="664" y2="172.7" stroke="var(--grid)" stroke-width="1"/><text x="44" y="176.2" text-anchor="end" class="tick">2</text><line x1="52" y1="99.3" x2="664" y2="99.3" stroke="var(--grid)" stroke-width="1"/><text x="44" y="102.8" text-anchor="end" class="tick">4</text><line x1="52" y1="26.0" x2="664" y2="26.0" stroke="var(--grid)" stroke-width="1"/><text x="44" y="29.5" text-anchor="end" class="tick">6</text><path d="M54.0 246.0 v-176.8 q0 -4 4 -4 h8.4 q4 0 4 4 v176.8 z" fill="var(--series)" class="mark" data-tip="Unit 58 — act now: 4.93× baseline"/><text x="62.2" y="59.2" text-anchor="middle" class="dlabel">4.93×</text><path d="M74.4 246.0 v-176.4 q0 -4 4 -4 h8.4 q4 0 4 4 v176.4 z" fill="var(--series)" class="mark" data-tip="Unit 57 — act now: 4.92× baseline"/><path d="M94.8 246.0 v-155.9 q0 -4 4 -4 h8.4 q4 0 4 4 v155.9 z" fill="var(--series)" class="mark" data-tip="Unit 27 — act now: 4.36× baseline"/><path d="M115.2 246.0 v-105.3 q0 -4 4 -4 h8.4 q4 0 4 4 v105.3 z" fill="var(--series)" class="mark" data-tip="Unit 29 — act now: 2.98× baseline"/><path d="M135.6 246.0 v-104.2 q0 -4 4 -4 h8.4 q4 0 4 4 v104.2 z" fill="var(--series)" class="mark" data-tip="Unit 8 — act now: 2.95× baseline"/><path d="M156.0 246.0 v-94.6 q0 -4 4 -4 h8.4 q4 0 4 4 v94.6 z" fill="var(--series)" class="mark" data-tip="Unit 19 — act now: 2.69× baseline"/><path d="M176.4 246.0 v-71.9 q0 -4 4 -4 h8.4 q4 0 4 4 v71.9 z" fill="var(--series)" class="mark" data-tip="Unit 77 — act now: 2.07× baseline"/><path d="M196.8 246.0 v-81.1 q0 -4 4 -4 h8.4 q4 0 4 4 v81.1 z" fill="var(--series)" class="mark" data-tip="Unit 60 — watch: 2.32× baseline"/><path d="M217.2 246.0 v-74.5 q0 -4 4 -4 h8.4 q4 0 4 4 v74.5 z" fill="var(--series)" class="mark" data-tip="Unit 93 — watch: 2.14× baseline"/><path d="M237.6 246.0 v-63.5 q0 -4 4 -4 h8.4 q4 0 4 4 v63.5 z" fill="var(--series)" class="mark" data-tip="Unit 81 — watch: 1.84× baseline"/><path d="M258.0 246.0 v-59.4 q0 -4 4 -4 h8.4 q4 0 4 4 v59.4 z" fill="var(--series)" class="mark" data-tip="Unit 80 — watch: 1.73× baseline"/><path d="M278.4 246.0 v-52.5 q0 -4 4 -4 h8.4 q4 0 4 4 v52.5 z" fill="var(--series)" class="mark" data-tip="Unit 62 — watch: 1.54× baseline"/><path d="M298.8 246.0 v-47.7 q0 -4 4 -4 h8.4 q4 0 4 4 v47.7 z" fill="var(--series)" class="mark" data-tip="Unit 51 — watch: 1.41× baseline"/><path d="M319.2 246.0 v-44.4 q0 -4 4 -4 h8.4 q4 0 4 4 v44.4 z" fill="var(--series)" class="mark" data-tip="Unit 22 — watch: 1.32× baseline"/><path d="M339.6 246.0 v-44.0 q0 -4 4 -4 h8.4 q4 0 4 4 v44.0 z" fill="var(--series)" class="mark" data-tip="Unit 53 — watch: 1.31× baseline"/><path d="M360.0 246.0 v-41.5 q0 -4 4 -4 h8.4 q4 0 4 4 v41.5 z" fill="var(--series)" class="mark" data-tip="Unit 28 — watch: 1.24× baseline"/><path d="M380.4 246.0 v-33.8 q0 -4 4 -4 h8.4 q4 0 4 4 v33.8 z" fill="var(--series)" class="mark" data-tip="Unit 26 — watch: 1.03× baseline"/><path d="M400.8 246.0 v-77.4 q0 -4 4 -4 h8.4 q4 0 4 4 v77.4 z" fill="var(--axis)" class="mark" data-tip="Unit 3 — healthy: 2.22× baseline"/><path d="M421.2 246.0 v-68.2 q0 -4 4 -4 h8.4 q4 0 4 4 v68.2 z" fill="var(--axis)" class="mark" data-tip="Unit 34 — healthy: 1.97× baseline"/><path d="M441.6 246.0 v-56.9 q0 -4 4 -4 h8.4 q4 0 4 4 v56.9 z" fill="var(--axis)" class="mark" data-tip="Unit 100 — healthy: 1.66× baseline"/><path d="M462.0 246.0 v-50.3 q0 -4 4 -4 h8.4 q4 0 4 4 v50.3 z" fill="var(--axis)" class="mark" data-tip="Unit 72 — healthy: 1.48× baseline"/><path d="M482.4 246.0 v-41.5 q0 -4 4 -4 h8.4 q4 0 4 4 v41.5 z" fill="var(--axis)" class="mark" data-tip="Unit 98 — healthy: 1.24× baseline"/><path d="M502.8 246.0 v-41.1 q0 -4 4 -4 h8.4 q4 0 4 4 v41.1 z" fill="var(--axis)" class="mark" data-tip="Unit 82 — healthy: 1.23× baseline"/><path d="M523.2 246.0 v-40.0 q0 -4 4 -4 h8.4 q4 0 4 4 v40.0 z" fill="var(--axis)" class="mark" data-tip="Unit 5 — healthy: 1.2× baseline"/><path d="M543.6 246.0 v-37.8 q0 -4 4 -4 h8.4 q4 0 4 4 v37.8 z" fill="var(--axis)" class="mark" data-tip="Unit 38 — healthy: 1.14× baseline"/><path d="M564.0 246.0 v-35.2 q0 -4 4 -4 h8.4 q4 0 4 4 v35.2 z" fill="var(--axis)" class="mark" data-tip="Unit 52 — healthy: 1.07× baseline"/><path d="M584.4 246.0 v-32.7 q0 -4 4 -4 h8.4 q4 0 4 4 v32.7 z" fill="var(--axis)" class="mark" data-tip="Unit 25 — healthy: 1.0× baseline"/><path d="M604.8 246.0 v-31.6 q0 -4 4 -4 h8.4 q4 0 4 4 v31.6 z" fill="var(--axis)" class="mark" data-tip="Unit 79 — healthy: 0.97× baseline"/><path d="M625.2 246.0 v-30.8 q0 -4 4 -4 h8.4 q4 0 4 4 v30.8 z" fill="var(--axis)" class="mark" data-tip="Unit 43 — healthy: 0.95× baseline"/><path d="M645.6 246.0 v-15.4 q0 -4 4 -4 h8.4 q4 0 4 4 v15.4 z" fill="var(--axis)" class="mark" data-tip="Unit 95 — healthy: 0.53× baseline"/><line x1="52" y1="246" x2="664" y2="246" stroke="var(--axis)" stroke-width="1"/><text x="358" y="280" text-anchor="middle" class="axis-title">Machines in attention-rank order (colored = needs attention, gray = healthy)</text></svg>
+</div>
+
+
+<div class="card unit act_now">
+  <div class="flag">Act now</div>
+  <h2>#1 &nbsp;Unit 58</h2>
+  <p class="headline">Unit 58 shows a fleet-wide rotation-domain anomaly that fired 11 cycles ago and is still climbing.</p>
+  <ul class="facts"><li><span class="k">Surprise now:</span> 4.93× its learned baseline (120 cycles observed)</li><li><span class="k">Firing since:</span> cycle 109 (11 cycles ago)</li><li><span class="k">Loudest sense:</span> rotation (2.56× baseline)</li><li><span class="k">Fleet context at firing:</span> percentile 0.77 (fleet wide)</li><li><span class="k">Already triaged:</span> escalate — work order awaiting approval</li></ul>
+  <svg viewBox="0 0 300 64" class="spark" role="img" aria-label="Surprise trajectory over observed life, 1.29 to 3.36"><polyline points="8.0,53.1 35.8,49.4 63.6,52.2 91.3,45.4 119.1,48.9 146.9,54.4 174.7,56.0 202.4,50.3 230.2,30.7 258.0,8.0" fill="none" stroke="var(--series)" stroke-width="2" stroke-linejoin="round"/><circle cx="258.0" cy="8.0" r="3" fill="var(--series)"/><text x="264.0" y="12.0" class="dlabel">3.36×</text></svg><p class="sub" style="font-size:12px">Surprise over the life observed so far (earliest → latest tenth)</p>
+  <p>Rotation domain is dominant at 4.93x baseline now, up from 2.03x at firing (cycle 109, 77th percentile fleet-wide); the surprise signal continued rising through the most recent segments (segment means 1.421, 2.319, 3.359).</p>
+  <div class="action"><strong>Recommended:</strong>
+  Prioritize inspection of rotation-related components; already triaged: escalate — work order awaiting approval.</div>
+</div>
+<div class="card unit act_now">
+  <div class="flag">Act now</div>
+  <h2>#2 &nbsp;Unit 57</h2>
+  <p class="headline">Unit 57 shows a fleet-wide reconstruction-domain anomaly that fired 20 cycles ago and continues to rise sharply.</p>
+  <ul class="facts"><li><span class="k">Surprise now:</span> 4.92× its learned baseline (120 cycles observed)</li><li><span class="k">Firing since:</span> cycle 100 (20 cycles ago)</li><li><span class="k">Loudest sense:</span> reconstruction (4.68× baseline)</li><li><span class="k">Fleet context at firing:</span> percentile 0.75 (fleet wide)</li><li><span class="k">Already triaged:</span> monitor — work order awaiting approval</li></ul>
+  <svg viewBox="0 0 300 64" class="spark" role="img" aria-label="Surprise trajectory over observed life, 1.29 to 5.25"><polyline points="8.0,54.2 35.8,56.0 63.6,49.3 91.3,53.4 119.1,51.9 146.9,45.4 174.7,50.4 202.4,48.6 230.2,35.7 258.0,8.0" fill="none" stroke="var(--series)" stroke-width="2" stroke-linejoin="round"/><circle cx="258.0" cy="8.0" r="3" fill="var(--series)"/><text x="264.0" y="12.0" class="dlabel">5.25×</text></svg><p class="sub" style="font-size:12px">Surprise over the life observed so far (earliest → latest tenth)</p>
+  <p>Reconstruction domain is dominant at 4.92x baseline now, up from 1.81x at firing (cycle 100, 75th percentile fleet-wide); trajectory shows a steep late rise from 2.874 to 5.25 across the last two segments.</p>
+  <div class="action"><strong>Recommended:</strong>
+  Schedule diagnostic review of sensors feeding the reconstruction signal; already triaged: monitor — flagged for periodic check.</div>
+</div>
+<div class="card unit act_now">
+  <div class="flag">Act now</div>
+  <h2>#3 &nbsp;Unit 27</h2>
+  <p class="headline">Unit 27 shows an isolated rotation-domain anomaly that fired 38 cycles ago and remains elevated.</p>
+  <ul class="facts"><li><span class="k">Surprise now:</span> 4.36× its learned baseline (120 cycles observed)</li><li><span class="k">Firing since:</span> cycle 82 (38 cycles ago)</li><li><span class="k">Loudest sense:</span> rotation (4.35× baseline)</li><li><span class="k">Fleet context at firing:</span> percentile 0.95 (isolated)</li><li><span class="k">Already triaged:</span> escalate — work order awaiting approval</li></ul>
+  <svg viewBox="0 0 300 64" class="spark" role="img" aria-label="Surprise trajectory over observed life, 1.38 to 4.54"><polyline points="8.0,56.0 35.8,55.3 63.6,55.5 91.3,54.8 119.1,39.7 146.9,49.0 174.7,39.8 202.4,39.5 230.2,27.2 258.0,8.0" fill="none" stroke="var(--series)" stroke-width="2" stroke-linejoin="round"/><circle cx="258.0" cy="8.0" r="3" fill="var(--series)"/><text x="264.0" y="12.0" class="dlabel">4.54×</text></svg><p class="sub" style="font-size:12px">Surprise over the life observed so far (earliest → latest tenth)</p>
+  <p>Rotation domain is dominant at 4.36x baseline now, up from 2.29x at firing (cycle 82, 95th percentile isolated event); segment means show a steady climb, reaching 3.275 then 4.538 in the final two segments.</p>
+  <div class="action"><strong>Recommended:</strong>
+  Prioritize inspection of rotation-related components; already triaged: escalate — work order awaiting approval.</div>
+</div>
+<div class="card unit act_now">
+  <div class="flag">Act now</div>
+  <h2>#4 &nbsp;Unit 29</h2>
+  <p class="headline">Unit 29 shows a fleet-wide reconstruction-domain anomaly that fired 14 cycles ago.</p>
+  <ul class="facts"><li><span class="k">Surprise now:</span> 2.98× its learned baseline (120 cycles observed)</li><li><span class="k">Firing since:</span> cycle 106 (14 cycles ago)</li><li><span class="k">Loudest sense:</span> reconstruction (2.09× baseline)</li><li><span class="k">Fleet context at firing:</span> percentile 0.63 (fleet wide)</li></ul>
+  <svg viewBox="0 0 300 64" class="spark" role="img" aria-label="Surprise trajectory over observed life, 1.26 to 2.59"><polyline points="8.0,56.0 35.8,51.0 63.6,48.8 91.3,48.8 119.1,53.7 146.9,48.9 174.7,45.8 202.4,45.3 230.2,17.3 258.0,8.0" fill="none" stroke="var(--series)" stroke-width="2" stroke-linejoin="round"/><circle cx="258.0" cy="8.0" r="3" fill="var(--series)"/><text x="264.0" y="12.0" class="dlabel">2.59×</text></svg><p class="sub" style="font-size:12px">Surprise over the life observed so far (earliest → latest tenth)</p>
+  <p>Reconstruction domain is dominant at 2.98x baseline now, up from 1.62x at firing (cycle 106, 63rd percentile fleet-wide); the signal is not confirmed as continuing to rise, though the latest segment mean reached 2.589 after 2.33.</p>
+  <div class="action"><strong>Recommended:</strong>
+  Schedule a diagnostic inspection to clarify whether the reconstruction anomaly is stabilizing or progressing.</div>
+</div>
+<div class="card unit act_now">
+  <div class="flag">Act now</div>
+  <h2>#5 &nbsp;Unit 8</h2>
+  <p class="headline">Unit 8 shows an isolated reconstruction-domain anomaly that fired 41 cycles ago and continues to rise.</p>
+  <ul class="facts"><li><span class="k">Surprise now:</span> 2.95× its learned baseline (120 cycles observed)</li><li><span class="k">Firing since:</span> cycle 79 (41 cycles ago)</li><li><span class="k">Loudest sense:</span> reconstruction (4.42× baseline)</li><li><span class="k">Fleet context at firing:</span> percentile 0.96 (isolated)</li></ul>
+  <svg viewBox="0 0 300 64" class="spark" role="img" aria-label="Surprise trajectory over observed life, 2.15 to 4.83"><polyline points="8.0,50.2 35.8,55.0 63.6,54.0 91.3,56.0 119.1,44.7 146.9,41.0 174.7,40.5 202.4,33.2 230.2,14.2 258.0,8.0" fill="none" stroke="var(--series)" stroke-width="2" stroke-linejoin="round"/><circle cx="258.0" cy="8.0" r="3" fill="var(--series)"/><text x="264.0" y="12.0" class="dlabel">4.83×</text></svg><p class="sub" style="font-size:12px">Surprise over the life observed so far (earliest → latest tenth)</p>
+  <p>Reconstruction domain is dominant at 2.95x baseline now, up from 1.77x at firing (cycle 79, 96th percentile isolated event); trajectory climbs steadily, reaching 4.434 then 4.83 in the final two segments.</p>
+  <div class="action"><strong>Recommended:</strong>
+  Prioritize inspection of components tied to the reconstruction signal given the sustained isolated deviation.</div>
+</div>
+<div class="card unit act_now">
+  <div class="flag">Act now</div>
+  <h2>#6 &nbsp;Unit 19</h2>
+  <p class="headline">Unit 19 shows an isolated reconstruction-domain anomaly that fired 27 cycles ago and continues to rise.</p>
+  <ul class="facts"><li><span class="k">Surprise now:</span> 2.69× its learned baseline (120 cycles observed)</li><li><span class="k">Firing since:</span> cycle 93 (27 cycles ago)</li><li><span class="k">Loudest sense:</span> reconstruction (4.44× baseline)</li><li><span class="k">Fleet context at firing:</span> percentile 0.84 (isolated)</li></ul>
+  <svg viewBox="0 0 300 64" class="spark" role="img" aria-label="Surprise trajectory over observed life, 1.81 to 4.75"><polyline points="8.0,55.2 35.8,56.0 63.6,51.0 91.3,56.0 119.1,47.8 146.9,48.5 174.7,36.2 202.4,23.8 230.2,17.3 258.0,8.0" fill="none" stroke="var(--series)" stroke-width="2" stroke-linejoin="round"/><circle cx="258.0" cy="8.0" r="3" fill="var(--series)"/><text x="264.0" y="12.0" class="dlabel">4.75×</text></svg><p class="sub" style="font-size:12px">Surprise over the life observed so far (earliest → latest tenth)</p>
+  <p>Reconstruction domain is dominant at 2.69x baseline now, up from 1.66x at firing (cycle 93, 84th percentile isolated event); segment means rise steadily, reaching 4.174 then 4.753 in the final two segments.</p>
+  <div class="action"><strong>Recommended:</strong>
+  Schedule inspection of reconstruction-related sensing/components to confirm root cause.</div>
+</div>
+<div class="card unit act_now">
+  <div class="flag">Act now</div>
+  <h2>#7 &nbsp;Unit 77</h2>
+  <p class="headline">Unit 77 shows an isolated pressure-domain anomaly that fired 22 cycles ago and continues to rise.</p>
+  <ul class="facts"><li><span class="k">Surprise now:</span> 2.07× its learned baseline (120 cycles observed)</li><li><span class="k">Firing since:</span> cycle 98 (22 cycles ago)</li><li><span class="k">Loudest sense:</span> pressure (2.9× baseline)</li><li><span class="k">Fleet context at firing:</span> percentile 0.97 (isolated)</li></ul>
+  <svg viewBox="0 0 300 64" class="spark" role="img" aria-label="Surprise trajectory over observed life, 1.46 to 3.57"><polyline points="8.0,52.0 35.8,37.9 63.6,46.2 91.3,56.0 119.1,47.8 146.9,45.4 174.7,38.6 202.4,34.9 230.2,11.3 258.0,8.0" fill="none" stroke="var(--series)" stroke-width="2" stroke-linejoin="round"/><circle cx="258.0" cy="8.0" r="3" fill="var(--series)"/><text x="264.0" y="12.0" class="dlabel">3.57×</text></svg><p class="sub" style="font-size:12px">Surprise over the life observed so far (earliest → latest tenth)</p>
+  <p>Pressure domain is dominant at 2.07x baseline now, down from 2.88x at firing (cycle 98, 97th percentile isolated event); segment means climbed to 3.411 then 3.571 in the final two segments, though the current ratio is lower than at firing.</p>
+  <div class="action"><strong>Recommended:</strong>
+  Inspect pressure system components to assess whether the anomaly is easing or persisting.</div>
+</div>
+<div class="card unit watch">
+  <div class="flag">Watch</div>
+  <h2>#8 &nbsp;Unit 60</h2>
+  <p class="headline">Unit 60 shows a recent fleet-wide rotation-domain deviation that fired just 3 cycles ago.</p>
+  <ul class="facts"><li><span class="k">Surprise now:</span> 2.32× its learned baseline (120 cycles observed)</li><li><span class="k">Firing since:</span> cycle 117 (3 cycles ago)</li><li><span class="k">Loudest sense:</span> rotation (1.8× baseline)</li><li><span class="k">Fleet context at firing:</span> percentile 0.65 (fleet wide)</li></ul>
+  <svg viewBox="0 0 300 64" class="spark" role="img" aria-label="Surprise trajectory over observed life, 1.55 to 2.27"><polyline points="8.0,42.4 35.8,56.0 63.6,49.0 91.3,47.2 119.1,46.3 146.9,47.2 174.7,38.2 202.4,37.6 230.2,32.1 258.0,8.0" fill="none" stroke="var(--series)" stroke-width="2" stroke-linejoin="round"/><circle cx="258.0" cy="8.0" r="3" fill="var(--series)"/><text x="264.0" y="12.0" class="dlabel">2.27×</text></svg><p class="sub" style="font-size:12px">Surprise over the life observed so far (earliest → latest tenth)</p>
+  <p>Rotation domain ratio now 2.32x baseline, up from 1.78x at firing (cycle 117, 65th percentile fleet-wide); the pattern is too recent (3 cycles since firing) to confirm trend direction.</p>
+  <div class="action"><strong>Recommended:</strong>
+  Monitor closely over the next several cycles and flag for inspection if the ratio continues to rise.</div>
+</div>
+<div class="card unit watch">
+  <div class="flag">Watch</div>
+  <h2>#9 &nbsp;Unit 93</h2>
+  <p class="headline">Unit 93 shows a fleet-wide thermal-domain deviation that fired 11 cycles ago.</p>
+  <ul class="facts"><li><span class="k">Surprise now:</span> 2.14× its learned baseline (120 cycles observed)</li><li><span class="k">Firing since:</span> cycle 109 (11 cycles ago)</li><li><span class="k">Loudest sense:</span> thermal (1.85× baseline)</li><li><span class="k">Fleet context at firing:</span> percentile 0.71 (fleet wide)</li></ul>
+  <svg viewBox="0 0 300 64" class="spark" role="img" aria-label="Surprise trajectory over observed life, 1.41 to 2.6"><polyline points="8.0,50.6 35.8,47.3 63.6,50.8 91.3,54.1 119.1,39.5 146.9,42.6 174.7,56.0 202.4,51.8 230.2,45.7 258.0,8.0" fill="none" stroke="var(--series)" stroke-width="2" stroke-linejoin="round"/><circle cx="258.0" cy="8.0" r="3" fill="var(--series)"/><text x="264.0" y="12.0" class="dlabel">2.6×</text></svg><p class="sub" style="font-size:12px">Surprise over the life observed so far (earliest → latest tenth)</p>
+  <p>Thermal domain ratio now 2.14x baseline, up from 1.85x at firing (cycle 109, 71st percentile fleet-wide); the signal is not confirmed as continuing to rise, though the latest segment mean reached 2.595 after 1.547.</p>
+  <div class="action"><strong>Recommended:</strong>
+  Add to next inspection round to check thermal sensors and related components.</div>
+</div>
+<div class="card unit watch">
+  <div class="flag">Watch</div>
+  <h2>#10 &nbsp;Unit 81</h2>
+  <p class="headline">Unit 81 shows a fleet-wide thermal-domain deviation that fired 6 cycles ago and appears to be rising.</p>
+  <ul class="facts"><li><span class="k">Surprise now:</span> 1.84× its learned baseline (120 cycles observed)</li><li><span class="k">Firing since:</span> cycle 114 (6 cycles ago)</li><li><span class="k">Loudest sense:</span> thermal (1.64× baseline)</li><li><span class="k">Fleet context at firing:</span> percentile 0.55 (fleet wide)</li></ul>
+  <svg viewBox="0 0 300 64" class="spark" role="img" aria-label="Surprise trajectory over observed life, 1.53 to 2.08"><polyline points="8.0,38.6 35.8,56.0 63.6,47.4 91.3,49.0 119.1,53.2 146.9,52.9 174.7,17.2 202.4,36.2 230.2,43.5 258.0,8.0" fill="none" stroke="var(--series)" stroke-width="2" stroke-linejoin="round"/><circle cx="258.0" cy="8.0" r="3" fill="var(--series)"/><text x="264.0" y="12.0" class="dlabel">2.08×</text></svg><p class="sub" style="font-size:12px">Surprise over the life observed so far (earliest → latest tenth)</p>
+  <p>Thermal domain ratio now 1.84x baseline, up from 1.53x at firing (cycle 114, 55th percentile fleet-wide); segment means show a recent uptick to 2.082 after 1.447.</p>
+  <div class="action"><strong>Recommended:</strong>
+  Monitor thermal readings closely and schedule inspection if the rise continues.</div>
+</div>
+<div class="card unit watch">
+  <div class="flag">Watch</div>
+  <h2>#11 &nbsp;Unit 80</h2>
+  <p class="headline">Unit 80 shows an isolated rotation-domain anomaly that fired 46 cycles ago and has since eased somewhat.</p>
+  <ul class="facts"><li><span class="k">Surprise now:</span> 1.73× its learned baseline (120 cycles observed)</li><li><span class="k">Firing since:</span> cycle 74 (46 cycles ago)</li><li><span class="k">Loudest sense:</span> rotation (2.2× baseline)</li><li><span class="k">Fleet context at firing:</span> percentile 0.99 (isolated)</li></ul>
+  <svg viewBox="0 0 300 64" class="spark" role="img" aria-label="Surprise trajectory over observed life, 2.09 to 2.5"><polyline points="8.0,31.2 35.8,47.6 63.6,54.5 91.3,56.0 119.1,43.4 146.9,53.9 174.7,28.6 202.4,49.8 230.2,38.6 258.0,8.0" fill="none" stroke="var(--series)" stroke-width="2" stroke-linejoin="round"/><circle cx="258.0" cy="8.0" r="3" fill="var(--series)"/><text x="264.0" y="12.0" class="dlabel">2.5×</text></svg><p class="sub" style="font-size:12px">Surprise over the life observed so far (earliest → latest tenth)</p>
+  <p>Rotation domain ratio now 1.73x baseline, down from 2.11x at firing (cycle 74, 99th percentile isolated event); the dominant-domain ratio is 2.2x baseline, and the signal is not confirmed as continuing to rise, though segment means reached 1.964 then 2.501 recently.</p>
+  <div class="action"><strong>Recommended:</strong>
+  Perform a diagnostic check to confirm whether the rotation anomaly has resolved or is still present.</div>
+</div>
+<div class="card unit watch">
+  <div class="flag">Watch</div>
+  <h2>#12 &nbsp;Unit 62</h2>
+  <p class="headline">Unit 62 shows an isolated pressure-domain anomaly that fired 31 cycles ago and has largely settled.</p>
+  <ul class="facts"><li><span class="k">Surprise now:</span> 1.54× its learned baseline (120 cycles observed)</li><li><span class="k">Firing since:</span> cycle 89 (31 cycles ago)</li><li><span class="k">Loudest sense:</span> pressure (3.52× baseline)</li><li><span class="k">Fleet context at firing:</span> percentile 0.9 (isolated)</li></ul>
+  <svg viewBox="0 0 300 64" class="spark" role="img" aria-label="Surprise trajectory over observed life, 1.81 to 4.05"><polyline points="8.0,56.0 35.8,50.6 63.6,53.8 91.3,49.0 119.1,47.6 146.9,45.8 174.7,44.6 202.4,32.7 230.2,34.1 258.0,8.0" fill="none" stroke="var(--series)" stroke-width="2" stroke-linejoin="round"/><circle cx="258.0" cy="8.0" r="3" fill="var(--series)"/><text x="264.0" y="12.0" class="dlabel">4.05×</text></svg><p class="sub" style="font-size:12px">Surprise over the life observed so far (earliest → latest tenth)</p>
+  <p>Pressure domain ratio now 1.54x baseline, down slightly from 1.63x at firing (cycle 89, 90th percentile isolated event); the dominant-domain ratio is 3.52x baseline, with segment means peaking at 4.05 in the final segment.</p>
+  <div class="action"><strong>Recommended:</strong>
+  Verify current pressure readings during next routine check to confirm the anomaly has subsided.</div>
+</div>
+<div class="card unit watch">
+  <div class="flag">Watch</div>
+  <h2>#13 &nbsp;Unit 51</h2>
+  <p class="headline">Unit 51 shows a recent fleet-wide rotation-domain deviation that fired 4 cycles ago.</p>
+  <ul class="facts"><li><span class="k">Surprise now:</span> 1.41× its learned baseline (120 cycles observed)</li><li><span class="k">Firing since:</span> cycle 116 (4 cycles ago)</li><li><span class="k">Loudest sense:</span> rotation (2.78× baseline)</li><li><span class="k">Fleet context at firing:</span> percentile 0.71 (fleet wide)</li></ul>
+  <svg viewBox="0 0 300 64" class="spark" role="img" aria-label="Surprise trajectory over observed life, 2.12 to 2.78"><polyline points="8.0,29.7 35.8,56.0 63.6,44.3 91.3,28.2 119.1,40.1 146.9,28.7 174.7,38.2 202.4,24.7 230.2,23.6 258.0,8.0" fill="none" stroke="var(--series)" stroke-width="2" stroke-linejoin="round"/><circle cx="258.0" cy="8.0" r="3" fill="var(--series)"/><text x="264.0" y="12.0" class="dlabel">2.78×</text></svg><p class="sub" style="font-size:12px">Surprise over the life observed so far (earliest → latest tenth)</p>
+  <p>Rotation domain ratio now 1.41x baseline, down from 1.67x at firing (cycle 116, 71st percentile fleet-wide); the dominant-domain ratio is 2.78x baseline, and the pattern is too recent (4 cycles since firing) to confirm trend.</p>
+  <div class="action"><strong>Recommended:</strong>
+  Continue monitoring; no inspection needed yet unless ratio rises further.</div>
+</div>
+<div class="card unit watch">
+  <div class="flag">Watch</div>
+  <h2>#14 &nbsp;Unit 22</h2>
+  <p class="headline">Unit 22 shows a recent isolated pressure-domain deviation that fired 3 cycles ago and has eased.</p>
+  <ul class="facts"><li><span class="k">Surprise now:</span> 1.32× its learned baseline (120 cycles observed)</li><li><span class="k">Firing since:</span> cycle 117 (3 cycles ago)</li><li><span class="k">Loudest sense:</span> pressure (3.75× baseline)</li><li><span class="k">Fleet context at firing:</span> percentile 0.87 (isolated)</li></ul>
+  <svg viewBox="0 0 300 64" class="spark" role="img" aria-label="Surprise trajectory over observed life, 2.12 to 4.24"><polyline points="8.0,49.5 35.8,47.5 63.6,56.0 91.3,50.7 119.1,39.8 146.9,44.9 174.7,41.8 202.4,38.3 230.2,37.7 258.0,8.0" fill="none" stroke="var(--series)" stroke-width="2" stroke-linejoin="round"/><circle cx="258.0" cy="8.0" r="3" fill="var(--series)"/><text x="264.0" y="12.0" class="dlabel">4.24×</text></svg><p class="sub" style="font-size:12px">Surprise over the life observed so far (earliest → latest tenth)</p>
+  <p>Pressure domain ratio now 1.32x baseline, down from 1.82x at firing (cycle 117, 87th percentile isolated event); the dominant-domain ratio is 3.75x baseline, with segment means spiking to 4.241 in the final segment.</p>
+  <div class="action"><strong>Recommended:</strong>
+  Monitor pressure readings for a few more cycles before deciding on inspection.</div>
+</div>
+<div class="card unit watch">
+  <div class="flag">Watch</div>
+  <h2>#15 &nbsp;Unit 53</h2>
+  <p class="headline">Unit 53 shows a fleet-wide rotation-domain deviation that fired 10 cycles ago and has eased.</p>
+  <ul class="facts"><li><span class="k">Surprise now:</span> 1.31× its learned baseline (120 cycles observed)</li><li><span class="k">Firing since:</span> cycle 110 (10 cycles ago)</li><li><span class="k">Loudest sense:</span> rotation (2.2× baseline)</li><li><span class="k">Fleet context at firing:</span> percentile 0.72 (fleet wide)</li></ul>
+  <svg viewBox="0 0 300 64" class="spark" role="img" aria-label="Surprise trajectory over observed life, 1.15 to 2.21"><polyline points="8.0,56.0 35.8,54.0 63.6,37.9 91.3,40.2 119.1,36.7 146.9,44.9 174.7,36.0 202.4,34.3 230.2,20.8 258.0,8.0" fill="none" stroke="var(--series)" stroke-width="2" stroke-linejoin="round"/><circle cx="258.0" cy="8.0" r="3" fill="var(--series)"/><text x="264.0" y="12.0" class="dlabel">2.21×</text></svg><p class="sub" style="font-size:12px">Surprise over the life observed so far (earliest → latest tenth)</p>
+  <p>Rotation domain ratio now 1.31x baseline, down from 1.97x at firing (cycle 110, 72nd percentile fleet-wide); the dominant-domain ratio is 2.2x baseline, with segment means reaching 1.929 then 2.21 recently.</p>
+  <div class="action"><strong>Recommended:</strong>
+  Continue routine monitoring; escalate only if ratio rises again.</div>
+</div>
+<div class="card unit watch">
+  <div class="flag">Watch</div>
+  <h2>#16 &nbsp;Unit 28</h2>
+  <p class="headline">Unit 28 shows an isolated rotation-domain anomaly that fired 28 cycles ago and has largely settled.</p>
+  <ul class="facts"><li><span class="k">Surprise now:</span> 1.24× its learned baseline (120 cycles observed)</li><li><span class="k">Firing since:</span> cycle 92 (28 cycles ago)</li><li><span class="k">Loudest sense:</span> rotation (1.72× baseline)</li><li><span class="k">Fleet context at firing:</span> percentile 0.92 (isolated)</li></ul>
+  <svg viewBox="0 0 300 64" class="spark" role="img" aria-label="Surprise trajectory over observed life, 1.87 to 1.94"><polyline points="8.0,19.9 35.8,47.0 63.6,12.1 91.3,39.9 119.1,56.0 146.9,50.6 174.7,40.9 202.4,8.0 230.2,19.9 258.0,14.1" fill="none" stroke="var(--series)" stroke-width="2" stroke-linejoin="round"/><circle cx="258.0" cy="14.1" r="3" fill="var(--series)"/><text x="264.0" y="18.1" class="dlabel">1.94×</text></svg><p class="sub" style="font-size:12px">Surprise over the life observed so far (earliest → latest tenth)</p>
+  <p>Rotation domain ratio now 1.24x baseline, down from 2.09x at firing (cycle 92, 92nd percentile isolated event); the dominant-domain ratio is 1.72x baseline, with segment means at 1.871 then 1.936 in the final two segments.</p>
+  <div class="action"><strong>Recommended:</strong>
+  Confirm resolution with a routine check; no urgent inspection needed.</div>
+</div>
+<div class="card unit watch">
+  <div class="flag">Watch</div>
+  <h2>#17 &nbsp;Unit 26</h2>
+  <p class="headline">Unit 26 shows a fleet-wide rotation-domain deviation that fired 6 cycles ago and has largely settled.</p>
+  <ul class="facts"><li><span class="k">Surprise now:</span> 1.03× its learned baseline (120 cycles observed)</li><li><span class="k">Firing since:</span> cycle 114 (6 cycles ago)</li><li><span class="k">Loudest sense:</span> rotation (1.71× baseline)</li><li><span class="k">Fleet context at firing:</span> percentile 0.65 (fleet wide)</li><li><span class="k">Already triaged:</span> escalate — work order awaiting approval</li></ul>
+  <svg viewBox="0 0 300 64" class="spark" role="img" aria-label="Surprise trajectory over observed life, 1.48 to 2.16"><polyline points="8.0,53.1 35.8,42.6 63.6,56.0 91.3,21.5 119.1,38.6 146.9,31.3 174.7,8.0 202.4,15.9 230.2,32.2 258.0,12.1" fill="none" stroke="var(--series)" stroke-width="2" stroke-linejoin="round"/><circle cx="258.0" cy="12.1" r="3" fill="var(--series)"/><text x="264.0" y="16.1" class="dlabel">2.16×</text></svg><p class="sub" style="font-size:12px">Surprise over the life observed so far (earliest → latest tenth)</p>
+  <p>Rotation domain ratio now 1.03x baseline, down from 1.7x at firing (cycle 114, 65th percentile fleet-wide); the dominant-domain ratio is 1.71x baseline, with segment means at 1.823 then 2.156 in the final two segments.</p>
+  <div class="action"><strong>Recommended:</strong>
+  Review prior escalation triage status and confirm current condition with a routine check; already triaged: escalate — work order awaiting approval.</div>
+</div>
+
+<div class="card"><h2>Healthy</h2>
+<p class="healthy-list">unit 3, unit 34, unit 100, unit 72, unit 98, unit 82, unit 5, unit 38, unit 52, unit 25, unit 79, unit 43, unit 95</p></div>
+
+<div class="card caveat"><h2>Warnings</h2><ul><li>Unit 26 carries a prior triage record referencing firing_cycle 138, which differs from the current table&#x27;s firing_cycle of 114 for this unit; this discrepancy should be reconciled before acting.</li><li>Ratios for units 8, 19, 27, 57, and 58 combine sustained rises with recent readings that remain far above baseline; the report reflects verbatim table values only and does not project future behavior.</li></ul></div>
+
+<footer class="rep">
+  Generated by the SENTYS fleet copilot. The ranking and every number
+  above are computed by code from each machine's unsupervised surprise signal
+  — no failure labels, no manual thresholds per machine. The narrative was
+  mechanically checked against those numbers before release: a claim that
+  cites a number not present in the evidence table fails the report.
+  Recommendations are advisory only and require human approval.
+</footer>
+
+</div><script>
+document.addEventListener('DOMContentLoaded',function(){
+  var tip=document.getElementById('tip');
+  document.querySelectorAll('.mark').forEach(function(m){
+    m.addEventListener('mousemove',function(e){
+      tip.textContent=m.getAttribute('data-tip');
+      tip.style.display='block';
+      tip.style.left=(e.clientX+12)+'px';
+      tip.style.top=(e.clientY-30)+'px';
+    });
+    m.addEventListener('mouseleave',function(){tip.style.display='none';});
+  });
+});
+</script></body></html>
