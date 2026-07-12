@@ -217,9 +217,11 @@ void main(){
       const tm = inHero
         ? HERO_MODES[Math.floor((t + DRIFT_PHASE) / 9) % HERO_MODES.length]
         : tgtStop.mode;
-      if (tm[0] !== st.modeB[0] || tm[1] !== st.modeB[1]){
-        st.modeA = st.mix > .5 ? st.modeB : st.modeA;
-        st.modeB = tm; st.mix = 0;
+      // a new morph may only START from a settled pattern — an interrupted
+      // blend can't be re-based (the shader holds two modes), and re-basing
+      // mid-flight is a visible snap. Pending targets wait a beat instead.
+      if (st.mix >= 1 && (tm[0] !== st.modeB[0] || tm[1] !== st.modeB[1])){
+        st.modeA = st.modeB; st.modeB = tm; st.mix = 0;
       }
       // hero morphs are languid (the breathing); section changes stay brisk
       st.mix = Math.min(1, st.mix + (inHero ? .0045 : .012));
@@ -459,11 +461,13 @@ void main(){
     const octx = organCv.getContext('2d');
     const ostate = document.getElementById('ostate');
     const osense = document.getElementById('osense');
-    const GANG = { x:.175, y:.44 };
+    // ganglion sits HIGH (afferent pathways climb, as in the original
+    // Afferent concept): most fibers rise toward it and pulses travel upward
+    const GANG = { x:.315, y:.16 };
     const SENSORS = [
-      { x:.450, y:.385, sense:'a. rotation', key:'rotation', lx:-12, ly:-24, align:'right', ph:0   },
+      { x:.450, y:.385, sense:'a. rotation', key:'rotation', lx:-14, ly: 20, align:'right', ph:0   },
       { x:.712, y:.205, sense:'b. thermal',  key:'thermal',  lx:-12, ly:-14, align:'right', ph:2.1 },
-      { x:.752, y:.085, sense:'c. pressure', key:'pressure', lx:-20, ly:  3, align:'right', ph:4.2 },
+      { x:.752, y:.085, sense:'c. pressure', key:'pressure', lx:-12, ly: -6, align:'right', ph:4.2 },
       { x:.700, y:.890, sense:'d. flow',     key:'flow',     lx:-16, ly: 26, align:'right', ph:5.6 },
     ];
     let W, H, fibers = [];
@@ -559,36 +563,40 @@ void main(){
       return;
     }
 
-    // the surprise fires ONCE per visit, ~1.6s after the plate first docks
-    // into view; afterwards the organ rests at healthy. Silence is the default.
-    let armedAt = null, surpriseDone = false;
-    const SURPRISE_FI = 0; // rotation — the same sense that speaks in the story
-    function surpriseEnv(now){
-      if (surpriseDone || armedAt === null) return 0;
-      const local = now - armedAt - 1600;
-      if (local < 0) return 0;
-      if (local > 3500){ surpriseDone = true; return 0; }
-      return Math.sin(local/3500*Math.PI);
+    // surprises recur while the figure is watched: the first ~1.6s after it
+    // docks into view, then one sense at a time every ~14s of VISIBLE time
+    // (the clock stops when the organ scrolls away — it never fires unseen)
+    let vt = 0, lastNow = 0, needSync = false;
+    const SUR_LEN = 3500, SUR_PERIOD = 14000, SUR_FIRST = 1600, SUR_LATER = 8500;
+    function surpriseState(){
+      const k = Math.floor(vt / SUR_PERIOD);
+      const local = vt - k*SUR_PERIOD;
+      const start = k === 0 ? SUR_FIRST : SUR_LATER;
+      const fi = k % SENSORS.length;
+      const env = (local > start && local < start + SUR_LEN)
+        ? Math.sin((local - start)/SUR_LEN*Math.PI) : 0;
+      return { fi, env };
     }
 
     let running = false, rafo = 0;
     function frame(now){
+      if (needSync){ lastNow = now; needSync = false; }
+      vt += Math.min(now - lastNow, 100); lastNow = now;
       octx.clearRect(0,0,W,H);
-      const env = surpriseEnv(now);
-      drawFibers(now, SURPRISE_FI, env);
-      drawGanglion(now, env);
-      const active = env > .1;
+      const s = surpriseState();
+      drawFibers(now, s.fi, s.env);
+      drawGanglion(now, s.env);
+      const active = s.env > .1;
       ostate.classList.toggle('surprised', active);
       osense.textContent = active
-        ? SENSORS[SURPRISE_FI].key + ' · surprised'
+        ? SENSORS[s.fi].key + ' · surprised'
         : 'all senses within healthy range';
       rafo = running ? requestAnimationFrame(frame) : 0;
     }
     new IntersectionObserver(es => {
       const vis = es[0].isIntersecting;
       if (vis && !running){
-        running = true;
-        if (armedAt === null) armedAt = performance.now();
+        running = true; needSync = true;
         rafo = requestAnimationFrame(frame);
       }
       if (!vis && running){ running = false; cancelAnimationFrame(rafo); }
