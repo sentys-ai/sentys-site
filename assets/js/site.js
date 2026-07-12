@@ -182,9 +182,9 @@ void main(){
     if (voiceText) voiceText.textContent = IDLE_MSG;
 
     let raf = 0;
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden && !raf) raf = requestAnimationFrame(frame);
-    });
+    const wake = () => { if (!raf && !document.hidden) raf = requestAnimationFrame(frame); };
+    document.addEventListener('visibilitychange', wake);
+    addEventListener('scroll', wake, { passive:true });
 
     function pickStop(){
       const mid = innerHeight * .5;
@@ -253,7 +253,16 @@ void main(){
       gl.uniform1f(U.uDim, st.dim);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
-      raf = requestAnimationFrame(frame);
+      // the instrument sleeps: freeze in reading sections once settled.
+      // it wakes on scroll, and stays awake only where something is felt
+      // (the hero's drift cycle, the story's live surprise).
+      const settled =
+        Math.abs(st.dim - tgtStop.dim) < .004 && st.mix > .995 && st.drift < .005 &&
+        Math.abs(st.center[0] - tgtStop.center[0]) < .002 &&
+        Math.abs(st.center[1] - tgtStop.center[1]) < .002;
+      const active = tgtStop.hero || storyDrift !== null;
+      if (active || !settled) raf = requestAnimationFrame(frame);
+      else raf = 0;
     }
     raf = requestAnimationFrame(frame);
     return true;
@@ -279,6 +288,10 @@ void main(){
     });
     const cycleEl = story.querySelector('.story-cycle .cyc');
     const stages = [...story.querySelectorAll('.story-stage')];
+    const railFill = story.querySelector('.story-rail .fill');
+    const hintEl = story.querySelector('.story-hint');
+    if (hintEl && matchMedia('(pointer:coarse)').matches)
+      hintEl.textContent = 'swipe to run \u25be';
 
     let W, H, dpr, lastCycle = -1;
     function resize(){
@@ -384,20 +397,38 @@ void main(){
       return;
     }
 
+    // the playhead has mass: dc eases toward the scroll target
+    let targetC = 0, dc = 0, sRaf = 0, inView = false;
+    function tick(){
+      sRaf = 0;
+      const diff = targetC - dc;
+      if (Math.abs(diff) > .35){
+        dc += diff * .13;
+        const c = Math.round(dc);
+        if (c !== lastCycle){
+          lastCycle = c;
+          draw(c); setChips(c); setStages(c);
+          if (railFill) railFill.style.width = (c / (n-1) * 100) + '%';
+        }
+        const s = D.overall[Math.round(dc)];
+        if (inView) storyDrift = Math.min(1, Math.max(0, L(s) / L(32))) * .95;
+      }
+      if (inView && Math.abs(targetC - dc) > .35) sRaf = requestAnimationFrame(tick);
+    }
     function update(){
       const r = story.getBoundingClientRect();
       const total = r.height - innerHeight;
       const p = Math.min(1, Math.max(0, -r.top / Math.max(total, 1)));
-      const inView = r.top < innerHeight && r.bottom > 0;
-      const c = Math.round(p * (n-1));
-      if (inView){
-        const s = D.overall[c];
-        storyDrift = Math.min(1, Math.max(0, L(s) / L(32))) * .95;
-      } else storyDrift = null;
-      if (c !== lastCycle){
-        lastCycle = c;
-        draw(c); setChips(c); setStages(c);
-      }
+      inView = r.top < innerHeight && r.bottom > 0;
+      targetC = p * (n-1);
+      if (!inView) storyDrift = null;
+      // dock state: the sticky is engaged and driving the wheel
+      const docked = inView && r.top <= 1 && r.bottom >= innerHeight - 1;
+      story.classList.toggle('docked', docked);
+      document.body.classList.toggle('story-focus', docked);
+      if (hintEl) hintEl.classList.toggle('on', docked && dc < 12);
+      story.classList.toggle('done', dc >= n - 4);
+      if (inView && !sRaf) sRaf = requestAnimationFrame(tick);
     }
     addEventListener('scroll', update, { passive:true });
     resize(); update();

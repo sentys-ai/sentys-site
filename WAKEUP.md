@@ -3,6 +3,20 @@
 **Started:** 2026-07-12 01:45 CEST · **Branch:** `redesign` · **Protocol:** ~/sensory/docs/OVERNIGHT_PROTOCOL.md
 **Prompt:** RUN_PROMPT.md (untracked, kept out of git via .git/info/exclude along with sensory/)
 
+## v3 addendum (branch redesign-v3, worktree ~/sentys-site-v3, :8323 — started 2026-07-12 ~03:50)
+Brief: RUN_PROMPT_V3.md ("the instrument sleeps"). User verdict on v1 vs v2: neither as-is;
+v2 architecture + v1 calm. Three moves:
+- [x] M-A instrument sleeps: conductor freezes rAF when settled in reading sections (wake on
+      scroll); awake only in hero + story; rest dims .18-.28; no pointer ripple while asleep.
+- [x] M-B dock+rail+inertia: chartbox dock pulse + SCROLL TO RUN hint (SWIPE on coarse pointer),
+      progress rail with tick at cycle 123, lerped playhead (mass), focus vignette via
+      body.story-focus + .veil::after, release at c>=175 (.done).
+- [x] M-C de-decoration: zero backdrop-filter, quieter panel grounds (.55 alpha), wall/fit-grid
+      transparent grounds. Loud moments: hero, story, ask sheet.
+- [ ] Remaining: full-page pass (fits/founder/ask visual check), mobile 390 + reduced-motion
+      verify, guide v3 note, 3 iteration passes, final push. Compare page: :8320.
+Overnight rig: tmux session `sentys` hosts servers 8320-8323; pings armed 05:15/06:45/08:15/09:45.
+
 ## v2 addendum (branch redesign-v2, 2026-07-12 ~03:40)
 User verdict on v1: concept new, skeleton inherited ("new skin"). v2 = Option A + B's story:
 global plate conductor ([data-plate-*] per section), all-dark continuous world, paper documents,
