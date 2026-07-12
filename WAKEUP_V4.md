@@ -46,6 +46,18 @@ robot-origin still) carries over.
       data-handling block, founder section, Danish note
 - [x] Routes: demo/, sample-report.html, data-spec.html, CNAME, og.png (regen)
 
+## Verdict (fresh eyes, 2026-07-12)
+
+**v4 beats v3 for this audience — PR opened.** v3 is the more beautiful
+object; v4 is the more credible instrument. The brief's criterion is
+credibility with maintenance/reliability engineers, and v4 speaks their
+mother tongue: annunciator windows, LAMP TEST/ACKNOWLEDGE, LED readouts,
+RAL-7032 enamel, paper deliverables shown as paper. A plant engineer
+arriving cold sees "the fourth dark AI site this week" in v3, and a control
+console in v4. Counterpoint stated in the PR: design-literate visitors
+(e.g. investors) may find v3 more impressive; the owner decides.
+Side-by-sides: `guide/compare/`.
+
 ## If revived mid-run
 
 Everything above marked [x] is committed on `redesign-v4` — do not redo.
