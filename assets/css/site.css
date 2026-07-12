@@ -291,6 +291,14 @@ section h2 { font-size:clamp(30px, 3.8vw, 48px); margin:0 0 14px; max-width:24ch
 .guardrail svg { flex:none; color:var(--ember); margin-top:2px; }
 .guardrail p { margin:0; font-size:15px; color:var(--dust); }
 .guardrail p b { color:var(--ember-strong); }
+.agentchain { display:flex; flex-wrap:wrap; gap:10px 12px; align-items:stretch; margin-top:18px; }
+.ac-step { display:flex; flex-direction:column; justify-content:center; gap:5px; flex:1; min-width:170px;
+  background:rgba(15,18,22,.55); border:1px solid var(--hairline); border-radius:6px; padding:13px 16px; }
+.ac-step b { font:500 12px/1 var(--mono); letter-spacing:.1em; text-transform:uppercase; color:var(--ember); font-weight:500; }
+.ac-step span { font-size:13.5px; color:var(--dust-dim); }
+.ac-sep { color:var(--dust-dim); font-size:15px; flex:none; align-self:center; }
+.agentchain-cap { font-size:13px; color:var(--dust-dim); margin:10px 0 0; }
+@media (max-width:760px){ .ac-sep { display:none; } .ac-step { min-width:44%; } }
 
 /* ── evidence: the instrument wall ───────────────────────────────────── */
 .wall { border:1px solid var(--hairline); border-radius:8px; overflow:hidden; background:rgba(15,18,22,.55); margin-bottom:26px; }
