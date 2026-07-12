@@ -129,7 +129,9 @@ void main(){
       cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr);
       gl.viewport(0, 0, cv.width, cv.height);
     };
-    addEventListener('resize', resize); resize();
+    addEventListener('resize', () => { resize();
+      if (!raf && !document.hidden) raf = requestAnimationFrame(frame); });
+    resize();
 
     // sections that conduct the plate
     const stops = [...document.querySelectorAll('[data-plate]')].map(el => {

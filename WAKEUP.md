@@ -15,9 +15,14 @@ v2 architecture + v1 calm. Three moves:
       transparent grounds. Loud moments: hero, story, ask sheet.
 - [x] Pass 1: fits (near-black rest + living clip), ask sheet on sleeping room, mobile 390 +
       reduced-motion clean (no overflow, no console errors), guide v3 note added.
-- [ ] Remaining for overnight pings: passes 2-3 (fresh-eyes screenshots desktop+mobile, hunt
-      problems, verify plate freeze feels right at real framerates, demo/founder sections look,
-      1920 check), then final push. Compare page: :8320. DO NOT redo paid generations.
+- [x] Pass 2: resize-while-frozen bug fixed (canvas went stale on window resize during sleep);
+      stage handoff staggered (no more double-ghost); FREEZE PROVEN: 0 rAF calls in 3s parked in
+      #evidence vs 120 in 2s at hero. Full-page rhythm verified: only chart/demo/papers/media
+      bright, everything else rests.
+- [x] Pass 3: 1920 clean (no overflow, no errors); first-load weight 349KB incl. fonts+images.
+- [ ] Morning: final fresh-eyes look + user verdict on v1/v2/v3 (:8320); if v3 wins → PR +
+      mirror to ~/sensory. Pings at 05:15/06:45/08:15/09:45 re-verify idempotently; nothing
+      paid left to do. DO NOT redo generations (Gemini 2/15, Higgsfield 7.5/50 used).
 Overnight rig: tmux session `sentys` hosts servers 8320-8323; pings armed 05:15/06:45/08:15/09:45.
 
 ## v2 addendum (branch redesign-v2, 2026-07-12 ~03:40)

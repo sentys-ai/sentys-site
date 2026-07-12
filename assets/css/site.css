@@ -225,8 +225,8 @@ section h2 { font-size:clamp(30px, 3.8vw, 48px); margin:0 0 14px; max-width:24ch
 @media (prefers-reduced-motion: reduce){ .story-hint { transition:none; } }
 .story-stages { position:relative; min-height:118px; margin-top:20px; }
 .story-stage { position:absolute; inset:0; opacity:0; transform:translateY(10px);
-  transition:opacity .45s ease, transform .45s ease; pointer-events:none; }
-.story-stage.on { opacity:1; transform:none; pointer-events:auto; }
+  transition:opacity .3s ease, transform .3s ease; pointer-events:none; }
+.story-stage.on { opacity:1; transform:none; pointer-events:auto; transition:opacity .45s ease .18s, transform .45s ease .18s; }
 .story-stage .s-kicker { font:500 11.5px/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--ember); margin-bottom:8px; }
 .story-stage p { margin:0; font-size:clamp(15.5px, 1.8vw, 18px); color:var(--dust); max-width:72ch; text-shadow:0 1px 12px rgba(15,18,22,.9); }
 .story-stage p i { color:var(--dust-dim); }
