@@ -480,8 +480,8 @@ void main(){
     const SENSORS = [
       { x:.450, y:.385, sense:'a. rotation', key:'rotation', lx:-12, ly:-24, align:'right', ph:0   },
       { x:.712, y:.205, sense:'b. thermal',  key:'thermal',  lx:-22, ly:-20, align:'right', ph:2.1 },
-      { x:.752, y:.085, sense:'c. pressure', key:'pressure', lx:-26, ly: -4, align:'right', ph:4.2 },
-      { x:.700, y:.890, sense:'d. flow',     key:'flow',     lx:-16, ly: 26, align:'right', ph:5.6 },
+      { x:.752, y:.085, sense:'c. pressure', key:'pressure', lx:-34, ly: -8, align:'right', ph:4.2 },
+      { x:.700, y:.890, sense:'d. flow',     key:'flow',     lx:-26, ly: 34, align:'right', ph:5.6 },
     ];
     let W, H, fibers = [], gang = GANG;
 

@@ -25,8 +25,7 @@
   .brand { font-weight:700; font-size:16px; } .brand span { color:var(--signal); }
   header .tag { font:500 11px var(--mono); letter-spacing:.1em; text-transform:uppercase; color:var(--dim); }
   h1 { font-size:21px; margin:14px 0 4px; letter-spacing:-.015em; }
-  .lead { color:var(--dim); margin:0 0 6px; }
-  .dansk { font-size:12px; color:var(--dim); font-style:italic; margin:0 0 18px; }
+  .lead { color:var(--dim); margin:0 0 18px; }
   h2 { font:600 12px var(--mono); letter-spacing:.1em; text-transform:uppercase;
        color:var(--signal-deep); margin:20px 0 8px; display:flex; align-items:center; gap:8px; }
   h2::before { content:""; width:12px; height:3px; background:var(--signal); }
@@ -46,14 +45,22 @@
   @media (max-width:640px){ .cols { grid-template-columns:1fr; } }
   footer { margin-top:22px; padding-top:10px; border-top:1px solid var(--line);
            font:400 11px var(--mono); color:var(--dim); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+  .xclose { position:fixed; top:14px; right:auto; left:min(calc(50% + 358px), calc(100vw - 54px)); z-index:50;
+    width:38px; height:38px; display:flex; align-items:center; justify-content:center;
+    font:300 20px/1 system-ui,sans-serif; color:var(--dim); background:var(--surface);
+    border:1px solid var(--line); border-radius:50%; text-decoration:none;
+    box-shadow:0 2px 10px rgba(0,0,0,.08); }
+  .xclose:hover { color:var(--ink); }
   @media print {
     body { padding:0; font-size:12px; max-width:none; }
     @page { size:A4; margin:16mm 15mm; }
     a { color:inherit; text-decoration:none; }
+    .xclose { display:none; }
   }
 </style>
 </head>
 <body>
+<a class="xclose" href="./" aria-label="Close and return to sentys.ai" title="Close" onclick="if(document.referrer.indexOf(location.host)>-1&&history.length>1){history.back();return false}">×</a>
 
 <header>
   <div class="brand">Sentys<span>.</span></div>
@@ -62,7 +69,6 @@
 
 <h1>What to export — and what you get back</h1>
 <p class="lead">Everything below comes straight out of your SRO/SCADA or historian. Expect it to take about twenty minutes, most of it waiting for the export to finish.</p>
-<p class="dansk">Spørgsmål og data på dansk er meget velkomne — skriv endelig på dansk.</p>
 
 <h2>The export — five lines</h2>
 <ol class="spec">
@@ -98,7 +104,8 @@
   <div>
     <h2>How your data is handled</h2>
     <ul class="plain">
-      <li>Processed on a <b>single machine in Denmark</b>; raw data never uploaded to any cloud service.</li>
+      <li>Processed on a <b>single machine in Denmark</b>; raw data never uploaded to any public
+        cloud. A dedicated European server (Hetzner) is available on request.</li>
       <li>Stated up front: schema inference sends <b>column names, statistics, and a few sample values</b> to an AI API — never the bulk data. Object, and it's done by hand.</li>
       <li>Used for <b>your analysis only</b>; never used to train models for anyone else.</li>
       <li><b>Deleted when you say so</b> — confirmed in writing. A mutual NDA is signed before any data moves.</li>
