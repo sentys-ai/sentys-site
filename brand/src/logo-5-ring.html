@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Logo 5 — the deformed ring · screenshot 1024×1024</title>
+<style>html,body{margin:0;width:1024px;height:1024px;overflow:hidden;background:#0f1216}
+canvas{display:block;width:1024px;height:1024px}</style></head>
+<body>
+<!-- One healthy orbit; a single arc drifts outward and heats. -->
+<canvas id="c" width="1024" height="1024"></canvas>
+<script>
+const cv = document.getElementById('c'), x = cv.getContext('2d');
+const S = 1024, r = 1;
+x.beginPath();
+x.moveTo(r,0); x.arcTo(S,0,S,S,r); x.arcTo(S,S,0,S,r); x.arcTo(0,S,0,0,r); x.arcTo(0,0,S,0,r);
+x.closePath(); x.clip();
+const g = x.createRadialGradient(S*.5,S*.42,0,S*.5,S*.42,S*.75);
+g.addColorStop(0,'#1a2029'); g.addColorStop(.7,'#0f1216'); g.addColorStop(1,'#0b0e12');
+x.fillStyle = g; x.fillRect(0,0,S,S);
+
+// inner baseline ring: calm, thin
+x.strokeStyle = 'rgba(236,229,214,.45)'; x.lineWidth = 22;
+x.beginPath(); x.arc(512,512,182,0,7); x.stroke();
+
+// outer ring with a gaussian drift bulge at -50°
+const R = 330, A = 105, TH = -Math.PI*0.28, SIG = 0.42;
+const pts = [];
+for (let t=0; t<=360; t++){
+  const th = t/180*Math.PI;
+  let dth = Math.atan2(Math.sin(th-TH), Math.cos(th-TH));   // wrapped distance
+  const bump = Math.exp(-(dth*dth)/(2*SIG*SIG));
+  const rr = R + A*bump;
+  pts.push([512 + rr*Math.cos(th), 512 + rr*Math.sin(th), bump]);
+}
+x.lineCap = 'round';
+for (let i=0;i<pts.length-1;i++){
+  const [x1,y1,b1] = pts[i], [x2,y2] = pts[i+1];
+  const dr=236,dg=229,db=214, mr=240,mg=164,mb=60, hr=255,hg=106,hb=69;
+  let cr,cg,cb;
+  if (b1 < .5){ const t=b1/.5; cr=dr*(1-t)+mr*t; cg=dg*(1-t)+mg*t; cb=db*(1-t)+mb*t; }
+  else { const t=(b1-.5)/.5; cr=mr*(1-t)+hr*t; cg=mg*(1-t)+hg*t; cb=mb*(1-t)+hb*t; }
+  x.strokeStyle = `rgb(${cr|0},${cg|0},${cb|0})`;
+  x.lineWidth = 44 + 14*b1;
+  x.beginPath(); x.moveTo(x1,y1); x.lineTo(x2,y2); x.stroke();
+}
+</script>
+</body>
+</html>

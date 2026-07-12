@@ -3,6 +3,16 @@
 **Started:** 2026-07-12 01:45 CEST · **Branch:** `redesign` · **Protocol:** ~/sensory/docs/OVERNIGHT_PROTOCOL.md
 **Prompt:** RUN_PROMPT.md (untracked, kept out of git via .git/info/exclude along with sensory/)
 
+## v2 addendum (branch redesign-v2, 2026-07-12 ~03:40)
+User verdict on v1: concept new, skeleton inherited ("new skin"). v2 = Option A + B's story:
+global plate conductor ([data-plate-*] per section), all-dark continuous world, paper documents,
+instrument-wall evidence, and the "One engine's life" scroll-scrubbed story (Engine 03 real data
+drives the plate's drift; rotation sense story: 3.7x at cycle 123 while others read 0.9-1.3x).
+Logos: brand/logo-{2..5}.png + logo-compare.png (drift mark / standing S / nodal tile / drifted
+orbit), all full-bleed 1024^2, sources in brand/src/. v1 stays on `redesign` (:8321) for
+comparison; v2 on `redesign-v2` (:8322, worktree ~/sentys-site-v2). Do NOT mirror v2 to sensory
+unless it wins. Budget left for FDE site: Gemini 13/15 calls, Higgsfield 42.5/50 credits.
+
 ## Current milestone
 ✅ RUN COMPLETE — 2026-07-12 ~03:00 CEST. All milestones M0–M9 done.
 PR open: https://github.com/sentys-ai/sentys-site/pull/1 (merging it live is the user's
