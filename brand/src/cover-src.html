@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sentys LinkedIn cover source — screenshot at 1584×396</title>
+<style>
+@font-face { font-family:'Tanker'; src:url('../../assets/fonts/Tanker-400.woff2') format('woff2'); font-weight:400; }
+@font-face { font-family:'Khand'; src:url('../../assets/fonts/Khand-600.woff2') format('woff2'); font-weight:600; }
+@font-face { font-family:'PlexMono'; src:url('../../assets/fonts/PlexMono-400.woff2') format('woff2'); font-weight:400; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { width:1584px; height:396px; overflow:hidden; background:#c8c5ba; color:#32302a;
+  font-family:'Khand',sans-serif; position:relative;
+  background-image:repeating-linear-gradient(90deg, rgba(255,255,255,.022) 0 1px, transparent 1px 3px); }
+/* LinkedIn crops hard left-bottom behind the logo chip; keep content right-of-center */
+.row { display:flex; align-items:center; gap:56px; height:100%; padding:0 72px 0 420px; }
+h1 { font:400 58px/0.98 'Tanker',sans-serif; text-transform:uppercase; letter-spacing:.01em;
+  text-shadow:0 1px 0 rgba(255,255,255,.48); max-width:12ch; }
+h1 em { font-style:normal; color:#a4650a; }
+.grid { display:grid; grid-template-columns:repeat(3,150px); gap:9px; flex:none; }
+.win { border-radius:4px; min-height:64px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:3px; padding:8px; text-align:center;
+  background:linear-gradient(180deg,#3f3d36,#454339 30%,#403e37);
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.55), inset 0 0 0 1px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.35); }
+.win .l1 { font:600 14px/1.15 'Khand',sans-serif; letter-spacing:.1em; color:#8b887c; text-transform:uppercase; }
+.win .l2 { font:400 10px/1.2 'PlexMono',monospace; letter-spacing:.07em; color:#767368; text-transform:uppercase; }
+.win.on { background:radial-gradient(ellipse at 50% 42%,#ffd894 0%,#f0a43c 55%,#c97e18 100%);
+  box-shadow:inset 0 1px 3px rgba(255,255,255,.5), inset 0 -2px 5px rgba(120,60,0,.4),
+    0 0 22px rgba(240,164,60,.55), 0 1px 0 rgba(255,255,255,.3); }
+.win.on .l1 { color:#3a2503; } .win.on .l2 { color:#6b4a10; }
+.win.ok { background:radial-gradient(ellipse at 50% 42%,#7fd598 0%,#3f9857 60%,#2a7440 100%); }
+.win.ok .l1 { color:#0d3319; } .win.ok .l2 { color:#1d5230; }
+.tag { position:absolute; right:72px; bottom:26px;
+  font:400 13px/1 'PlexMono',monospace; letter-spacing:.06em; color:#565349; }
+</style>
+</head>
+<body>
+<div class="row">
+  <h1>A warning light for what <em>hasn't failed yet</em>.</h1>
+  <div class="grid">
+    <div class="win"><span class="l1">Thermal</span><span class="l2">Unit 01</span></div>
+    <div class="win"><span class="l1">Pressure</span><span class="l2">Unit 02</span></div>
+    <div class="win"><span class="l1">Rotation</span><span class="l2">Unit 02</span></div>
+    <div class="win"><span class="l1">Thermal</span><span class="l2">Unit 03</span></div>
+    <div class="win on"><span class="l1">Surprise high</span><span class="l2">Unit 03</span></div>
+    <div class="win"><span class="l1">Flow</span><span class="l2">Unit 03</span></div>
+    <div class="win"><span class="l1">Pressure</span><span class="l2">Unit 04</span></div>
+    <div class="win ok"><span class="l1">Fleet normal</span><span class="l2">27 units</span></div>
+    <div class="win"><span class="l1">Thermal</span><span class="l2">Unit 04</span></div>
+  </div>
+</div>
+<p class="tag">sentys.ai · no failure labels · 30/30 flagged before failure</p>
+</body>
+</html>
