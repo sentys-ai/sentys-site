@@ -13,8 +13,11 @@ v2 architecture + v1 calm. Three moves:
       body.story-focus + .veil::after, release at c>=175 (.done).
 - [x] M-C de-decoration: zero backdrop-filter, quieter panel grounds (.55 alpha), wall/fit-grid
       transparent grounds. Loud moments: hero, story, ask sheet.
-- [ ] Remaining: full-page pass (fits/founder/ask visual check), mobile 390 + reduced-motion
-      verify, guide v3 note, 3 iteration passes, final push. Compare page: :8320.
+- [x] Pass 1: fits (near-black rest + living clip), ask sheet on sleeping room, mobile 390 +
+      reduced-motion clean (no overflow, no console errors), guide v3 note added.
+- [ ] Remaining for overnight pings: passes 2-3 (fresh-eyes screenshots desktop+mobile, hunt
+      problems, verify plate freeze feels right at real framerates, demo/founder sections look,
+      1920 check), then final push. Compare page: :8320. DO NOT redo paid generations.
 Overnight rig: tmux session `sentys` hosts servers 8320-8323; pings armed 05:15/06:45/08:15/09:45.
 
 ## v2 addendum (branch redesign-v2, 2026-07-12 ~03:40)
