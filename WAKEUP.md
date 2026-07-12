@@ -4,7 +4,7 @@
 **Prompt:** RUN_PROMPT.md (untracked, kept out of git via .git/info/exclude along with sensory/)
 
 ## Current milestone
-M2 — Full site build from winning concept C ("Resonance")
+M4 — Guide page + concepts notes (then M5 brand kit + og.png, then iteration passes)
 
 ## Done
 - [x] M0 Setup: read ONE_PAGER/VISION/MANIFESTO/EVIDENCE/WORLD_MODEL + current site copy;
@@ -19,13 +19,20 @@ M2 — Full site build from winning concept C ("Resonance")
       alarm annotations, strip-chart evidence device), as is A's plain-language sense-voice.
       User mid-run note: fetched ui-ux-pro-max-skill.nextlevelbuilder.io — page empty, nothing taken.
 
+- [x] M2 Full site built: index.html + assets/css/site.css + assets/js/site.js +
+      assets/js/engine03-data.js (real Engine-03 series from demo/fleet_data.json, log2 chart).
+      Founder pic extracted to assets/img/founder.jpg. Chladni hero + sense-voice ticker +
+      6-benchmark evidence wall (incl. FEMTO/XJTU honest FAILs) + all routes preserved.
+      Screenshot harness: scratchpad/shoot.js (puppeteer-core, checks overflow + console errors).
+      Local server: python http.server on :8321.
+
 ## Next step
-M2: build full index.html from Concept C. Type: Clash Display + Supreme + PlexMono.
-Palette: plate graphite #101318, dust #efe7d8, ember #f2a53e→#ff6a45 heat ramp; light
-instrument-paper sections for readability. Asymmetric hero (NOT centered), plate confined
-with vignette, drift narrated by typed sense-voice line. Watch mobile horizontal overflow
-(C prototype had real overflow at 390px — find with document.scrollWidth during build).
-Preserve demo/ iframe, sample-report.html, data-spec.html, CNAME, SEO meta.
+M4: write /guide (unlinked) + concepts rationale. Then M5 brand kit (hand-built logo.png,
+linkedin-cover.png, og.png from hero screenshot). Then iteration passes 1–3 (fresh-eyes
+screenshots each). Decide during pass 1 whether any generated imagery (M3) actually elevates
+the design — shader/canvas art may be enough; budget spend must be deliberate.
+Known nits for pass 1: 'first warning' annotation can clip the trace; failure annotation
+only visible at animation end; hero readout strip bottom spacing at short viewports.
 
 ## Milestone map
 M1 bake-off → M2 full site build → M3 media assets → M4 guide+concepts notes →

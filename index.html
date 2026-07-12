@@ -3,324 +3,31 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sentys — Failure warning from data you already have</title>
-<meta name="description" content="Sentys learns each machine's healthy behaviour from the sensor history you already log — any machine, any sensors, no failure labels — and tells you in plain language which machine is drifting and which sensor saw it first.">
+<title>Sentys — Every machine has a feeling of healthy</title>
+<meta name="description" content="Sentys learns each machine's healthy behaviour from the sensor history you already log — any machine, any sensors, no failure labels — and tells you in plain language which machine is drifting and which sensor felt it first.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Sentys — the data you already log knows what's about to break">
+<meta property="og:title" content="Sentys — every machine has a feeling of healthy">
 <meta property="og:description" content="Failure warning from data you already collect. All 30 unseen machines flagged before failure on NASA's benchmark, one false alarm. Send one export — free analysis.">
-<meta property="og:url" content="https://sentys.ai/"><!-- DOMAIN swap-in -->
-<meta property="og:image" content="https://sentys.ai/og.png"><!-- DOMAIN swap-in -->
+<meta property="og:url" content="https://sentys.ai/">
+<meta property="og:image" content="https://sentys.ai/og.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#0b0e11">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0e11">
-<!-- ═══════════ SWAP-IN CHECKLIST (when the name + legal entity land) ═══════════
-     1. BRAND  — replace "Sentys" in <title>, meta, nav .brand, footer, prose (grep: Sentys).
-     2. DOMAIN — served from GitHub Pages today; when the domain exists, add
-                 <link rel="canonical">, update OUTREACH_KIT links, and swap
-                 frixos@sentys.ai for the domain mailbox (grep: gmail).
-     3. ENTITY — fill the footer ENTITY LINE (Company ApS · CVR xxxxxxxx · address) and
-                 the NDA step in #ask ("ready-to-sign mutual NDA" needs a legal party).
-     ════════════════════════════════════════════════════════════════════════════ -->
-<link rel="preload" href="assets/fonts/Nippo-Medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="canonical" href="https://sentys.ai/">
+<meta name="theme-color" content="#0f1216">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f1216'/%3E%3Cpath d='M6 16c3.3 0 3.3-6 6.7-6s3.3 6 6.6 6 3.4-6 6.7-6' fill='none' stroke='%23f0a43c' stroke-width='2.2' stroke-linecap='round'/%3E%3Cpath d='M6 22c3.3 0 3.3-4 6.7-4s3.3 4 6.6 4 3.4-4 6.7-4' fill='none' stroke='%23ece5d6' stroke-width='1.6' stroke-linecap='round' opacity='.55'/%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/ClashDisplay-500.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/Supreme-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/PlexMono-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/img/hero-bearing.webp" as="image" media="(min-width: 720px)">
-<script>document.documentElement.classList.add('js')</script>
-<style>
-  /* ── Fonts: self-hosted, zero external requests ─────────────────────────── */
-  @font-face { font-family:'Nippo'; src:url('assets/fonts/Nippo-Light.woff2') format('woff2'); font-weight:300; font-display:swap; }
-  @font-face { font-family:'Nippo'; src:url('assets/fonts/Nippo-Regular.woff2') format('woff2'); font-weight:400; font-display:swap; }
-  @font-face { font-family:'Nippo'; src:url('assets/fonts/Nippo-Medium.woff2') format('woff2'); font-weight:500; font-display:swap; }
-  @font-face { font-family:'Nippo'; src:url('assets/fonts/Nippo-Bold.woff2') format('woff2'); font-weight:700; font-display:swap; }
-  @font-face { font-family:'Supreme'; src:url('assets/fonts/Supreme-Regular.woff2') format('woff2'); font-weight:400; font-display:swap; }
-  @font-face { font-family:'Supreme'; src:url('assets/fonts/Supreme-Italic.woff2') format('woff2'); font-weight:400; font-style:italic; font-display:swap; }
-  @font-face { font-family:'Supreme'; src:url('assets/fonts/Supreme-Medium.woff2') format('woff2'); font-weight:500; font-display:swap; }
-  @font-face { font-family:'Supreme'; src:url('assets/fonts/Supreme-Bold.woff2') format('woff2'); font-weight:700; font-display:swap; }
-  @font-face { font-family:'PlexMono'; src:url('assets/fonts/PlexMono-400.woff2') format('woff2'); font-weight:400; font-display:swap; }
-  @font-face { font-family:'PlexMono'; src:url('assets/fonts/PlexMono-500.woff2') format('woff2'); font-weight:500; font-display:swap; }
-
-  /* ── Tokens ──────────────────────────────────────────────────────────────
-     One point of view: dark machine bands + light instrument-paper body.
-     One accent: signal amber (amber-before-red IS the product).
-     green/red appear ONLY as data semantics inside charts & status.          */
-  :root {
-    /* coal band — constant across schemes */
-    --coal:#0b0e11; --coal-2:#10151a; --coal-line:#222a31;
-    --coal-ink:#eceff1; --coal-dim:#96a1aa;
-    --amber:#e2a445; --amber-deep:#c98d2e;
-    /* light body (day) */
-    --bg:#f7f6f2; --surface:#fffefb; --ink:#181c20; --dim:#5a636b;
-    --line:#e3dfd6; --grid:#edeae2;
-    --signal:#b26b00; --signal-deep:#8a5300; --signal-soft:#f5eddc;
-    --green:#2e7d46; --red:#c03a2b;
-    --btn-ink:#fff8ec;
-    --shadow:0 1px 2px rgba(24,28,32,.05), 0 10px 32px rgba(24,28,32,.07);
-    --maxw:1080px;
-    --display:'Nippo','Archivo',-apple-system,sans-serif;
-    --sans:'Supreme',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    --mono:'PlexMono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  }
-  @media (prefers-color-scheme: dark) {   /* night shift: body darkens, bands stay coal */
-    :root {
-      --bg:#101418; --surface:#161b21; --ink:#e9edf0; --dim:#93a0a9;
-      --line:#242d34; --grid:#181f26;
-      --signal:#e2a445; --signal-deep:#c98d2e; --signal-soft:#2a2113;
-      --green:#4caf6a; --red:#e5695c;
-      --btn-ink:#140d02;
-      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 34px rgba(0,0,0,.45);
-    }
-  }
-
-  * { box-sizing:border-box; }
-  html { scroll-behavior:smooth; }
-  body { margin:0; background:var(--bg); color:var(--ink); font:400 16px/1.68 var(--sans); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
-  a { color:var(--signal-deep); }
-  h1,h2,h3 { font-family:var(--display); line-height:1.08; letter-spacing:.005em; font-weight:500; }
-  .wrap { max-width:var(--maxw); margin:0 auto; padding:0 20px; }
-  @media (min-width:720px){ .wrap { padding:0 28px; } }
-  .num { font-variant-numeric:tabular-nums; }
-  :focus-visible { outline:2px solid var(--signal); outline-offset:2px; }
-
-  /* eyebrow: mono readout with amber tick — the page's one structural device */
-  .eyebrow { font:500 12px/1.4 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--dim); display:flex; align-items:center; gap:10px; margin:0 0 18px; }
-  .eyebrow::before { content:""; width:16px; height:2px; background:var(--signal); flex:none; }
-  /* hero eyebrow: reveal each phrase one-by-one on load, amber ticks between */
-  .eyebrow-seq { flex-wrap:wrap; }
-  .eyebrow-seq .sep { color:var(--signal); }
-  .js .eyebrow-seq .ph, .js .eyebrow-seq .sep { opacity:0; transform:translateY(4px); transition:opacity .5s ease, transform .5s ease; }
-  .js .eyebrow-seq.in .ph, .js .eyebrow-seq.in .sep { opacity:1; transform:none; }
-  .js .eyebrow-seq.in > :nth-child(1){ transition-delay:.12s } .js .eyebrow-seq.in > :nth-child(2){ transition-delay:.40s }
-  .js .eyebrow-seq.in > :nth-child(3){ transition-delay:.52s } .js .eyebrow-seq.in > :nth-child(4){ transition-delay:.80s }
-  .js .eyebrow-seq.in > :nth-child(5){ transition-delay:.92s }
-  @media (prefers-reduced-motion: reduce){ .js .eyebrow-seq .ph, .js .eyebrow-seq .sep { opacity:1; transform:none; transition:none; } }
-
-  /* reveal-on-scroll (JS-gated; no-JS never hides content) */
-  .js .reveal { opacity:0; transform:translateY(14px); transition:opacity .55s ease, transform .55s ease; }
-  .js .reveal.in { opacity:1; transform:none; }
-  .js .reveal.d1 { transition-delay:.08s; } .js .reveal.d2 { transition-delay:.16s; } .js .reveal.d3 { transition-delay:.24s; }
-  @media (prefers-reduced-motion: reduce) { .js .reveal { opacity:1; transform:none; transition:none; } }
-
-  /* ── nav: coal, hairline on scroll ── */
-  nav { position:sticky; top:0; z-index:30; background:var(--coal); border-bottom:1px solid transparent; transition:border-color .2s; }
-  nav.scrolled { border-color:var(--coal-line); }
-  nav .wrap { display:flex; align-items:center; justify-content:space-between; height:60px; }
-  .brand { font:500 17px/1 var(--display); letter-spacing:.22em; text-transform:uppercase; color:var(--coal-ink); text-decoration:none; }
-  .brand em { font-style:normal; color:var(--amber); }
-  .nav-links { display:flex; gap:26px; align-items:center; font-size:14px; }
-  .nav-links a { color:var(--coal-dim); text-decoration:none; }
-  .nav-links a:hover { color:var(--coal-ink); }
-  .nav-links a.nav-cta { color:#140d02; background:var(--amber); padding:9px 16px; border-radius:5px; font-weight:600; }
-  .nav-links a.nav-cta:hover { filter:brightness(1.06); }
-  @media (max-width:780px){ .nav-links a:not(.nav-cta) { display:none; } }
-
-  /* ── HERO: coal band, machine substrate, amber signal on top ── */
-  header.hero { position:relative; background:var(--coal); color:var(--coal-ink); overflow:hidden; padding:64px 0 0; }
-  .hero-photo { position:absolute; inset:0; z-index:0; }
-  .hero-photo img { width:100%; height:100%; object-fit:cover; object-position:78% 38%; }
-  /* hero ambient loop: desktop + motion-allowed only; mobile & reduced-motion keep the still */
-  .hero-vid { display:none; position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:78% 38%; }
-  @media (min-width:720px) and (prefers-reduced-motion: no-preference){ .hero-vid { display:block; } }
-  .hero-photo::after { content:""; position:absolute; inset:0;
-    background:linear-gradient(100deg, var(--coal) 0%, rgba(11,14,17,.94) 30%, rgba(11,14,17,.38) 62%, rgba(11,14,17,.08) 100%),
-               linear-gradient(to bottom, rgba(11,14,17,.18), rgba(11,14,17,0) 26%, rgba(11,14,17,.55) 72%, rgba(11,14,17,.88) 100%); }
-  .hero-inner { position:relative; z-index:1; }
-  header.hero .eyebrow { color:var(--coal-dim); }
-  header.hero h1 { font-size:clamp(34px, 5.6vw, 60px); font-weight:500; margin:0 0 18px; max-width:21ch; color:var(--coal-ink); }
-  header.hero h1 b { font-weight:500; color:var(--amber); }
-  header.hero .sub { font-size:clamp(16.5px,2.2vw,19px); color:var(--coal-dim); max-width:54ch; margin:0 0 30px; }
-  .cta-row { display:flex; flex-wrap:wrap; gap:14px; margin-bottom:48px; }
-  .btn { display:inline-block; padding:14px 24px; border-radius:5px; font:600 15px/1.2 var(--sans); text-decoration:none; cursor:pointer; border:1px solid transparent; transition:transform .06s ease, filter .15s ease, border-color .15s ease; }
-  .btn:active { transform:translateY(1px); }
-  .btn-primary { background:var(--amber); color:#140d02; }
-  .btn-primary:hover { filter:brightness(1.06); }
-  .btn-ghost { background:transparent; color:var(--coal-ink); border-color:var(--coal-line); }
-  .btn-ghost:hover { border-color:var(--amber); }
-  .band-light .btn-primary { background:var(--signal-deep); color:var(--btn-ink); }
-  .band-light .btn-ghost { color:var(--ink); border-color:var(--line); background:var(--surface); }
-
-  /* signature: the real Engine-03 trend, drawn over the machine */
-  .trend { background:rgba(16,21,26,.72); backdrop-filter:blur(3px); border:1px solid var(--coal-line); border-radius:8px; overflow:hidden; }
-  .trend-head { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:11px 16px; border-bottom:1px solid var(--coal-line); font:500 11.5px/1.4 var(--mono); letter-spacing:.07em; color:var(--coal-dim); }
-  .trend-head .live { color:#4caf6a; }
-  .trend svg { width:100%; height:auto; display:block; }
-  .trend .trace { fill:none; stroke:url(#tracegrad); stroke-width:2.1; stroke-linejoin:round; stroke-linecap:round; stroke-dasharray:1; stroke-dashoffset:1; animation:draw 3.4s cubic-bezier(.55,0,.35,1) .4s forwards; }
-  @keyframes draw { to { stroke-dashoffset:0; } }
-  .trend .thr { stroke-dasharray:4 4; stroke-width:1; opacity:.55; }
-  .trend .svglbl { font:500 10.5px var(--mono); fill:var(--coal-dim); letter-spacing:.04em; }
-  .trend .anno { opacity:0; animation:appear .5s ease forwards; }
-  .trend .anno text { font:600 11px var(--mono); }
-  .trend .anno-warn { animation-delay:2.6s; }
-  .trend .anno-fail { animation-delay:3.7s; }
-  @keyframes appear { to { opacity:1; } }
-  @media (prefers-reduced-motion: reduce) {
-    .trend .trace { stroke-dasharray:none; stroke-dashoffset:0; animation:none; }
-    .trend .anno { opacity:1; animation:none; }
-  }
-  .trend-cap { font-size:13.5px; color:var(--coal-dim); max-width:78ch; margin:12px 0 0; position:relative; z-index:1; }
-  .trend-cap b { color:var(--coal-ink); }
-
-  /* readout strip: the four numbers, bottom of the coal band */
-  .readouts { position:relative; z-index:1; margin-top:46px; border-top:1px solid var(--coal-line); }
-  .readout-grid { display:grid; grid-template-columns:1fr 1fr; }
-  @media (min-width:860px){ .readout-grid { grid-template-columns:repeat(4,1fr); } }
-  .readout { padding:22px 18px 26px; border-right:1px solid var(--coal-line); }
-  .readout:last-child { border-right:0; }
-  @media (max-width:859px){ .readout:nth-child(2n) { border-right:0; } .readout:nth-child(-n+2){ border-bottom:1px solid var(--coal-line); } }
-  .readout .n { font:500 36px/1.05 var(--display); color:var(--amber); }
-  .readout .n small { font-size:18px; }
-  .readout .l { font:400 13px/1.5 var(--sans); color:var(--coal-dim); margin-top:8px; }
-  .readout .l b { color:var(--coal-ink); font-weight:600; }
-
-  /* ── light body ── */
-  .band-light { background:var(--bg); color:var(--ink); }
-  section { padding:72px 0; }
-  section + section { border-top:1px solid var(--line); }
-  section h2 { font-size:clamp(26px,3.6vw,38px); margin:0 0 12px; }
-  .section-lead { color:var(--dim); max-width:64ch; margin:0 0 40px; font-size:17px; }
-  .section-lead b { color:var(--ink); }
-
-  .blocks { display:grid; grid-template-columns:1fr; gap:18px; }
-  @media (min-width:820px){ .blocks { grid-template-columns:repeat(3,1fr); gap:20px; } }
-  .block { background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:26px 24px; transition:border-color .15s ease; }
-  .block:hover { border-color:var(--signal); }
-  .block .tag { font:500 11.5px/1 var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--signal-deep); margin-bottom:14px; }
-  .block h3 { font-size:19px; margin:0 0 10px; }
-  .block p { margin:0; color:var(--dim); font-size:15px; }
-  .block p + p { margin-top:10px; }
-  .block p b, .block p i { color:var(--ink); }
-
-  /* ── demo ── */
-  .demo-chip { display:inline-flex; align-items:center; gap:9px; margin-bottom:14px; font:500 12.5px/1.4 var(--mono); letter-spacing:.05em; color:var(--ink); background:var(--surface); border:1px solid var(--line); border-radius:999px; padding:8px 15px; }
-  .demo-chip .dot { width:8px; height:8px; border-radius:50%; background:var(--green); animation:pulse 2s ease-in-out infinite; flex:none; }
-  @keyframes pulse { 0%,100%{ box-shadow:0 0 0 0 rgba(46,125,70,.4);} 50%{ box-shadow:0 0 0 6px rgba(46,125,70,0);} }
-  @media (prefers-reduced-motion: reduce){ .demo-chip .dot { animation:none; } }
-  .demo-embed { border:1px solid var(--line); border-radius:8px; overflow:hidden; box-shadow:var(--shadow); background:#0d1117; }
-  .demo-embed iframe { width:100%; height:clamp(520px, 68vh, 700px); border:0; display:block; background:#0d1117; }
-  .demo-caption { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-top:14px; }
-  .demo-caption p { margin:0; color:var(--dim); font-size:14px; max-width:60ch; }
-
-  /* ── from signal to action (agents) ── */
-  .flow { display:grid; grid-template-columns:1fr; gap:18px; margin-bottom:26px; }
-  @media (min-width:860px){ .flow { grid-template-columns:1fr 1.25fr 1fr; gap:20px; align-items:start; } }
-  .flow-step { background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:24px; }
-  .flow-step .stepno { font:500 12px/1 var(--mono); letter-spacing:.14em; color:var(--signal-deep); margin-bottom:12px; }
-  .flow-step h3 { font-size:18px; margin:0 0 10px; }
-  .flow-step p { margin:0; color:var(--dim); font-size:14.5px; }
-  .flow-step p b { color:var(--ink); }
-  .sensor-illus { display:block; margin:16px auto 2px; max-width:230px; width:100%; height:auto; color:var(--dim); }
-  .sensor-illus .amberline { stroke:var(--signal); }
-  .sensor-illus text { font:500 9.5px var(--mono); fill:var(--dim); letter-spacing:.05em; }
-
-  /* the real work-order excerpt — a document, not a screenshot */
-  .workorder { background:var(--bg); border:1px solid var(--line); border-left:4px solid var(--signal); border-radius:8px; padding:18px 20px; font:400 12.5px/1.65 var(--mono); color:var(--dim); }
-  .workorder .wo-title { color:var(--ink); font-weight:500; font-size:13px; margin-bottom:10px; }
-  .workorder .wo-kv { display:flex; justify-content:space-between; gap:10px; border-bottom:1px dashed var(--line); padding:4px 0; }
-  .workorder .wo-kv span:last-child { color:var(--ink); text-align:right; }
-  .workorder .wo-quote { margin:12px 0 0; padding:0; border:0; font-style:normal; color:var(--dim); }
-  .workorder .wo-quote b { color:var(--ink); font-weight:500; }
-  .workorder .wo-foot { margin-top:12px; padding-top:10px; border-top:1px solid var(--line); font-size:11.5px; color:var(--signal-deep); }
-  .flow-cap { font-size:13px; color:var(--dim); margin:10px 0 0; }
-  .guardrail { display:flex; gap:14px; align-items:flex-start; background:var(--signal-soft); border:1px solid var(--line); border-left:4px solid var(--signal); border-radius:8px; padding:18px 20px; }
-  .guardrail svg { flex:none; color:var(--signal-deep); margin-top:2px; }
-  .guardrail p { margin:0; font-size:15px; color:var(--ink); }
-
-  /* ── evidence ── */
-  .val-grid { display:grid; grid-template-columns:1fr; gap:18px; margin-bottom:28px; }
-  @media (min-width:820px){ .val-grid { grid-template-columns:repeat(3,1fr); gap:20px; } }
-  .val-card { background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:24px; display:flex; flex-direction:column; }
-  .val-card .metric { font:500 28px/1.1 var(--display); color:var(--signal-deep); }
-  .val-card .metric small { font:600 13px var(--sans); color:var(--dim); letter-spacing:0; }
-  .val-card h3 { font-size:16px; margin:8px 0 10px; }
-  .val-card p { margin:0 0 10px; font-size:14.5px; color:var(--dim); }
-  .val-card .tech { margin-top:auto; padding-top:12px; border-top:1px dashed var(--line); font:400 12.5px/1.6 var(--mono); color:var(--dim); }
-  .qa { background:var(--surface); border:1px solid var(--line); border-left:4px solid var(--signal); border-radius:8px; padding:20px 22px; margin-bottom:20px; }
-  .qa h3 { margin:0 0 8px; font-size:17px; }
-  .qa p { margin:0; font-size:15px; color:var(--dim); }
-  .qa p b { color:var(--ink); }
-  .honest { display:flex; gap:14px; align-items:flex-start; background:var(--signal-soft); border:1px solid var(--line); border-left:4px solid var(--signal); border-radius:8px; padding:18px 20px; }
-  .honest svg { flex:none; color:var(--signal-deep); margin-top:2px; }
-  .honest p { margin:0; font-size:15.5px; color:var(--ink); }
-
-  /* ── report ── */
-  .report-card { display:grid; grid-template-columns:1fr; gap:30px; align-items:center; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:30px; box-shadow:var(--shadow); }
-  @media (min-width:820px){ .report-card { grid-template-columns:1.1fr .9fr; gap:34px; padding:34px; } }
-  .report-card ul { margin:0 0 22px; padding-left:0; list-style:none; display:grid; gap:10px; }
-  .report-card li { display:flex; gap:10px; font-size:15px; color:var(--dim); }
-  .report-card li svg { flex:none; color:var(--signal-deep); margin-top:4px; }
-  .report-card .note { font-size:13px; color:var(--dim); margin-top:14px; }
-  .report-thumb { border:1px solid var(--line); border-radius:8px; background:var(--bg); padding:18px 20px; font:400 12.5px/1.6 var(--mono); color:var(--dim); }
-  .report-thumb .rt-title { font-weight:500; color:var(--ink); font-size:13.5px; margin-bottom:4px; }
-  .report-thumb .rt-bar { height:7px; border-radius:3px; background:var(--grid); margin:7px 0; overflow:hidden; }
-  .report-thumb .rt-bar i { display:block; height:100%; border-radius:3px; }
-  .report-thumb .rt-line { display:flex; justify-content:space-between; margin-top:8px; }
-
-  /* ── where it fits ── */
-  .fit-grid { display:grid; grid-template-columns:1fr; gap:18px; }
-  @media (min-width:820px){ .fit-grid { grid-template-columns:repeat(2,1fr); gap:20px; } }
-  .fit { background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:24px; }
-  .fit .tag { font:500 11.5px/1 var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--signal-deep); margin-bottom:12px; }
-  .fit h3 { font-size:18px; margin:0 0 8px; }
-  .fit p { margin:0; color:var(--dim); font-size:14.5px; }
-  .fit p b, .fit p i { color:var(--ink); }
-  .lang-line { margin-top:22px; font-size:14.5px; color:var(--dim); }
-  .lang-line i { color:var(--ink); }
-
-  /* ── founder ── */
-  .founder { display:flex; gap:26px; align-items:flex-start; flex-wrap:wrap; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:28px; }
-  .avatar { width:92px; height:92px; border-radius:50%; overflow:hidden; flex:none; background:var(--signal-soft); border:1px solid var(--line); }
-  .founder-body { flex:1; min-width:260px; }
-  .founder h3 { margin:0 0 2px; font-size:20px; }
-  .founder .role { color:var(--dim); font-size:14.5px; margin:0 0 14px; font-family:var(--mono); }
-  .founder p { margin:0 0 12px; color:var(--dim); font-size:15px; max-width:66ch; }
-  .founder p b { color:var(--ink); }
-  .founder-links { display:flex; gap:18px; font-size:14px; }
-  .founder-links a { color:var(--signal-deep); text-decoration:none; }
-  .founder-links a:hover { text-decoration:underline; }
-
-  /* ── ASK: coal band again, impeller substrate ── */
-  .ask-band { position:relative; background:var(--coal); color:var(--coal-ink); overflow:hidden; }
-  .ask-photo { position:absolute; inset:0; z-index:0; }
-  .ask-photo img { width:100%; height:100%; object-fit:cover; object-position:78% center; opacity:.6; }
-  .ask-photo::after { content:""; position:absolute; inset:0;
-    background:linear-gradient(95deg, var(--coal) 0%, rgba(11,14,17,.97) 40%, rgba(11,14,17,.72) 72%, rgba(11,14,17,.45) 100%); }
-  .ask-band .wrap { position:relative; z-index:1; }
-  .ask-band section { border:0; }
-  .ask-band .eyebrow { color:var(--coal-dim); }
-  .ask-band h2 { color:var(--coal-ink); }
-  .ask-band .section-lead { color:var(--coal-dim); }
-  .steps { counter-reset:step; display:grid; gap:12px; margin:0 0 32px; padding:0; list-style:none; max-width:780px; }
-  .steps li { counter-increment:step; display:flex; gap:16px; align-items:flex-start; background:rgba(16,21,26,.82); border:1px solid var(--coal-line); border-radius:8px; padding:17px 19px; }
-  .steps li::before { content:counter(step,decimal-leading-zero); flex:none; margin-top:2px; font:500 13px/1.4 var(--mono); color:var(--amber); letter-spacing:.06em; }
-  .steps li div { font-size:15px; color:var(--coal-dim); }
-  .steps li div b { color:var(--coal-ink); display:block; margin-bottom:2px; font-size:15.5px; }
-  .ask-cols { display:grid; grid-template-columns:1fr; gap:20px; margin-bottom:34px; }
-  @media (min-width:820px){ .ask-cols { grid-template-columns:1fr 1fr; gap:22px; } }
-  .spec, .handling { background:rgba(16,21,26,.82); border:1px solid var(--coal-line); border-radius:8px; padding:22px 24px; }
-  .spec h3, .handling h3 { margin:0 0 14px; font-size:16px; color:var(--coal-ink); }
-  .spec ol { margin:0; padding-left:0; list-style:none; counter-reset:spec; display:grid; gap:9px; }
-  .spec ol li { counter-increment:spec; padding-left:26px; position:relative; font:400 13px/1.55 var(--mono); color:var(--coal-dim); }
-  .spec ol li::before { content:counter(spec); position:absolute; left:0; top:1px; color:var(--amber); font-weight:600; }
-  .spec a { color:var(--amber); }
-  .handling ul { margin:0; padding-left:0; list-style:none; display:grid; gap:11px; }
-  .handling li { display:flex; gap:10px; font-size:14px; color:var(--coal-dim); }
-  .handling li svg { flex:none; color:var(--amber); margin-top:3px; }
-  .ask-cta { text-align:center; padding:8px 0 4px; }
-  .ask-cta .fine { font:400 13px var(--mono); color:var(--coal-dim); margin-top:16px; }
-
-  /* ── footer (still coal) ── */
-  footer { background:var(--coal); color:var(--coal-dim); border-top:1px solid var(--coal-line); padding:34px 0 44px; }
-  .copyright { font:400 12.5px var(--mono); letter-spacing:.02em; }
-</style>
+<link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 
-<nav id="topnav" aria-label="Main">
+<nav class="top" aria-label="Main">
   <div class="wrap">
-    <!-- BRAND swap-in: nav wordmark -->
-    <a class="brand" href="#top">Sentys<em>.</em></a>
+    <a class="brand" href="#top">SENTY<i>S</i></a>
     <div class="nav-links">
       <a href="#how">How it works</a>
-      <a href="#action">From signal to action</a>
+      <a href="#action">Signal → action</a>
       <a href="#evidence">Evidence</a>
       <a href="sample-report.html">Sample report</a>
       <a class="nav-cta" href="#ask">Free analysis</a>
@@ -328,390 +35,431 @@
   </div>
 </nav>
 
-<!-- ═══ HERO — dark machine band, real signal drawn over it ═══ -->
+<!-- ═══ HERO — the plate ═══ -->
 <header class="hero" id="top">
-  <div class="hero-photo" aria-hidden="true">
-    <picture>
-      <source media="(min-width:720px)" srcset="assets/img/hero-bearing.webp">
-      <img src="assets/img/hero-bearing-m.webp" alt="" fetchpriority="high" decoding="async">
-    </picture>
-    <video class="hero-vid" autoplay muted loop playsinline preload="auto" poster="assets/img/hero-bearing.webp">
-      <source src="assets/vid/hero-loop.webm?v=2" type="video/webm">
-      <source src="assets/vid/hero-loop.mp4?v=2" type="video/mp4">
-    </video>
+  <div class="hero-fallback" aria-hidden="true"></div>
+  <canvas id="plate" aria-hidden="true"></canvas>
+  <div class="hero-scrim" aria-hidden="true"></div>
+
+  <div class="hero-inner">
+    <div class="wrap">
+      <div class="hero-copy">
+        <p class="eyebrow">Predictive maintenance · any machine · any sensors</p>
+        <h1>Every machine has a <em>feeling</em> of healthy.</h1>
+        <p class="hero-sub">Sentys learns that feeling from the sensor history you already log —
+          <b>no failure labels, no data-science project on your side</b> — and tells you, in plain
+          language, which machine is drifting and which sensor felt it first.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#ask">Send one export — free analysis</a>
+          <a class="btn btn-ghost" href="sample-report.html">See a sample report</a>
+        </div>
+        <p class="voice" aria-live="off"><span class="dot" aria-hidden="true"></span>
+          <span class="vtext">all senses within healthy range</span><span class="caret" aria-hidden="true">▏</span></p>
+      </div>
+    </div>
   </div>
-  <div class="wrap hero-inner">
-    <p class="eyebrow eyebrow-seq" aria-label="Predictive maintenance · any machine · any sensors"><span class="ph">Predictive maintenance</span><span class="sep" aria-hidden="true">·</span><span class="ph">any machine</span><span class="sep" aria-hidden="true">·</span><span class="ph">any sensors</span></p>
-    <h1 class="reveal">The data you already log knows what's <b>about to break</b>.</h1>
-    <p class="sub reveal d1">Sentys learns each machine's healthy behaviour from its own sensor history — no failure labels, no data-science project on your side — and tells you, in plain language, which machine is drifting and which sensor saw it first.</p>
-    <div class="cta-row reveal d2">
-      <a class="btn btn-primary" href="#ask">Send one export — get a free analysis</a>
-      <a class="btn btn-ghost" href="sample-report.html">See a sample report</a>
-    </div>
 
-    <!-- Signature: real model output (Engine 03 of the demo dataset, fleet_data.json),
-         health index on a √ scale clipped at 27.5×. Not an illustration. -->
-    <div class="trend">
-      <div class="trend-head">
-        <span>TREND · ENGINE-03 · SURPRISE vs HEALTHY BASELINE</span>
-        <span class="live">MODEL OUTPUT — UNSEEN UNIT</span>
-      </div>
-      <svg viewBox="0 0 760 150" role="img" aria-label="Health-index trend of an unseen engine: flat and healthy for 122 cycles, first warning at cycle 123, failure at cycle 179">
-        <defs>
-          <linearGradient id="tracegrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0"    stop-color="#4caf6a"/>
-            <stop offset=".62"  stop-color="#4caf6a"/>
-            <stop offset=".74"  stop-color="#e2a445"/>
-            <stop offset=".86"  stop-color="#e5695c"/>
-            <stop offset="1"    stop-color="#e5695c"/>
-          </linearGradient>
-          <pattern id="chartgrid" width="47" height="34" patternUnits="userSpaceOnUse">
-            <path d="M 47 0 L 0 0 0 34" fill="none" stroke="rgba(150,161,170,.13)" stroke-width="1"/>
-          </pattern>
-        </defs>
-        <rect x="0" y="0" width="760" height="150" fill="url(#chartgrid)"/>
-        <g transform="translate(0,9)">
-          <line class="thr" x1="6" y1="78.3" x2="754" y2="78.3" stroke="#e2a445"/>
-          <text class="svglbl" x="8" y="74.5">warning · 3× healthy</text>
-          <line class="thr" x1="6" y1="63.6" x2="754" y2="63.6" stroke="#e5695c"/>
-          <text class="svglbl" x="8" y="59.8">critical · 6× healthy</text>
-          <text class="svglbl" x="8" y="104">healthy baseline · 122 quiet cycles</text>
-          <polyline class="trace" pathLength="1" points="6.0,90.4 14.4,87.7 22.8,89.8 31.2,90.5 39.6,92.8 48.0,91.5 56.4,89.8 64.8,88.8 73.2,87.3 81.6,87.6 90.0,89.4 98.4,91.6 106.9,92.0 115.3,91.9 123.7,89.9 132.1,90.3 140.5,92.7 148.9,93.0 157.3,89.2 165.7,89.0 174.1,87.9 182.5,86.6 190.9,86.7 199.3,91.9 207.7,91.9 216.1,92.0 224.5,92.0 232.9,90.8 241.3,92.5 249.7,92.0 258.1,92.1 266.5,90.3 274.9,91.7 283.3,89.8 291.8,90.5 300.2,90.4 308.6,85.4 317.0,86.5 325.4,88.3 333.8,90.5 342.2,88.4 350.6,89.2 359.0,88.7 367.4,91.3 375.8,89.5 384.2,90.1 392.6,87.8 401.0,84.2 409.4,84.6 417.8,92.0 426.2,91.5 434.6,89.2 443.0,89.6 451.4,88.4 459.8,85.3 468.2,86.4 476.7,85.6 485.1,86.4 493.5,84.3 501.9,83.1 510.3,79.0 518.7,76.5 527.1,73.7 535.5,72.9 543.9,70.9 552.3,67.5 560.7,66.6 569.1,66.6 577.5,64.2 585.9,63.0 594.3,60.9 602.7,59.1 611.1,55.8 619.5,53.1 627.9,50.8 636.3,48.6 644.7,46.5 653.1,43.3 661.6,41.1 670.0,38.3 678.4,35.3 686.8,33.3 695.2,29.8 703.6,26.3 712.0,22.9 720.4,19.7 728.8,16.4 737.2,13.9 745.6,10.3 754.0,6.5"/>
-          <g class="anno anno-warn">
-            <line x1="518.7" y1="18" x2="518.7" y2="112" stroke="#e2a445" stroke-width="1" opacity=".65"/>
-            <text x="514" y="12" text-anchor="end" fill="#e2a445">first warning · cycle 123 — 56 cycles early</text>
-          </g>
-          <g class="anno anno-fail">
-            <circle cx="754" cy="6.5" r="3.6" fill="#e5695c"/>
-            <text x="744" y="10" text-anchor="end" fill="#e5695c">failure · cycle 179</text>
-          </g>
-        </g>
-      </svg>
-    </div>
-    <p class="trend-cap">Real output, not an illustration: Engine 03 from the live demo below, exactly as Sentys scored it. Quiet for 122 cycles, first warning at cycle 123 — <b>56 cycles before it failed</b>. Sentys had never seen this engine.</p>
-
-    <div class="readouts">
-      <div class="readout-grid">
-        <div class="readout"><div class="n num"><span data-count="30">30</span><small>/30</small></div><div class="l">unseen engines flagged <b>before</b> failure</div></div>
-        <div class="readout"><div class="n num" data-count="59">59</div><div class="l">operating cycles of median warning</div></div>
-        <div class="readout"><div class="n num" data-count="1">1</div><div class="l">false-alarm engine across the fleet, thresholds set from healthy data alone</div></div>
-        <div class="readout"><div class="n num" data-count="3">3</div><div class="l">machine classes validated — one unmodified pipeline</div></div>
-      </div>
+  <div class="readouts">
+    <div class="readout-grid" role="list">
+      <div class="readout" role="listitem"><div class="n num">30<i>/30</i></div><div class="l">unseen engines flagged <b>before</b> failure</div></div>
+      <div class="readout" role="listitem"><div class="n num">59</div><div class="l">operating cycles of median warning</div></div>
+      <div class="readout" role="listitem"><div class="n num">1</div><div class="l">false-alarm engine across the fleet</div></div>
+      <div class="readout" role="listitem"><div class="n num">6</div><div class="l">public benchmarks · one unmodified pipeline</div></div>
     </div>
   </div>
 </header>
 
+<main id="main">
+<!-- ═══ WHAT IT IS ═══ -->
 <div class="band-light">
+  <section id="how">
+    <div class="wrap">
+      <p class="eyebrow reveal">What it is</p>
+      <h2 class="reveal">Built to fit the plant you already have</h2>
+      <p class="section-lead reveal d1">No labeled failure history. No data-science team. No rip-and-replace.
+        Sentys works with the sensor data your control system is already logging.</p>
+      <div class="blocks">
+        <div class="block reveal">
+          <div class="tag">Learns healthy · flags drift</div>
+          <h3>A baseline per machine, from its own history</h3>
+          <p>It trains on your machine's own healthy operation — no failure labels, because at most
+            sites they don't exist — and reports degradation as a rising deviation from that baseline,
+            decomposed per sensor.</p>
+          <p>The answer is triage language, not an anomaly score:
+            <i>“Vibration: 3.2× healthy baseline; temperature and flow within range.”</i></p>
+        </div>
+        <div class="block reveal d1">
+          <div class="tag">Sensor-agnostic</div>
+          <h3>Any tags your system logs</h3>
+          <p>Temperatures, pressures, flow, current, vibration — it doesn't care. From a SCADA export,
+            a historian, or a plain spreadsheet. New sensor types are configuration, not code — built
+            by an integration engineer, so the data problem is solved first.</p>
+          <p>European exports parse natively: semicolons, decimal commas, your column names in your
+            language. CSV or JSON, straight from the system you have.</p>
+        </div>
+        <div class="block reveal d2">
+          <div class="tag">Status · honest</div>
+          <h3>Where it stands today</h3>
+          <p><b>Today:</b> an export is enough. Send one machine's history, get a written analysis
+            back — zero integration on your side.</p>
+          <p><b>A pilot:</b> the same pipeline runs on-prem (Docker, no GPU) reading your exports or
+            a live stream; your data never leaves the plant.</p>
+          <p><b>Not built yet:</b> OPC-UA/Modbus connectors and hardened remote access. That's
+            pilot-stage work we do together — we'd rather tell you now than surprise you later.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
 
 <!-- ═══ LIVE DEMO ═══ -->
-<section id="demo" style="border-top:0">
-  <div class="wrap">
-    <span class="demo-chip"><span class="dot"></span> LIVE — real model output on 30 unseen engines, not a mock-up</span>
-    <div class="demo-embed">
-      <!-- Self-contained page in the sibling demo/ folder. embed=1 hides the demo's own
-           header, autoplay+loop animate the fleet, select=3 opens Engine 03's triage panel. -->
-      <iframe src="demo/index.html?embed=1&autoplay=1&loop=1&select=3" title="Sentys live fleet dashboard — 30 unseen NASA turbofan engines" loading="lazy"></iframe>
+<div class="band-dark">
+  <section id="demo">
+    <div class="wrap">
+      <div class="demo-chip reveal"><span class="dot" aria-hidden="true"></span>LIVE — real model output on 30 unseen engines, not a mock-up</div>
+      <h2 class="reveal">Watch a fleet age in ninety seconds</h2>
+      <p class="section-lead reveal d1">30 turbofan engines the model had never seen, run to failure.
+        Every tile climbs green → amber → red as the machine degrades; click any engine for its
+        per-sensor triage. The proof in plain terms: trained only on <b>healthy</b> operation
+        of 70 other machines.</p>
+      <div class="demo-embed reveal d1">
+        <iframe src="demo/" title="Sentys live fleet demo — 30 unseen engines run to failure" loading="lazy"></iframe>
+      </div>
+      <div class="demo-caption reveal d2">
+        <p>Engine 03 from this fleet is the trace in the evidence section below — <b>same data, same model.</b></p>
+        <a href="demo/" target="_blank" rel="noopener">Open full-screen ↗</a>
+      </div>
     </div>
-    <div class="demo-caption">
-      <p>30 turbofan engines the model had never seen, run to failure. Every tile climbs green → amber → red as the machine degrades; click any engine for its per-sensor triage. The proof in plain terms: trained only on <i>healthy</i> operation of 70 other machines.</p>
-      <a class="btn btn-ghost" href="demo/index.html" target="_blank" rel="noopener">Open full-screen</a>
-    </div>
-  </div>
-</section>
+  </section>
+</div>
 
-<!-- ═══ HOW IT WORKS ═══ -->
-<section id="how">
-  <div class="wrap">
-    <p class="eyebrow reveal">What it is</p>
-    <h2 class="reveal">Built to fit the plant you already have</h2>
-    <p class="section-lead reveal">No labeled failure history. No data-science team. No rip-and-replace. Sentys works with the sensor data your control system is already logging.</p>
-    <div class="blocks">
-      <div class="block reveal">
-        <div class="tag">Learns healthy · flags drift</div>
-        <h3>A baseline per machine, from its own history</h3>
-        <p>It trains on your machine's own healthy operation — no failure labels, because at most sites they don't exist — and reports degradation as a rising deviation from that baseline, decomposed per sensor.</p>
-        <p>The answer is triage language, not an anomaly score: <i>“Vibration: 3.2× healthy baseline; temperature and flow within range.”</i></p>
-      </div>
-      <div class="block reveal d1">
-        <div class="tag">Sensor-agnostic</div>
-        <h3>Any tags your system logs</h3>
-        <p>Temperatures, pressures, flow, current, vibration — it doesn't care. From a SCADA export, a historian, or a plain spreadsheet. New sensor types are configuration, not code — built by an integration engineer, so the data problem is solved first.</p>
-        <p>European exports parse natively: semicolons, decimal commas, your column names in your language. CSV or JSON, straight from the system you have.</p>
-      </div>
-      <div class="block reveal d2">
-        <div class="tag">Status · honest</div>
-        <h3>Where it stands today</h3>
-        <p><b>Today:</b> an export is enough. Send one machine's history, get a written analysis back — zero integration on your side. <b>A pilot:</b> the same pipeline runs on-prem (Docker, no GPU) reading your exports or a live stream; your data never leaves the plant.</p>
-        <p><b>Not built yet:</b> OPC-UA/Modbus connectors and hardened remote access. That's pilot-stage work we do together — we'd rather tell you now than surprise you later.</p>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- ═══ SIGNAL → ACTION ═══ -->
+<div class="band-light">
+  <section id="action">
+    <div class="wrap">
+      <p class="eyebrow reveal">From signal to action</p>
+      <h2 class="reveal">The drift becomes a work order — drafted for you</h2>
+      <p class="section-lead reveal d1">A rising trace is not an answer. Sentys's agents turn it into one:
+        <b>drafted by AI, grounded in your data, approved by your engineer.</b>
+        Every artifact below is real output from the pipeline, verbatim.</p>
 
-<!-- ═══ FROM SIGNAL TO ACTION (agents) ═══ -->
-<section id="action">
-  <div class="wrap">
-    <p class="eyebrow reveal">From signal to action</p>
-    <h2 class="reveal">The drift becomes a work order — drafted for you</h2>
-    <p class="section-lead reveal">A rising trace is not an answer. Sentys's agents turn it into one: <b>drafted by AI, grounded in your data, approved by your engineer.</b> Every artifact below is real output from the pipeline, verbatim.</p>
-    <div class="flow">
-      <div class="flow-step reveal">
-        <div class="stepno">01 · PERCEIVE</div>
-        <h3>The model listens</h3>
-        <p>Every sensor stream is compared to that machine's own learned normal, every moment. Drift is reported per sense — <i>rotation, temperature, flow</i> — as a ratio to healthy.</p>
-        <svg class="sensor-illus" viewBox="0 0 230 120" role="img" aria-label="Line drawing: a small sensor mounted on a machine housing, sending a signal">
-          <path d="M10 108 Q70 62 150 74 Q195 82 224 96" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".55"/>
-          <path d="M10 116 Q70 70 150 82 Q195 90 224 104" fill="none" stroke="currentColor" stroke-width="1" opacity=".3"/>
-          <g>
-            <rect x="86" y="46" width="26" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/>
-            <rect x="91" y="30" width="16" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.4"/>
-            <line x1="99" y1="30" x2="99" y2="22" stroke="currentColor" stroke-width="1.4"/>
-          </g>
-          <path class="amberline" d="M99 22 C99 10 128 12 138 12" fill="none" stroke-width="1.4" stroke-dasharray="3 3"/>
-          <polyline class="amberline" points="142,18 154,18 158,10 164,24 168,6 174,18 190,18" fill="none" stroke-width="1.6"/>
-          <text x="10" y="46">machine · its own baseline</text>
-          <text x="142" y="36">signal · ratio vs healthy</text>
-        </svg>
-      </div>
-      <div class="flow-step reveal d1">
-        <div class="stepno">02 · TRIAGE — DRAFTED BY AN AGENT</div>
-        <h3>A work order, not a chart</h3>
-        <div class="workorder" aria-label="Excerpt of a real agent-drafted work order">
-          <div class="wo-title">WORK ORDER (DRAFT) — Inspect rotation subsystem on unit 100</div>
-          <div class="wo-kv"><span>severity</span><span>escalate · confidence 0.6</span></div>
-          <div class="wo-kv"><span>dominant sense</span><span>rotation · 1.56× healthy</span></div>
-          <div class="wo-kv"><span>nearest prior case</span><span>unit 88 · kept degrading</span></div>
-          <p class="wo-quote">“<b>Schedule a rotation-domain inspection</b> (bearing/shaft/rotor balance and vibration diagnostics) on unit 100 … compare findings against the near-identical prior unit 88 that continued degrading.”</p>
-          <div class="wo-foot">Draft for your engineer to review — the tool proposes, your team approves. No automatic derate or shutdown.</div>
+      <div class="flow">
+        <div class="flow-step reveal">
+          <div class="stepno">01 · PERCEIVE</div>
+          <h3>The model listens</h3>
+          <p>Every sensor stream is compared to that machine's own learned normal, every moment.
+            Drift is reported per sense — <b>rotation, temperature, flow</b> — as a ratio to healthy.</p>
         </div>
-        <p class="flow-cap">Verbatim excerpt — benchmark unit 100, drafted by the triage agent, including its own stated caveats.</p>
+        <div class="flow-step reveal d1">
+          <div class="stepno">02 · TRIAGE — DRAFTED BY AN AGENT</div>
+          <h3>A work order, not a chart</h3>
+          <div class="workorder">
+            <div class="wo-title">WORK ORDER (DRAFT) — Inspect rotation subsystem on unit 100</div>
+            <div class="wo-kv"><span>severity</span><span>escalate · confidence 0.6</span></div>
+            <div class="wo-kv"><span>dominant sense</span><span>rotation · 1.56× healthy</span></div>
+            <div class="wo-kv"><span>nearest prior case</span><span>unit 88 · kept degrading</span></div>
+            <p class="wo-quote">“<b>Schedule a rotation-domain inspection</b> (bearing/shaft/rotor balance
+              and vibration diagnostics) on unit 100 … compare findings against the near-identical
+              prior unit 88 that continued degrading.”</p>
+            <div class="wo-foot">Draft for your engineer to review — the tool proposes, your team approves.
+              No automatic derate or shutdown.</div>
+          </div>
+          <p class="flow-cap">Verbatim excerpt — benchmark unit 100, drafted by the triage agent,
+            including its own stated caveats.</p>
+        </div>
+        <div class="flow-step reveal d2">
+          <div class="stepno">03 · THE WEEK AHEAD</div>
+          <h3>A fleet report every week</h3>
+          <p>Which machines need attention this week, ranked — <b>the ranking is computed by code</b>,
+            never decided by the model. An agent writes the prose around it; a mechanical check rejects
+            any draft citing a number that isn't in the evidence.</p>
+          <p>You read one page, not thirty dashboards.</p>
+        </div>
       </div>
-      <div class="flow-step reveal d2">
-        <div class="stepno">03 · THE WEEK AHEAD</div>
-        <h3>A fleet report every week</h3>
-        <p>Which machines need attention this week, ranked — <b>the ranking is computed by code</b>, never decided by the model. An agent writes the prose around it; a mechanical check rejects any draft citing a number that isn't in the evidence.</p>
-        <p>You read one page, not thirty dashboards.</p>
+
+      <div class="guardrail reveal">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 1.5 18.5 17H1.5L10 1.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M10 7.5v4.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="14.4" r=".9" fill="currentColor"/></svg>
+        <p><b>Grounded or rejected:</b> every number an agent writes is checked mechanically against the
+          evidence it was given — a draft that cites anything the data doesn't support is rejected and
+          redrafted. And nothing acts on a machine without a human signing off.</p>
       </div>
     </div>
-    <div class="guardrail reveal">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>
-      <p><strong>Grounded or rejected:</strong> every number an agent writes is checked mechanically against the evidence it was given — a draft that cites anything the data doesn't support is rejected and redrafted. And nothing acts on a machine without a human signing off.</p>
-    </div>
-  </div>
-</section>
+  </section>
+</div>
 
 <!-- ═══ EVIDENCE ═══ -->
-<section id="evidence">
-  <div class="wrap">
-    <p class="eyebrow reveal">Evidence, translated</p>
-    <h2 class="reveal">Three machine classes, one unmodified pipeline</h2>
-    <p class="section-lead reveal">Public benchmark datasets, trained on healthy data only, every time. Outcomes in plain language; the technical numbers sit in the small print for your advisor.</p>
-    <div class="val-grid">
-      <div class="val-card reveal">
-        <div class="metric">30/30 <small>flagged before failure</small></div>
-        <h3>Turbofan engines — NASA C-MAPSS</h3>
-        <p>Every one of 30 engines the model had never seen was flagged before it failed — median 59 operating cycles of warning. With alarm thresholds set from healthy data alone, one engine in the fleet false-alarmed.</p>
-        <div class="tech">holdout: Spearman ρ = 0.762, AUC = 0.996 (FD001); ρ = 0.615, AUC = 0.95 on the six-regime FD002 subset — no regime-aware tuning.</div>
-      </div>
-      <div class="val-card reveal d1">
-        <div class="metric">75 h <small>warning — and physics for free</small></div>
-        <h3>Bearing vibration — NASA IMS</h3>
-        <p>On run-to-failure rigs, the bearing that actually failed was ranked strongest-trending and loudest — flagged 75 hours before end of run on one rig, ~470 on the other. The spectral sense fired first, reproducing known bearing-defect physics with zero labels.</p>
-        <div class="tech">honest limits: same-shaft neighbours also elevate late (the ranked view still picks the right bearing by 2–3×); healthy baselines don't transfer across installations — each gets its own, which is the deployment protocol anyway.</div>
-      </div>
-      <div class="val-card reveal d2">
-        <div class="metric">±0.03 <small>AUC of the specialist tool</small></div>
-        <h3>Industrial pump audio — MIMII / DCASE</h3>
-        <p>On four physically different real pumps in factory noise, the same pipeline — with zero audio-specific engineering — landed within 0.03 average AUC of the purpose-built DCASE audio baseline (0.687 vs 0.715), beating it outright on two of the four.</p>
-        <div class="tech">also measured: a brand-new pump gets useful day-one coverage from its fleet-mates' shared model (0.60 AUC unseen); its own baseline lifts that to 0.69 — cold-start from the fleet, precision from the fine-tune.</div>
-      </div>
-    </div>
-    <div class="qa reveal">
-      <h3>“How much warning do I actually get?”</h3>
-      <p>The honest answer: <b>on the turbofan benchmark, the median first warning came 59 cycles before failure</b> — roughly the last fifth of the machine's life — and on the bearing rigs, days to weeks. What Sentys does <b>not</b> do yet is date the failure: it ranks which machine is drifting and shows which sensor saw it first, so you inspect the right asset while there's still time to schedule it. It doesn't output “fails in 12 days” — and we won't claim it does until we can prove it.</p>
-    </div>
-    <div class="honest reveal">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
-      <p><strong>Everything above is public-benchmark evidence. We're seeking our first real-world pilot — that honesty is the point.</strong></p>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ SAMPLE REPORT ═══ -->
-<section id="report">
-  <div class="wrap">
-    <p class="eyebrow reveal">The deliverable</p>
-    <h2 class="reveal">This is what you get back</h2>
-    <p class="section-lead reveal">Not a dashboard login. Not a sales deck. One self-contained report — readable by an operations lead, forwardable to the board.</p>
-    <div class="report-card reveal">
-      <div>
-        <ul>
-          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Health-over-life chart for every machine in the data, with the warning point marked</li>
-          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Which sensor group saw the drift first, and how far from healthy it moved</li>
-          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Findings in plain language — and every caveat stated, in the same font size</li>
-          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Every number read mechanically from the run's artifacts — no hand-tuning, no cherry-picking</li>
-        </ul>
-        <a class="btn btn-primary" href="sample-report.html">Open the sample report</a>
-        <p class="note">Generated from a real analysis run of the NASA turbofan data — the same report generator your export goes through.</p>
-      </div>
-      <div class="report-thumb" aria-hidden="true">
-        <div class="rt-title">Findings report — fleet of 30</div>
-        <div>machine 03 · flow sense · first warning cycle 123</div>
-        <div class="rt-bar"><i style="width:86%;background:var(--red)"></i></div>
-        <div class="rt-bar"><i style="width:54%;background:var(--signal)"></i></div>
-        <div class="rt-bar"><i style="width:23%;background:var(--green)"></i></div>
-        <div class="rt-line"><span>surprise vs healthy</span><span class="num">7.2×</span></div>
-        <div class="rt-line"><span>caveats stated</span><span>all of them</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ WHERE IT FITS ═══ -->
-<section id="fits">
-  <div class="wrap">
-    <p class="eyebrow reveal">Where it fits</p>
-    <h2 class="reveal">Any machine that hums, pumps, spins, or heats</h2>
-    <p class="section-lead reveal">Across Europe, the pattern is the same: the control system logs everything, and nobody reads the history. Sentys reads it. The machine classes it has been benchmarked on — <b>pumps, bearings, turbomachinery</b> — sit at the heart of every one of these.</p>
-    <div class="fit-grid">
-      <div class="fit reveal">
-        <div class="tag">District energy &amp; utilities</div>
-        <h3>The plant that keeps a town warm</h3>
-        <p>Circulation pumps, heat exchangers, boilers — running unattended most hours of the year, where <i>a pump failure in January is not a ticket, it's a cold town</i>. Your control room already logs years of history at minute resolution. <b>Sentys has never seen a district-heating plant — which is exactly why the first analysis is free.</b></p>
-      </div>
-      <div class="fit reveal d1">
-        <div class="tag">Water &amp; wastewater</div>
-        <h3>Pump stations, around the clock</h3>
-        <p>Submersible and dry-well pumps, blowers, screens — the benchmarked machine classes almost exactly. Drift in current draw or vibration shows up in the history long before the alarm bank knows anything is wrong.</p>
-      </div>
-      <div class="fit reveal d2">
-        <div class="tag">Manufacturing &amp; process</div>
-        <h3>The compressor nobody thinks about</h3>
-        <p>Compressors, fans, conveyors, CIP pumps — the machines that stop a line when they stop. One export per machine is enough to find out whether your last breakdown had warning in the data. Usually it did.</p>
-      </div>
-      <div class="fit reveal d3">
-        <div class="tag">Robots &amp; mobile fleets</div>
-        <h3>Where Sentys was born</h3>
-        <p>The pipeline started life as the nervous system of a real robot — learning the feel of its own motors and sensors, flagging what didn't feel right. Fleet predictive maintenance for robotics is where it's headed next; <i>industrial plants are where it proves itself first.</i></p>
-      </div>
-    </div>
-    <p class="lang-line reveal"><i>Og ja — skriv gerne på dansk.</i> Exports in any European locale parse natively — semicolons, decimal commas, and your column names in your own language. Reports come back in English or Danish, as you prefer.</p>
-  </div>
-</section>
-
-<!-- ═══ FOUNDER ═══ -->
-<section id="who">
-  <div class="wrap">
-    <p class="eyebrow reveal">Who's behind this</p>
-    <div class="founder reveal">
-      <div class="avatar">
-        <img src="data:image/jpeg;base64,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" alt="Frixos Andreou" style="width:100%;height:100%;object-fit:cover">
-      </div>
-      <div class="founder-body">
-        <h3>Frixos Andreou</h3>
-        <p class="role">integration engineer · robotics background · Denmark, working across Europe</p>
-        <p>I studied robotics, and I've spent 5+ years as an integration specialist connecting enterprise systems — the unglamorous work of making data actually flow. <b>Sentys started in my living room:</b> a robot that learned the feel of its own motors and sensors from experience, with no labels, and noticed when something was off.</p>
-        <p>The same question — <i>does this machine feel like itself today?</i> — turned out to matter far more for a pump that keeps a town warm than for a robot. So that's what it does now. The benchmarks above are that one idea, tested honestly, three machine classes in a row.</p>
-        <div class="founder-links">
-          <a href="https://www.linkedin.com/in/frixosandreou" target="_blank" rel="noopener">LinkedIn</a>
-          <a href="mailto:frixos@sentys.ai">frixos@sentys.ai</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-</div><!-- /band-light -->
-
-<!-- ═══ THE ASK — coal band, impeller substrate ═══ -->
-<div class="ask-band">
-  <section id="ask">
+<div class="band-dark">
+  <section id="evidence">
     <div class="wrap">
-      <p class="eyebrow reveal">The ask — all of it</p>
-      <h2 class="reveal">Send one export. Get a real answer.</h2>
-      <p class="section-lead reveal">Here is everything saying yes commits you to — all four steps of it.</p>
-      <ol class="steps reveal">
-        <li><div><b>We sign an NDA first.</b> You get a ready-to-sign mutual NDA before any data moves.<!-- ENTITY swap-in: NDA counterparty is currently the founder personally; update to the company when registered. --></div></li>
-        <li><div><b>You export one problem machine's history.</b> The five-line spec is below — CSV or JSON, straight out of your control system. Twenty minutes, no project.</div></li>
-        <li><div><b>Within a week you get the report.</b> What drifted, which sensor saw it first, and whether your last breakdown had warning in the data. Free — one machine, no strings.</div></li>
-        <li><div><b>That's it.</b> If the report earns it, the next conversation is a 2-week shadow pilot on more machines — a separate decision, made on the evidence in your hands.</div></li>
-      </ol>
-      <div class="ask-cols">
-        <div class="spec reveal">
-          <h3>The data spec — five lines, in full</h3>
-          <ol>
-            <li>One machine you care about — a pump, a heat exchanger, a motor.</li>
-            <li>All its logged tags: temperatures, pressures, flow, current, vibration, speed.</li>
-            <li>1-minute averages are plenty; hourly still works.</li>
-            <li>6–12 months of history — ideally spanning a breakdown or repair you remember.</li>
-            <li>CSV or JSON, any delimiter — semicolons and decimal commas are fine.</li>
-          </ol>
-          <p style="margin:14px 0 0; font-size:13px;"><a href="data-spec.html">Open the full export spec (one printable page)</a> — forward it to whoever runs your control system.</p>
+      <p class="eyebrow reveal">Evidence, translated</p>
+      <h2 class="reveal">The data you already log knows what's about to break</h2>
+      <p class="section-lead reveal d1">Six public benchmark datasets, four machine classes, one
+        unmodified pipeline — trained on <b>healthy data only</b>, every time. Plain-language outcomes
+        first; the technical numbers sit in the small print for your advisor. And where a
+        pre-registered gate missed its bar, the result is published, not hidden.</p>
+
+      <div class="trend reveal">
+        <div class="trend-head">
+          <span>TREND · ENGINE-03 · SURPRISE vs HEALTHY BASELINE</span>
+          <span class="live">MODEL OUTPUT — UNSEEN UNIT</span>
         </div>
-        <div class="handling reveal d1">
-          <h3>How your data is handled</h3>
-          <ul>
-            <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Processed on a single machine in Denmark. Your raw data is never uploaded to any cloud service.</li>
-            <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>Stated up front: schema inference sends column names, per-column statistics, and a handful of sample values to an AI API — never your bulk data. If even that is too much, say so and it's done by hand.</li>
-            <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>Used for your analysis only. Never used to train models for anyone else. Deleted when you say so — confirmed in writing.</li>
-          </ul>
+        <canvas id="engine03" role="img" aria-label="Line chart of Engine 03's surprise signal over its 179-cycle life: quiet near 1× healthy for 122 cycles, first warning at cycle 123 where it crosses the amber threshold, then climbing steeply until failure at cycle 179. Four thin per-sense traces run beneath the overall signal."></canvas>
+      </div>
+      <p class="trend-cap reveal d1">Real output, not an illustration: Engine 03 from the live demo above,
+        exactly as Sentys scored it — the thin lines are its four senses, the bright line the overall
+        surprise. Quiet for 122 cycles, first warning at cycle 123 — <b>56 cycles before it failed</b>.
+        Sentys had never seen this engine.</p>
+
+      <div class="val-grid">
+        <div class="val-card reveal">
+          <div class="metric num">30/30 <small>flagged before failure</small></div>
+          <h3>Turbofan engines — NASA C-MAPSS</h3>
+          <p>Every one of 30 engines the model had never seen was flagged before it failed — median
+            59 operating cycles of warning. With alarm thresholds set from healthy data alone, one
+            engine in the fleet false-alarmed.</p>
+          <div class="tech">holdout: Spearman ρ = 0.762, AUC = 0.996 (FD001); ρ = 0.615, AUC = 0.95 on
+            the six-regime FD002 subset — no regime-aware tuning.</div>
+        </div>
+        <div class="val-card reveal d1">
+          <div class="metric num">75 h <small>warning — and physics for free</small></div>
+          <h3>Bearing vibration — NASA IMS</h3>
+          <p>On run-to-failure rigs, the bearing that actually failed was ranked strongest-trending
+            and loudest — flagged 75 hours before end of run on one rig, ~470 on the other. The
+            spectral sense fired first, reproducing known bearing-defect physics with zero labels.</p>
+          <div class="tech">honest limits: same-shaft neighbours also elevate late (the ranked view still
+            picks the right bearing by 2–3×); healthy baselines don't transfer across installations —
+            each gets its own, which is the deployment protocol anyway.</div>
+        </div>
+        <div class="val-card reveal d2">
+          <div class="metric num">±0.03 <small>AUC of the specialist tool</small></div>
+          <h3>Industrial pump audio — MIMII / DCASE</h3>
+          <p>On four physically different real pumps in factory noise, the same pipeline — with zero
+            audio-specific engineering — landed within 0.03 average AUC of the purpose-built DCASE
+            audio baseline, beating it outright on two of the four.</p>
+          <div class="tech">avg AUC 0.687 vs 0.715. also measured: a brand-new pump gets useful day-one
+            coverage from its fleet-mates' shared model (0.60 AUC unseen); its own baseline lifts that
+            to 0.69 — cold-start from the fleet, precision from the fine-tune.</div>
         </div>
       </div>
-      <div class="ask-cta reveal">
-        <a class="btn btn-primary" href="mailto:frixos@sentys.ai?subject=Machine%20history%20%E2%80%94%20free%20analysis">
-          Email me — I'll reply within 48 hours
-        </a>
-        <div class="fine">frixos@sentys.ai<!-- DOMAIN swap-in: replace with the domain mailbox --></div>
+
+      <div class="gates">
+        <div class="gate reveal">
+          <div class="g-head"><span class="g-name">PHM 2010 · CNC tool wear</span><span class="g-stamp pass">GATE PASS</span></div>
+          <p>Raw 50 kHz data from a real machine — the shipping scorer tracked a <b>measured</b>
+            flank-wear curve on 3 unseen cutters and alarmed on all three with zero false alarms,
+            at 46–62% of terminal wear.</p>
+          <p style="margin-top:8px; font:400 12px/1.65 var(--mono); color:var(--dust-dim);">ρ(surprise, wear) = 0.972 / 0.975 / 0.955 · AUC 1.000 · pre-registered.</p>
+        </div>
+        <div class="gate reveal d1">
+          <div class="g-head"><span class="g-name">FEMTO · bearing run-to-failure</span><span class="g-stamp fail">BAR MISSED — PUBLISHED</span></div>
+          <p>Detection worked: <b>10 of 11 unseen bearings</b>, one false alarm in healthy windows,
+            operating conditions discovered unsupervised. One pooled metric missed its pre-registered
+            bar (AUC 0.665) — so the run is reported as a fail, with the number, in full.</p>
+        </div>
+        <div class="gate reveal d2">
+          <div class="g-head"><span class="g-name">XJTU-SY · bearing run-to-failure</span><span class="g-stamp fail">BAR MISSED — PUBLISHED</span></div>
+          <p>Detection worked here too: <b>9 of 9 unseen bearings</b>, one false alarm, with a
+            label-free onset detector. The same pooled metric missed its bar (AUC 0.659) — published
+            as measured, not argued with.</p>
+        </div>
+      </div>
+
+      <div class="honest reveal">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8.5" stroke="currentColor" stroke-width="1.6"/><path d="M10 5.8v5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="13.9" r=".9" fill="currentColor"/></svg>
+        <p><b>We kill our own metrics before a skeptic can.</b> Every benchmark ran against a
+          pre-registered gate. Two of six missed a bar — both reports are published with the number
+          that missed. Your data would be held to the same standard, and told the same way.</p>
+      </div>
+
+      <div class="qa reveal">
+        <h3>“How much warning do I actually get?”</h3>
+        <p>The honest answer: <b>on the turbofan benchmark, the median first warning came 59 cycles
+          before failure</b> — roughly the last fifth of the machine's life — and on the bearing rigs,
+          days to weeks. What Sentys does <i>not</i> do yet is date the failure: it ranks which machine
+          is drifting and shows which sensor saw it first, so you inspect the right asset while there's
+          still time to schedule it. It doesn't output “fails in 12 days” — and we won't claim it does
+          until we can prove it.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══ THE DELIVERABLE ═══ -->
+<div class="band-light">
+  <section id="report">
+    <div class="wrap">
+      <p class="eyebrow reveal">The deliverable</p>
+      <h2 class="reveal">This is what you get back</h2>
+      <p class="section-lead reveal d1">Not a dashboard login. Not a sales deck. One self-contained
+        report — readable by an operations lead, forwardable to the board.</p>
+      <div class="report-card reveal">
+        <div>
+          <ul>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Health-over-life chart for every machine in the data, with the warning point marked</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Which sensor group saw the drift first, and how far from healthy it moved</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Findings in plain language — and every caveat stated, in the same font size</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Every number read mechanically from the run's artifacts — no hand-tuning, no cherry-picking</li>
+          </ul>
+          <a class="btn btn-primary" href="sample-report.html">Open the sample report</a>
+          <p class="note">Generated from a real analysis run of the NASA turbofan data — the same
+            report generator your export goes through.</p>
+        </div>
+        <div class="report-thumb" aria-hidden="true">
+          <div class="rt-title">Findings report — fleet of 30</div>
+          <div>machine 03 · flow sense · first warning cycle 123</div>
+          <div class="rt-bar"><i style="width:88%; background:linear-gradient(90deg,#3d8f5c,#f0a43c 62%,#c94a36)"></i></div>
+          <div class="rt-bar"><i style="width:64%; background:linear-gradient(90deg,#3d8f5c,#f0a43c)"></i></div>
+          <div class="rt-bar"><i style="width:38%; background:#3d8f5c"></i></div>
+          <div class="rt-line"><span>surprise vs healthy</span><span class="num">7.2×</span></div>
+          <div class="rt-line"><span>caveats stated</span><span>all of them</span></div>
+        </div>
       </div>
     </div>
   </section>
 
-  <div class="ask-photo" aria-hidden="true">
-    <picture>
-      <source media="(min-width:720px)" srcset="assets/img/ask-impeller.webp">
-      <img src="assets/img/ask-impeller-m.webp" alt="" loading="lazy" decoding="async">
-    </picture>
-  </div>
+<!-- ═══ WHERE IT FITS ═══ -->
+  <section id="fits">
+    <div class="wrap">
+      <p class="eyebrow reveal">Where it fits</p>
+      <h2 class="reveal">Any machine that hums, pumps, spins, or heats</h2>
+      <p class="section-lead reveal d1">Across Europe, the pattern is the same: the control system logs
+        everything, and nobody reads the history. Sentys reads it. The machine classes it has been
+        benchmarked on — <b>pumps, bearings, turbomachinery, cutting tools</b> — sit at the heart of
+        every one of these.</p>
+      <div class="fit-grid">
+        <div class="fit reveal">
+          <div class="tag">District energy & utilities</div>
+          <h3>The plant that keeps a town warm</h3>
+          <p>Circulation pumps, heat exchangers, boilers — running unattended most hours of the year,
+            where <i>a pump failure in January is not a ticket, it's a cold town</i>. Your control room
+            already logs years of history at minute resolution.</p>
+          <p><b>Sentys has never seen a district-heating plant — which is exactly why the first
+            analysis is free.</b></p>
+        </div>
+        <div class="fit reveal d1">
+          <div class="tag">Water & wastewater</div>
+          <h3>Pump stations, around the clock</h3>
+          <p>Submersible and dry-well pumps, blowers, screens — the benchmarked machine classes almost
+            exactly. Drift in current draw or vibration shows up in the history long before the alarm
+            bank knows anything is wrong.</p>
+        </div>
+        <div class="fit reveal d2">
+          <div class="tag">Manufacturing & process</div>
+          <h3>The compressor nobody thinks about</h3>
+          <p>Compressors, fans, conveyors, CIP pumps — the machines that stop a line when they stop.
+            One export per machine is enough to find out whether your last breakdown had warning in
+            the data. Usually it did.</p>
+        </div>
+        <div class="fit reveal d3">
+          <div class="tag">Robots & mobile fleets</div>
+          <h3>Where Sentys was born</h3>
+          <p>The pipeline started life as the nervous system of a real robot — learning the feel of its
+            own motors and sensors, flagging what didn't feel right. Fleet predictive maintenance for
+            robotics is where it's headed next; <b>industrial plants are where it proves itself first.</b></p>
+        </div>
+      </div>
+      <div class="dansk reveal">
+        <span class="flag" aria-hidden="true"><svg viewBox="0 0 37 28" width="26" height="19"><rect width="37" height="28" fill="#c8102e"/><rect x="12" width="4" height="28" fill="#fff"/><rect y="12" width="37" height="4" fill="#fff"/></svg></span>
+        <p><b>Og ja — skriv gerne på dansk.</b> Exports in any European locale parse natively —
+          semicolons, decimal commas, and your column names in your own language. Reports come back
+          in English or Danish, as you prefer.</p>
+      </div>
+    </div>
+  </section>
 </div>
 
+<!-- ═══ FOUNDER ═══ -->
+<div class="band-dark">
+  <section id="who">
+    <div class="wrap">
+      <p class="eyebrow reveal">Who's behind this</p>
+      <div class="founder reveal">
+        <img src="assets/img/founder.jpg" alt="Frixos Andreou" width="132" height="132" loading="lazy">
+        <div class="founder-body">
+          <h3>Frixos Andreou</h3>
+          <p class="role">integration engineer · robotics background · Denmark, working across Europe</p>
+          <p>I studied robotics, and I've spent 5+ years as an integration specialist connecting
+            enterprise systems — the unglamorous work of making data actually flow.
+            <b>Sentys started in my living room:</b> a robot that learned the feel of its own motors
+            and sensors from experience, with no labels, and noticed when something was off.</p>
+          <p>The same question — <i>does this machine feel like itself today?</i> — turned out to
+            matter far more for a pump that keeps a town warm than for a robot. So that's what it does
+            now. The benchmarks above are that one idea, tested honestly, six datasets in a row.</p>
+          <div class="founder-links">
+            <a href="https://www.linkedin.com/in/frixos-andreou" rel="noopener">LinkedIn</a>
+            <a href="mailto:frixos@sentys.ai">frixos@sentys.ai</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══ THE ASK ═══ -->
+<div class="band-light">
+  <section id="ask">
+    <div class="wrap">
+      <p class="eyebrow reveal">The ask — all of it</p>
+      <h2 class="reveal">Send one export. Get a real answer.</h2>
+      <p class="section-lead reveal d1">Here is everything saying yes commits you to — all four steps of it.</p>
+
+      <div class="steps reveal">
+        <div class="step"><h3>We sign an NDA first.</h3>
+          <p>You get a ready-to-sign mutual NDA before any data moves.</p></div>
+        <div class="step"><h3>You export one problem machine's history.</h3>
+          <p>The five-line spec is below — CSV or JSON, straight out of your control system.
+            Twenty minutes, no project.</p></div>
+        <div class="step"><h3>Within a week you get the report.</h3>
+          <p>What drifted, which sensor saw it first, and whether your last breakdown had warning in
+            the data. <b>Free — one machine, no strings.</b></p></div>
+        <div class="step"><h3>That's it.</h3>
+          <p>If the report earns it, the next conversation is a 2-week shadow pilot on more machines —
+            a separate decision, made on the evidence in your hands.</p></div>
+      </div>
+
+      <div class="spec reveal">
+        <h3>The data spec — five lines, in full</h3>
+        <ol>
+          <li><b>One machine you care about</b> — a pump, a heat exchanger, a motor.</li>
+          <li><b>All its logged tags:</b> temperatures, pressures, flow, current, vibration, speed.</li>
+          <li><b>1-minute averages are plenty;</b> hourly still works.</li>
+          <li><b>6–12 months of history</b> — ideally spanning a breakdown or repair you remember.</li>
+          <li><b>CSV or JSON, any delimiter</b> — semicolons and decimal commas are fine.</li>
+        </ol>
+        <p class="spec-link"><a href="data-spec.html">Open the full export spec (one printable page)</a>
+          — forward it to whoever runs your control system.</p>
+      </div>
+
+      <div class="handling reveal">
+        <h3>How your data is handled</h3>
+        <ul>
+          <li><b>Processed on a single machine in Denmark.</b> Your raw data is never uploaded to any cloud service.</li>
+          <li><b>Stated up front:</b> schema inference sends column names, per-column statistics, and a
+            handful of sample values to an AI API — never your bulk data. If even that is too much,
+            say so and it's done by hand.</li>
+          <li><b>Used for your analysis only.</b> Never used to train models for anyone else. Deleted
+            when you say so — confirmed in writing.</li>
+        </ul>
+      </div>
+
+      <div class="ask-cta reveal">
+        <p class="mail"><a href="mailto:frixos@sentys.ai">frixos@sentys.ai</a></p>
+        <p>Email me — I'll reply within 48 hours.</p>
+      </div>
+    </div>
+  </section>
+</div>
+</main>
+
 <footer>
-  <div class="wrap">
-    <div class="copyright">© 2026 Sentys · Denmark · sensor-agnostic predictive maintenance<!-- ENTITY LINE swap-in: "· Sentys ApS · CVR 12345678 · Street, City" when registered --></div>
+  <div class="wrap frow">
+    <span class="fbrand">SENTY<i>S</i></span>
+    <span>© 2026 Sentys · Denmark · sensor-agnostic predictive maintenance</span>
+    <span><a href="demo/">Live demo</a> · <a href="sample-report.html">Sample report</a> · <a href="data-spec.html">Data spec</a></span>
   </div>
 </footer>
 
-<script>
-(function () {
-  // sticky-nav hairline
-  var nav = document.getElementById('topnav');
-  addEventListener('scroll', function(){ nav.classList.toggle('scrolled', scrollY > 8); }, {passive:true});
-
-  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // reveal-on-scroll
-  var io = new IntersectionObserver(function(entries){
-    entries.forEach(function(en){ if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
-  }, {threshold:.12, rootMargin:'0px 0px -6% 0px'});
-  document.querySelectorAll('.reveal, .eyebrow-seq').forEach(function(el){ io.observe(el); });
-
-  // count-up readouts
-  function countUp(el){
-    var target = +el.getAttribute('data-count'), t0 = null;
-    if (reduced || !target){ el.textContent = target; return; }
-    function tick(t){
-      if (!t0) t0 = t;
-      var p = Math.min(1, (t - t0) / 900), eased = 1 - Math.pow(1 - p, 3);
-      el.textContent = Math.round(target * eased);
-      if (p < 1) requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  }
-  var cio = new IntersectionObserver(function(entries){
-    entries.forEach(function(en){ if (en.isIntersecting){ countUp(en.target); cio.unobserve(en.target); } });
-  }, {threshold:.5});
-  document.querySelectorAll('[data-count]').forEach(function(el){ cio.observe(el); });
-})();
-</script>
-
+<script src="assets/js/engine03-data.js"></script>
+<script src="assets/js/site.js"></script>
 </body>
 </html>
