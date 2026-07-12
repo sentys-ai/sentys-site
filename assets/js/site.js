@@ -10,6 +10,8 @@
   document.documentElement.classList.add('js');
   // enable smooth in-page scrolling only after the initial hash jump has happened
   requestAnimationFrame(() => document.documentElement.classList.add('smooth'));
+  // hero eyebrow: one-by-one phrase reveal
+  setTimeout(() => document.querySelector('.eyebrow-seq')?.classList.add('in'), 120);
 
   /* ── nav hairline ─────────────────────────────────────────────────── */
   const nav = document.querySelector('nav.top');
@@ -49,7 +51,7 @@
   const IDLE_MSG  = 'all senses within healthy range';
   const DRIFT_MSGS = [
     'vibration: 3.2× healthy baseline; temperature and flow within range.',
-    'rotation: 1.56× healthy — nearest prior case: unit 88, kept degrading.',
+    'rotation: 1.56× healthy · nearest prior case: unit 88, kept degrading.',
   ];
 
   let plateOK = false;

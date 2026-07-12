@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sentys — Every machine has a feeling of healthy</title>
-<meta name="description" content="Sentys learns each machine's healthy behaviour from the sensor history you already log — any machine, any sensors, no failure labels — and tells you in plain language which machine is drifting and which sensor felt it first.">
+<meta name="description" content="Sentys learns each machine's healthy behaviour from the sensor history you already log: any machine, any sensors, no failure labels. It tells you in plain language which machine is drifting and which sensor felt it first.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Sentys — every machine has a feeling of healthy">
 <meta property="og:description" content="Failure warning from data you already collect. All 30 unseen machines flagged before failure on NASA's benchmark, one false alarm. Send one export — free analysis.">
@@ -46,10 +46,10 @@
   <div class="hero-inner">
     <div class="wrap">
       <div class="hero-copy">
-        <p class="eyebrow">Predictive maintenance · any machine · any sensors</p>
+        <p class="eyebrow eyebrow-seq"><span class="ph">Predictive maintenance</span><span class="sep">·</span><span class="ph">any machine</span><span class="sep">·</span><span class="ph">any sensors</span></p>
         <h1>Every machine has a <em>feeling</em> of healthy.</h1>
-        <p class="hero-sub">Sentys learns that feeling from the sensor history you already log —
-          <b>no failure labels, no data-science project on your side</b> — and tells you, in plain
+        <p class="hero-sub">Sentys learns that feeling from the sensor history you already log.
+          <b>No failure labels, no data-science project on your side.</b> It tells you, in plain
           language, which machine is drifting and which sensor felt it first.</p>
         <div class="cta-row">
           <a class="btn btn-primary" href="#ask">Send one export — free analysis</a>
@@ -84,17 +84,17 @@
         <div class="block reveal">
           <div class="tag">Learns healthy · flags drift</div>
           <h3>A baseline per machine, from its own history</h3>
-          <p>It trains on your machine's own healthy operation — no failure labels, because at most
-            sites they don't exist — and reports degradation as a rising deviation from that baseline,
-            decomposed per sensor.</p>
+          <p>It trains on your machine's own healthy operation and reports degradation as a rising
+            deviation from that baseline, decomposed per sensor. No failure labels needed, because
+            at most sites they don't exist.</p>
           <p>The answer is triage language, not an anomaly score:
             <i>“Vibration: 3.2× healthy baseline; temperature and flow within range.”</i></p>
         </div>
         <div class="block reveal d1">
           <div class="tag">Sensor-agnostic</div>
           <h3>Any tags your system logs</h3>
-          <p>Temperatures, pressures, flow, current, vibration — it doesn't care. From a SCADA export,
-            a historian, or a plain spreadsheet. New sensor types are configuration, not code — built
+          <p>Temperatures, pressures, flow, current, vibration: it doesn't care. From a SCADA export,
+            a historian, or a plain spreadsheet. New sensor types are configuration, not code. Built
             by an integration engineer, so the data problem is solved first.</p>
           <p>European exports parse natively: semicolons, decimal commas, your column names in your
             language. CSV or JSON, straight from the system you have.</p>
@@ -103,11 +103,11 @@
           <div class="tag">Status · honest</div>
           <h3>Where it stands today</h3>
           <p><b>Today:</b> an export is enough. Send one machine's history, get a written analysis
-            back — zero integration on your side.</p>
+            back, with zero integration on your side.</p>
           <p><b>A pilot:</b> the same pipeline runs on-prem (Docker, no GPU) reading your exports or
             a live stream; your data never leaves the plant.</p>
           <p><b>Not built yet:</b> OPC-UA/Modbus connectors and hardened remote access. That's
-            pilot-stage work we do together — we'd rather tell you now than surprise you later.</p>
+            pilot-stage work we do together. We'd rather tell you now than surprise you later.</p>
         </div>
       </div>
     </div>
@@ -128,7 +128,7 @@
         <iframe src="demo/?embed=1&autoplay=1&loop=1&select=3" title="Sentys live fleet demo — 30 unseen engines run to failure" loading="lazy"></iframe>
       </div>
       <div class="demo-caption reveal d2">
-        <p>Engine 03 from this fleet is the trace in the evidence section below — <b>same data, same model.</b></p>
+        <p>Engine 03 from this fleet is the trace in the evidence section below: <b>same data, same model.</b></p>
         <a href="demo/" target="_blank" rel="noopener">Open full-screen ↗</a>
       </div>
     </div>
@@ -140,7 +140,7 @@
   <section id="action">
     <div class="wrap">
       <p class="eyebrow reveal">From signal to action</p>
-      <h2 class="reveal">The drift becomes a work order — drafted for you</h2>
+      <h2 class="reveal">The drift becomes a work order, drafted for you</h2>
       <p class="section-lead reveal d1">A rising trace is not an answer. Sentys's agents turn it into one:
         <b>drafted by AI, grounded in your data, approved by your engineer.</b>
         Every artifact below is real output from the pipeline, verbatim.</p>
@@ -150,10 +150,10 @@
           <div class="stepno">01 · PERCEIVE</div>
           <h3>The model listens</h3>
           <p>Every sensor stream is compared to that machine's own learned normal, every moment.
-            Drift is reported per sense — <b>rotation, temperature, flow</b> — as a ratio to healthy.</p>
+            Drift is reported per sense (<b>rotation, temperature, flow</b>) as a ratio to healthy.</p>
         </div>
         <div class="flow-step reveal d1">
-          <div class="stepno">02 · TRIAGE — DRAFTED BY AN AGENT</div>
+          <div class="stepno">02 · TRIAGE · DRAFTED BY AN AGENT</div>
           <h3>A work order, not a chart</h3>
           <div class="workorder">
             <div class="wo-title">WORK ORDER (DRAFT) — Inspect rotation subsystem on unit 100</div>
@@ -163,16 +163,16 @@
             <p class="wo-quote">“<b>Schedule a rotation-domain inspection</b> (bearing/shaft/rotor balance
               and vibration diagnostics) on unit 100 … compare findings against the near-identical
               prior unit 88 that continued degrading.”</p>
-            <div class="wo-foot">Draft for your engineer to review — the tool proposes, your team approves.
+            <div class="wo-foot">Draft for your engineer to review: the tool proposes, your team approves.
               No automatic derate or shutdown.</div>
           </div>
-          <p class="flow-cap">Verbatim excerpt — benchmark unit 100, drafted by the triage agent,
+          <p class="flow-cap">Verbatim excerpt: benchmark unit 100, drafted by the triage agent,
             including its own stated caveats.</p>
         </div>
         <div class="flow-step reveal d2">
           <div class="stepno">03 · THE WEEK AHEAD</div>
           <h3>A fleet report every week</h3>
-          <p>Which machines need attention this week, ranked — <b>the ranking is computed by code</b>,
+          <p>Which machines need attention this week, ranked. <b>The ranking is computed by code</b>,
             never decided by the model. An agent writes the prose around it; a mechanical check rejects
             any draft citing a number that isn't in the evidence.</p>
           <p>You read one page, not thirty dashboards.</p>
@@ -182,7 +182,7 @@
       <div class="guardrail reveal">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 1.5 18.5 17H1.5L10 1.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M10 7.5v4.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="14.4" r=".9" fill="currentColor"/></svg>
         <p><b>Grounded or rejected:</b> every number an agent writes is checked mechanically against the
-          evidence it was given — a draft that cites anything the data doesn't support is rejected and
+          evidence it was given. A draft that cites anything the data doesn't support is rejected and
           redrafted. And nothing acts on a machine without a human signing off.</p>
       </div>
     </div>
@@ -196,7 +196,7 @@
       <p class="eyebrow reveal">Evidence, translated</p>
       <h2 class="reveal">The data you already log knows what's about to break</h2>
       <p class="section-lead reveal d1">Six public benchmark datasets, four machine classes, one
-        unmodified pipeline — trained on <b>healthy data only</b>, every time. Plain-language outcomes
+        unmodified pipeline, trained on <b>healthy data only</b>, every time. Plain-language outcomes
         first; the technical numbers sit in the small print for your advisor. And where a
         pre-registered gate missed its bar, the result is published, not hidden.</p>
 
@@ -208,25 +208,25 @@
         <canvas id="engine03" role="img" aria-label="Line chart of Engine 03's surprise signal over its 179-cycle life: quiet near 1× healthy for 122 cycles, first warning at cycle 123 where it crosses the amber threshold, then climbing steeply until failure at cycle 179. Four thin per-sense traces run beneath the overall signal."></canvas>
       </div>
       <p class="trend-cap reveal d1">Real output, not an illustration: Engine 03 from the live demo above,
-        exactly as Sentys scored it — the thin lines are its four senses, the bright line the overall
-        surprise. Quiet for 122 cycles, first warning at cycle 123 — <b>56 cycles before it failed</b>.
+        exactly as Sentys scored it. The thin lines are its four senses, the bright line the overall
+        surprise. Quiet for 122 cycles, first warning at cycle 123: <b>56 cycles before it failed</b>.
         Sentys had never seen this engine.</p>
 
       <div class="val-grid">
         <div class="val-card reveal">
           <div class="metric num">30/30 <small>flagged before failure</small></div>
-          <h3>Turbofan engines — NASA C-MAPSS</h3>
-          <p>Every one of 30 engines the model had never seen was flagged before it failed — median
+          <h3>Turbofan engines · NASA C-MAPSS</h3>
+          <p>Every one of 30 engines the model had never seen was flagged before it failed, with a median of
             59 operating cycles of warning. With alarm thresholds set from healthy data alone, one
             engine in the fleet false-alarmed.</p>
           <div class="tech">holdout: Spearman ρ = 0.762, AUC = 0.996 (FD001); ρ = 0.615, AUC = 0.95 on
-            the six-regime FD002 subset — no regime-aware tuning.</div>
+            the six-regime FD002 subset, no regime-aware tuning.</div>
         </div>
         <div class="val-card reveal d1">
-          <div class="metric num">75 h <small>warning — and physics for free</small></div>
-          <h3>Bearing vibration — NASA IMS</h3>
+          <div class="metric num">75 h <small>warning, and physics for free</small></div>
+          <h3>Bearing vibration · NASA IMS</h3>
           <p>On run-to-failure rigs, the bearing that actually failed was ranked strongest-trending
-            and loudest — flagged 75 hours before end of run on one rig, ~470 on the other. The
+            and loudest, flagged 75 hours before end of run on one rig and ~470 on the other. The
             spectral sense fired first, reproducing known bearing-defect physics with zero labels.</p>
           <div class="tech">honest limits: same-shaft neighbours also elevate late (the ranked view still
             picks the right bearing by 2–3×); healthy baselines don't transfer across installations —
@@ -234,20 +234,20 @@
         </div>
         <div class="val-card reveal d2">
           <div class="metric num">±0.03 <small>AUC of the specialist tool</small></div>
-          <h3>Industrial pump audio — MIMII / DCASE</h3>
-          <p>On four physically different real pumps in factory noise, the same pipeline — with zero
-            audio-specific engineering — landed within 0.03 average AUC of the purpose-built DCASE
+          <h3>Industrial pump audio · MIMII / DCASE</h3>
+          <p>On four physically different real pumps in factory noise, the same pipeline, with zero
+            audio-specific engineering, landed within 0.03 average AUC of the purpose-built DCASE
             audio baseline, beating it outright on two of the four.</p>
           <div class="tech">avg AUC 0.687 vs 0.715. also measured: a brand-new pump gets useful day-one
             coverage from its fleet-mates' shared model (0.60 AUC unseen); its own baseline lifts that
-            to 0.69 — cold-start from the fleet, precision from the fine-tune.</div>
+            to 0.69: cold-start from the fleet, precision from the fine-tune.</div>
         </div>
       </div>
 
       <div class="gates">
         <div class="gate reveal">
           <div class="g-head"><span class="g-name">PHM 2010 · CNC tool wear</span><span class="g-stamp pass">GATE PASS</span></div>
-          <p>Raw 50 kHz data from a real machine — the shipping scorer tracked a <b>measured</b>
+          <p>Raw 50 kHz data from a real machine: the shipping scorer tracked a <b>measured</b>
             flank-wear curve on 3 unseen cutters and alarmed on all three with zero false alarms,
             at 46–62% of terminal wear.</p>
           <p style="margin-top:8px; font:400 12px/1.65 var(--mono); color:var(--dust-dim);">ρ(surprise, wear) = 0.972 / 0.975 / 0.955 · AUC 1.000 · pre-registered.</p>
@@ -256,12 +256,12 @@
           <div class="g-head"><span class="g-name">FEMTO · bearing run-to-failure</span><span class="g-stamp fail">BAR MISSED — PUBLISHED</span></div>
           <p>Detection worked: <b>10 of 11 unseen bearings</b>, one false alarm in healthy windows,
             operating conditions discovered unsupervised. One pooled metric missed its pre-registered
-            bar (AUC 0.665) — so the run is reported as a fail, with the number, in full.</p>
+            bar (AUC 0.665), so the run is reported as a fail, with the number, in full.</p>
         </div>
         <div class="gate reveal d2">
           <div class="g-head"><span class="g-name">XJTU-SY · bearing run-to-failure</span><span class="g-stamp fail">BAR MISSED — PUBLISHED</span></div>
           <p>Detection worked here too: <b>9 of 9 unseen bearings</b>, one false alarm, with a
-            label-free onset detector. The same pooled metric missed its bar (AUC 0.659) — published
+            label-free onset detector. The same pooled metric missed its bar (AUC 0.659). Published
             as measured, not argued with.</p>
         </div>
       </div>
@@ -269,14 +269,14 @@
       <div class="honest reveal">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8.5" stroke="currentColor" stroke-width="1.6"/><path d="M10 5.8v5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="13.9" r=".9" fill="currentColor"/></svg>
         <p><b>We kill our own metrics before a skeptic can.</b> Every benchmark ran against a
-          pre-registered gate. Two of six missed a bar — both reports are published with the number
+          pre-registered gate. Two of six missed a bar; both reports are published with the number
           that missed. Your data would be held to the same standard, and told the same way.</p>
       </div>
 
       <div class="qa reveal">
         <h3>“How much warning do I actually get?”</h3>
         <p>The honest answer: <b>on the turbofan benchmark, the median first warning came 59 cycles
-          before failure</b> — roughly the last fifth of the machine's life — and on the bearing rigs,
+          before failure</b>, roughly the last fifth of the machine's life; on the bearing rigs,
           days to weeks. What Sentys does <i>not</i> do yet is date the failure: it ranks which machine
           is drifting and shows which sensor saw it first, so you inspect the right asset while there's
           still time to schedule it. It doesn't output “fails in 12 days” — and we won't claim it does
@@ -293,17 +293,17 @@
       <p class="eyebrow reveal">The deliverable</p>
       <h2 class="reveal">This is what you get back</h2>
       <p class="section-lead reveal d1">Not a dashboard login. Not a sales deck. One self-contained
-        report — readable by an operations lead, forwardable to the board.</p>
+        report, readable by an operations lead and forwardable to the board.</p>
       <div class="report-card reveal">
         <div>
           <ul>
             <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Health-over-life chart for every machine in the data, with the warning point marked</li>
             <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Which sensor group saw the drift first, and how far from healthy it moved</li>
-            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Findings in plain language — and every caveat stated, in the same font size</li>
-            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Every number read mechanically from the run's artifacts — no hand-tuning, no cherry-picking</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Findings in plain language, with every caveat stated in the same font size</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Every number read mechanically from the run's artifacts: no hand-tuning, no cherry-picking</li>
           </ul>
           <a class="btn btn-primary" href="sample-report.html">Open the sample report</a>
-          <p class="note">Generated from a real analysis run of the NASA turbofan data — the same
+          <p class="note">Generated from a real analysis run of the NASA turbofan data, by the same
             report generator your export goes through.</p>
         </div>
         <div class="report-thumb" aria-hidden="true">
@@ -326,7 +326,7 @@
       <h2 class="reveal">Any machine that hums, pumps, spins, or heats</h2>
       <p class="section-lead reveal d1">Across Europe, the pattern is the same: the control system logs
         everything, and nobody reads the history. Sentys reads it. The machine classes it has been
-        benchmarked on — <b>pumps, bearings, turbomachinery, cutting tools</b> — sit at the heart of
+        benchmarked on (<b>pumps, bearings, turbomachinery, cutting tools</b>) sit at the heart of
         every one of these.</p>
       <figure class="fit-band reveal">
         <div class="fit-band-media">
@@ -336,7 +336,7 @@
           </picture>
           <video muted loop playsinline aria-hidden="true" tabindex="-1"></video>
         </div>
-        <figcaption>The room this is built for: circulation pumps running unattended, logged every minute, read by no one. (Illustration — motion included.)</figcaption>
+        <figcaption>The room this is built for: circulation pumps running unattended, logged every minute, read by no one. (Illustration, motion included.)</figcaption>
       </figure>
       <div class="fit-grid">
         <div class="fit reveal">
@@ -346,7 +346,7 @@
           </svg>
           <div class="tag">District energy & utilities</div>
           <h3>The plant that keeps a town warm</h3>
-          <p>Circulation pumps, heat exchangers, boilers — running unattended most hours of the year,
+          <p>Circulation pumps, heat exchangers, boilers, running unattended most hours of the year,
             where <i>a pump failure in January is not a ticket, it's a cold town</i>. Your control room
             already logs years of history at minute resolution.</p>
           <p><b>Sentys has never seen a district-heating plant — which is exactly why the first
@@ -360,7 +360,7 @@
           </svg>
           <div class="tag">Water & wastewater</div>
           <h3>Pump stations, around the clock</h3>
-          <p>Submersible and dry-well pumps, blowers, screens — the benchmarked machine classes almost
+          <p>Submersible and dry-well pumps, blowers, screens: the benchmarked machine classes, almost
             exactly. Drift in current draw or vibration shows up in the history long before the alarm
             bank knows anything is wrong.</p>
         </div>
@@ -371,7 +371,7 @@
           </svg>
           <div class="tag">Manufacturing & process</div>
           <h3>The compressor nobody thinks about</h3>
-          <p>Compressors, fans, conveyors, CIP pumps — the machines that stop a line when they stop.
+          <p>Compressors, fans, conveyors, CIP pumps: the machines that stop a line when they stop.
             One export per machine is enough to find out whether your last breakdown had warning in
             the data. Usually it did.</p>
         </div>
@@ -383,14 +383,14 @@
           </svg>
           <div class="tag">Robots & mobile fleets</div>
           <h3>Where Sentys was born</h3>
-          <p>The pipeline started life as the nervous system of a real robot — learning the feel of its
-            own motors and sensors, flagging what didn't feel right. Fleet predictive maintenance for
+          <p>The pipeline started life as the nervous system of a real robot, learning the feel of its
+            own motors and sensors and flagging what didn't feel right. Fleet predictive maintenance for
             robotics is where it's headed next; <b>industrial plants are where it proves itself first.</b></p>
         </div>
       </div>
       <div class="dansk reveal">
         <span class="flag" aria-hidden="true"><svg viewBox="0 0 37 28" width="26" height="19"><rect width="37" height="28" fill="#c8102e"/><rect x="12" width="4" height="28" fill="#fff"/><rect y="12" width="37" height="4" fill="#fff"/></svg></span>
-        <p><b>Og ja — skriv gerne på dansk.</b> Exports in any European locale parse natively —
+        <p><b>Og ja — skriv gerne på dansk.</b> Exports in any European locale parse natively:
           semicolons, decimal commas, and your column names in your own language. Reports come back
           in English or Danish, as you prefer.</p>
       </div>
@@ -409,7 +409,7 @@
           <h3>Frixos Andreou</h3>
           <p class="role">integration engineer · robotics background · Denmark, working across Europe</p>
           <p>I studied robotics, and I've spent 5+ years as an integration specialist connecting
-            enterprise systems — the unglamorous work of making data actually flow.
+            enterprise systems: the unglamorous work of making data actually flow.
             <b>Sentys started in my living room:</b> a robot that learned the feel of its own motors
             and sensors from experience, with no labels, and noticed when something was off.</p>
           <p>The same question — <i>does this machine feel like itself today?</i> — turned out to
@@ -435,33 +435,33 @@
     <div class="wrap">
       <p class="eyebrow reveal">The ask — all of it</p>
       <h2 class="reveal">Send one export. Get a real answer.</h2>
-      <p class="section-lead reveal d1">Here is everything saying yes commits you to — all four steps of it.</p>
+      <p class="section-lead reveal d1">Here is everything saying yes commits you to: all four steps of it.</p>
 
       <div class="steps reveal">
         <div class="step"><h3>We sign an NDA first.</h3>
           <p>You get a ready-to-sign mutual NDA before any data moves.</p></div>
         <div class="step"><h3>You export one problem machine's history.</h3>
-          <p>The five-line spec is below — CSV or JSON, straight out of your control system.
+          <p>The five-line spec is below: CSV or JSON, straight out of your control system.
             Twenty minutes, no project.</p></div>
         <div class="step"><h3>Within a week you get the report.</h3>
           <p>What drifted, which sensor saw it first, and whether your last breakdown had warning in
-            the data. <b>Free — one machine, no strings.</b></p></div>
+            the data. <b>Free. One machine, no strings.</b></p></div>
         <div class="step"><h3>That's it.</h3>
-          <p>If the report earns it, the next conversation is a 2-week shadow pilot on more machines —
-            a separate decision, made on the evidence in your hands.</p></div>
+          <p>If the report earns it, the next conversation is a 2-week shadow pilot on more machines.
+            A separate decision, made on the evidence in your hands.</p></div>
       </div>
 
       <div class="spec reveal">
         <h3>The data spec — five lines, in full</h3>
         <ol>
-          <li><b>One machine you care about</b> — a pump, a heat exchanger, a motor.</li>
+          <li><b>One machine you care about:</b> a pump, a heat exchanger, a motor.</li>
           <li><b>All its logged tags:</b> temperatures, pressures, flow, current, vibration, speed.</li>
           <li><b>1-minute averages are plenty;</b> hourly still works.</li>
-          <li><b>6–12 months of history</b> — ideally spanning a breakdown or repair you remember.</li>
-          <li><b>CSV or JSON, any delimiter</b> — semicolons and decimal commas are fine.</li>
+          <li><b>6–12 months of history,</b> ideally spanning a breakdown or repair you remember.</li>
+          <li><b>CSV or JSON, any delimiter;</b> semicolons and decimal commas are fine.</li>
         </ol>
-        <p class="spec-link"><a href="data-spec.html">Open the full export spec (one printable page)</a>
-          — forward it to whoever runs your control system.</p>
+        <p class="spec-link"><a href="data-spec.html">Open the full export spec (one printable page)</a>.
+          Forward it to whoever runs your control system.</p>
       </div>
 
       <div class="handling reveal">
@@ -469,16 +469,16 @@
         <ul>
           <li><b>Processed on a single machine in Denmark.</b> Your raw data is never uploaded to any cloud service.</li>
           <li><b>Stated up front:</b> schema inference sends column names, per-column statistics, and a
-            handful of sample values to an AI API — never your bulk data. If even that is too much,
+            handful of sample values to an AI API, never your bulk data. If even that is too much,
             say so and it's done by hand.</li>
           <li><b>Used for your analysis only.</b> Never used to train models for anyone else. Deleted
-            when you say so — confirmed in writing.</li>
+            when you say so, confirmed in writing.</li>
         </ul>
       </div>
 
       <div class="ask-cta reveal">
         <p class="mail"><a href="mailto:frixos@sentys.ai">frixos@sentys.ai</a></p>
-        <p>Email me — I'll reply within 48 hours.</p>
+        <p>Email me. I'll reply within 48 hours.</p>
       </div>
     </div>
   </section>

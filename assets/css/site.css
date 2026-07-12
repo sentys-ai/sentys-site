@@ -74,6 +74,15 @@ h1,h2,h3 { font-family:var(--display); font-weight:500; line-height:1.06; letter
 .eyebrow::before { content:""; width:18px; height:2px; background:var(--ember); flex:none; }
 .band-light .eyebrow { color:var(--ink-dim); }
 .band-light .eyebrow::before { background:var(--accent-deep); }
+/* hero eyebrow: phrases arrive one by one, ember ticks between */
+.eyebrow-seq { flex-wrap:wrap; }
+.eyebrow-seq .sep { color:var(--ember); }
+.js .eyebrow-seq .ph, .js .eyebrow-seq .sep { opacity:0; transform:translateY(5px); transition:opacity .5s ease, transform .5s ease; }
+.js .eyebrow-seq.in .ph, .js .eyebrow-seq.in .sep { opacity:1; transform:none; }
+.js .eyebrow-seq.in > :nth-child(1){ transition-delay:.15s } .js .eyebrow-seq.in > :nth-child(2){ transition-delay:.48s }
+.js .eyebrow-seq.in > :nth-child(3){ transition-delay:.60s } .js .eyebrow-seq.in > :nth-child(4){ transition-delay:.93s }
+.js .eyebrow-seq.in > :nth-child(5){ transition-delay:1.05s }
+@media (prefers-reduced-motion: reduce){ .js .eyebrow-seq .ph, .js .eyebrow-seq .sep { opacity:1; transform:none; transition:none; } }
 
 /* reveal-on-scroll (JS-gated; content never hidden without JS) */
 .js .reveal { opacity:0; transform:translateY(16px); transition:opacity .6s cubic-bezier(.2,.6,.25,1), transform .6s cubic-bezier(.2,.6,.25,1); }
