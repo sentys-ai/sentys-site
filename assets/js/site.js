@@ -471,13 +471,13 @@ void main(){
     const octx = organCv.getContext('2d');
     const ostate = document.getElementById('ostate');
     const osense = document.getElementById('osense');
-    // ganglion sits HIGH and FAR (afferent pathways climb, as in the original
-    // Afferent concept) — clear air between it and the pump's wireframe
-    const GANG = { x:.20, y:.15 };
+    // ganglion at mid-left (owner's final call): fibers converge laterally
+    // across the dark left third, pulses flow inward to the baseline
+    const GANG = { x:.175, y:.44 };
     const SENSORS = [
-      { x:.450, y:.385, sense:'a. rotation', key:'rotation', lx:-26, ly: 32, align:'right', ph:0   },
-      { x:.712, y:.205, sense:'b. thermal',  key:'thermal',  lx:-16, ly:-16, align:'right', ph:2.1 },
-      { x:.752, y:.085, sense:'c. pressure', key:'pressure', lx:-14, ly: -8, align:'right', ph:4.2 },
+      { x:.450, y:.385, sense:'a. rotation', key:'rotation', lx:-12, ly:-24, align:'right', ph:0   },
+      { x:.712, y:.205, sense:'b. thermal',  key:'thermal',  lx:-12, ly:-14, align:'right', ph:2.1 },
+      { x:.752, y:.085, sense:'c. pressure', key:'pressure', lx:-20, ly:  3, align:'right', ph:4.2 },
       { x:.700, y:.890, sense:'d. flow',     key:'flow',     lx:-16, ly: 26, align:'right', ph:5.6 },
     ];
     let W, H, fibers = [];
@@ -527,8 +527,8 @@ void main(){
       octx.beginPath(); octx.arc(0,0,s*.05*breathe,0,7); octx.fill();
       octx.font = '500 11px PlexMono, monospace';
       octx.fillStyle = 'rgba(152,161,170,.9)';
-      octx.textAlign = 'right';
-      octx.fillText('g.', -(s*.05*breathe + 14), 4);
+      octx.textAlign = 'center';
+      octx.fillText('g.', 0, s*.05*breathe + 22);
       octx.restore();
     }
 

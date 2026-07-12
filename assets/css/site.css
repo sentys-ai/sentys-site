@@ -493,7 +493,7 @@ footer .fbrand i { font-style:normal; color:var(--ember); }
 .fig-stage img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
   user-select:none; -webkit-user-drag:none; }
 #afferent { position:absolute; inset:0; width:100%; height:100%; display:block; }
-.plate-label { position:absolute; left:46px; bottom:20px; z-index:2; font:400 11.5px/1.9 var(--mono);
+.plate-label { position:absolute; left:46px; top:20px; z-index:2; font:400 11.5px/1.9 var(--mono);
   letter-spacing:.12em; color:var(--dust-dim); text-shadow:0 1px 8px rgba(15,18,22,.9); }
 .plate-label b { color:var(--dust); font-weight:500; }
 .organ-state { text-align:center; font:400 11.5px/1.7 var(--mono); letter-spacing:.18em;
