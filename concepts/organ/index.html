@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" class="js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Concept — The Missing Organ · Sentys</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f1216'/%3E%3Cpath d='M6 16c3.3 0 3.3-6 6.7-6s3.3 6 6.6 6 3.4-6 6.7-6' fill='none' stroke='%23f0a43c' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<style>
+  /* Section prototype: sits between the hero and #how on the real page.
+     Quiet section — the plate conductor would hold the shader frozen and
+     dimmed behind it (data-plate-dim ~.2); the figure itself is the light. */
+  body { background:var(--plate); }
+  .organ { min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:76px 0 48px; }
+
+  /* center-as-punctuation: single short display lines only */
+  .organ-head { text-align:center; }
+  .organ-head .eyebrow { justify-content:center; }
+  .organ h2 { font-size:clamp(30px, 3.9vw, 50px); margin:0 auto 14px; max-width:none; text-wrap:balance;
+    text-shadow:none; /* flat bg on this prototype; the live plate scrim restores it on-site */ }
+  .organ h2 em { font-style:normal; color:var(--ember); }
+  .organ .lead { color:var(--dust-dim); font-size:clamp(16px, 1.9vw, 18.5px); margin:0 auto; max-width:60ch; }
+  .organ .lead b { color:var(--dust); font-weight:500; }
+
+  .fig-frame { position:relative; max-width:1000px; margin:26px auto 0; padding:0 22px; width:100%; }
+  .fig-stage { position:relative; aspect-ratio:1376/768; }
+  .fig-stage img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    mix-blend-mode:lighten; user-select:none; -webkit-user-drag:none; }
+  #afferent { position:absolute; inset:0; width:100%; height:100%; display:block; }
+
+  .plate-label { position:absolute; left:22px; top:0; font:400 11.5px/1.9 var(--mono);
+    letter-spacing:.12em; color:var(--dust-dim); }
+  .plate-label b { color:var(--dust); font-weight:500; }
+
+  .organ-state { text-align:center; font:400 11.5px/1.7 var(--mono); letter-spacing:.18em;
+    color:var(--dust-dim); text-transform:uppercase; margin:20px 0 0; }
+  .organ-state b { color:var(--dust); font-weight:500; }
+  .organ-state .dot { display:inline-block; width:7px; height:7px; border-radius:50%;
+    background:#5abf8a; margin-right:9px; vertical-align:1px; transition:background .4s; }
+  .organ-state.surprised .dot { background:var(--ember); }
+  .organ-state.surprised b { color:var(--ember); }
+
+  @media (max-width:760px){
+    .plate-label { position:static; text-align:center; margin-bottom:18px; }
+  }
+  @media (prefers-reduced-motion: reduce){ .organ-state .dot { transition:none; } }
+</style>
+</head>
+<body>
+
+<nav class="top scrolled" aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="../../">SENTY<i>S</i></a>
+    <div class="nav-links"><a href="../../">← back to the site</a></div>
+  </div>
+</nav>
+
+<section class="organ">
+  <div class="wrap organ-head">
+    <p class="eyebrow">Fig. 01 · the missing organ</p>
+    <h2>Machines that can <em>feel</em> something is wrong.</h2>
+    <p class="lead">Sentys is a nervous system for industrial equipment. Four senses converge
+      on a <b>learned baseline</b>; when one of them is surprised, it says which.</p>
+  </div>
+
+  <div class="fig-frame">
+    <div class="plate-label">
+      <b>PLATE I. — CENTRIFUGAL PUMP,</b><br>
+      afferent pathways exposed.<br>
+      a. rotation &nbsp; b. thermal &nbsp; c. pressure &nbsp; d. flow<br>
+      g. ganglion (learned baseline)
+    </div>
+    <div class="fig-stage">
+      <img src="plate.webp" alt="Engraved anatomical cross-section of a centrifugal pump, drawn like a 19th-century atlas plate." width="1376" height="768">
+      <canvas id="afferent" aria-hidden="true"></canvas>
+    </div>
+  </div>
+
+  <p class="organ-state" id="ostate" aria-live="off"><span class="dot" aria-hidden="true"></span>
+    afferent pathways — <b id="osense">all senses within healthy range</b></p>
+</section>
+
+<script>
+(() => {
+  const cv = document.getElementById('afferent');
+  const stateEl = document.getElementById('ostate');
+  const senseEl = document.getElementById('osense');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ctx = cv.getContext('2d');
+  let W, H, dpr, fibers = [];
+
+  // anchors in image unit coords (image is object-fit:cover at 1376:768)
+  const GANG = { x:.175, y:.44 };
+  const sensors = [
+    { x:.500, y:.400, sense:'a. rotation', key:'rotation', lx:-12, ly:-24, align:'right', ph:0   },
+    { x:.688, y:.268, sense:'b. thermal',  key:'thermal',  lx:-12, ly:-12, align:'right', ph:2.1 },
+    { x:.735, y:.120, sense:'c. pressure', key:'pressure', lx:-14, ly:  3, align:'right', ph:4.2 },
+    { x:.780, y:.855, sense:'d. flow',     key:'flow',     lx:-30, ly: 30, align:'right', ph:5.6 },
+  ];
+
+  function resize(){
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    const gx = GANG.x*W, gy = GANG.y*H;
+    fibers = sensors.map(sn => {
+      const sx = sn.x*W, sy = sn.y*H;
+      const dx = gx-sx, dy = gy-sy, L = Math.hypot(dx,dy);
+      const nx = -dy/L, ny = dx/L, bow = L*.16*(sy > gy ? -1 : 1);
+      return { sn, sx, sy, cx:(sx+gx)/2+nx*bow, cy:(sy+gy)/2+ny*bow, gx, gy };
+    });
+  }
+  addEventListener('resize', resize); resize();
+
+  const bez = (f,t) => {
+    const u = 1-t;
+    return [ u*u*f.sx + 2*u*t*f.cx + t*t*f.gx, u*u*f.sy + 2*u*t*f.cy + t*t*f.gy ];
+  };
+
+  function drawGanglion(t, excite){
+    const gx = GANG.x*W, gy = GANG.y*H, s = Math.min(W,H);
+    const breathe = 1 + Math.sin(t*.0014)*.05 + excite*.3;
+    ctx.save();
+    ctx.translate(gx,gy);
+    const dustA = .28 + excite*.15, embA = excite*.55;
+    for (let i=0;i<16;i++){
+      const a = i/16*Math.PI*2 + t*.00004;
+      const r0 = s*.030*breathe, r1 = s*(.055+.012*Math.sin(t*.0009+i))*breathe;
+      ctx.strokeStyle = excite > .05 ? `rgba(240,164,60,${embA})` : `rgba(236,229,214,${dustA})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(a)*r0, Math.sin(a)*r0);
+      ctx.lineTo(Math.cos(a)*r1, Math.sin(a)*r1);
+      ctx.stroke();
+    }
+    const core = excite > .05 ? `rgba(240,164,60,` : `rgba(236,229,214,`;
+    const g = ctx.createRadialGradient(0,0,0, 0,0,s*.05*breathe);
+    g.addColorStop(0, core + (.75+excite*.2) + ')');
+    g.addColorStop(1, core + '0)');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(0,0,s*.05*breathe,0,7); ctx.fill();
+    // g. label
+    ctx.font = '500 11px PlexMono, monospace';
+    ctx.fillStyle = 'rgba(152,161,170,.9)';
+    ctx.textAlign = 'center';
+    ctx.fillText('g.', 0, s*.05*breathe + 22);
+    ctx.restore();
+  }
+
+  // drift event: every ~13s one sense goes ember for ~3.5s
+  function driftState(t){
+    const period = 13000, k = Math.floor(t/period);
+    const local = t - k*period;
+    const fi = k % fibers.length;
+    const on = local > 8200 && local < 11700;
+    const env = on ? Math.sin((local-8200)/3500*Math.PI) : 0;
+    return { fi, env };
+  }
+
+  function drawFibers(t, drift){
+    fibers.forEach((f, i) => {
+      const isDrift = drift && i === drift.fi && drift.env > 0;
+      const col = isDrift ? 'rgba(240,164,60,' : 'rgba(236,229,214,';
+      for (const [w, a] of [[2.6,.04],[1.2,.10],[.6,.38]]){
+        ctx.strokeStyle = col + (a + (isDrift ? drift.env*.25 : 0)) + ')';
+        ctx.lineWidth = w;
+        ctx.beginPath();
+        ctx.moveTo(f.sx,f.sy);
+        ctx.quadraticCurveTo(f.cx,f.cy,f.gx,f.gy);
+        ctx.stroke();
+      }
+      ctx.fillStyle = col + '.9)';
+      ctx.beginPath(); ctx.arc(f.sx,f.sy,2.6,0,7); ctx.fill();
+      if (!reduced){
+        const rate = isDrift ? 1500 : 3400;
+        for (let p=0;p<(isDrift?4:2);p++){
+          const tt = ((t + f.sn.ph*1000 + p*rate/(isDrift?4:2)) % rate) / rate;
+          const [x,y] = bez(f,tt);
+          const r = isDrift ? 2.8 : 2.0;
+          const g = ctx.createRadialGradient(x,y,0,x,y,r*4);
+          g.addColorStop(0, col + '.9)');
+          g.addColorStop(1, col + '0)');
+          ctx.fillStyle = g;
+          ctx.beginPath(); ctx.arc(x,y,r*4,0,7); ctx.fill();
+        }
+      }
+      ctx.font = '500 11px PlexMono, monospace';
+      ctx.fillStyle = isDrift ? 'rgba(240,164,60,.95)' : 'rgba(152,161,170,.9)';
+      ctx.textAlign = f.sn.align;
+      // small screens: letter keys only; the legend and state line carry the names
+      const tag = W < 560 ? f.sn.sense.slice(0,2) : f.sn.sense;
+      ctx.fillText(tag + (isDrift && W >= 560 ? ' · surprised' : ''), f.sx + f.sn.lx, f.sy + f.sn.ly);
+    });
+  }
+
+  if (reduced){
+    // atlas plates are still: fibers + ganglion drawn once, no loop
+    const still = () => { ctx.clearRect(0,0,W,H); drawFibers(0, null); drawGanglion(0, 0); };
+    document.fonts ? document.fonts.ready.then(still) : still();
+    addEventListener('resize', still);
+    return;
+  }
+
+  // the instrument sleeps: animate only while the figure is on screen
+  let running = false, rafId = 0;
+  function frame(t){
+    ctx.clearRect(0,0,W,H);
+    const drift = driftState(t);
+    drawFibers(t, drift);
+    drawGanglion(t, drift.env);
+    const active = drift.env > .1;
+    stateEl.classList.toggle('surprised', active);
+    senseEl.textContent = active
+      ? fibers[drift.fi].sn.key + ' · surprised'
+      : 'all senses within healthy range';
+    rafId = running ? requestAnimationFrame(frame) : 0;
+  }
+  new IntersectionObserver(es => {
+    const vis = es[0].isIntersecting;
+    if (vis && !running){ running = true; rafId = requestAnimationFrame(frame); }
+    if (!vis && running){ running = false; cancelAnimationFrame(rafId); }
+  }, { threshold:.15 }).observe(cv);
+})();
+</script>
+</body>
+</html>

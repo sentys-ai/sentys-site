@@ -91,8 +91,8 @@ void main(){
   c += .32 * exp(-md*3.2) * sin(uT*6. - md*13.);
 
   float dust = 1.0 - smoothstep(0.0, 0.15, abs(c));
-  float grain = hash(gl_FragCoord.xy + floor(uT*7.)) * .5 + hash(gl_FragCoord.xy*1.7) * .5;
-  dust *= .5 + .5*grain;
+  float grain = hash(gl_FragCoord.xy + floor(uT*4.)) * .5 + hash(gl_FragCoord.xy*1.7) * .5;
+  dust *= .56 + .44*grain;
 
   vec3 plate = mix(vec3(.052,.06,.072), vec3(.078,.088,.104), uv.y + .05*sin(uv.x*6.));
   float field = smoothstep(.9, .0, abs(c)) * .045;
@@ -102,7 +102,7 @@ void main(){
   dustCol = mix(dustCol, vec3(.99,.63,.28), clamp(heat*1.7,0.,1.));
   dustCol = mix(dustCol, vec3(1.,.44,.26), clamp(heat*heat*1.9,0.,1.));
 
-  vec3 col = plate + field + dust * dustCol * (.62 + .42*heat);
+  vec3 col = plate + field + dust * dustCol * (.68 + .38*heat);
   float vig = smoothstep(1.7, .5, length((uv-vec2(.55,.5))*vec2(asp,1.)*1.5));
   col *= .5 + .5*vig;
   col *= uDim;
@@ -122,7 +122,7 @@ void main(){
     gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     const U = {}; ['uRes','uT','uMouse','uDrift','uMode','uMix','uCenter','uDim'].forEach(n => U[n] = gl.getUniformLocation(prog, n));
 
-    let W = 0, H = 0;
+    let W = 0, H = 0, raf = 0, plateShown = false;
     const resize = () => {
       const dpr = Math.min(devicePixelRatio || 1, 1.5);
       W = cv.clientWidth; H = cv.clientHeight;
@@ -130,7 +130,7 @@ void main(){
       gl.viewport(0, 0, cv.width, cv.height);
     };
     addEventListener('resize', () => { resize();
-      if (!raf && !document.hidden) raf = requestAnimationFrame(frame); });
+      if (!REDUCED && !raf && !document.hidden) raf = requestAnimationFrame(frame); });
     resize();
 
     // sections that conduct the plate
@@ -161,6 +161,7 @@ void main(){
       gl.uniform2f(U.uCenter, portrait ? .5 : .62, portrait ? .58 : .48);
       gl.uniform1f(U.uDim, .8);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
+      cv.classList.add('on');
       addEventListener('resize', () => { resize();
         gl.uniform2f(U.uRes, cv.width, cv.height); gl.drawArrays(gl.TRIANGLES, 0, 3); });
       return true;
@@ -172,6 +173,9 @@ void main(){
     }, { passive:true });
 
     const DRIFT_PERIOD = 16;
+    // phase-shifted so the FIRST drift lands ~3.5s after arrival —
+    // visitors should witness the plate feel something before they scroll
+    const DRIFT_PHASE = 6;
     const heroDriftEnv = tp => {
       if (tp < 9.5) return 0;
       if (tp < 11.5) return (tp - 9.5) / 2;
@@ -179,11 +183,13 @@ void main(){
       if (tp < 15.2) return 1 - (tp - 14) / 1.2;
       return 0;
     };
+    // idle breathing: while resting in the hero the plate slowly walks its
+    // resonant modes (the concept's "song") instead of holding one chord
+    const HERO_MODES = [[5,3],[6,2],[4,3],[7,2],[5,4]];
 
     let typed = 0, lastMsgIdx = -1, voiceMode = 'idle';
     if (voiceText) voiceText.textContent = IDLE_MSG;
 
-    let raf = 0;
     const wake = () => { if (!raf && !document.hidden) raf = requestAnimationFrame(frame); };
     document.addEventListener('visibilitychange', wake);
     addEventListener('scroll', wake, { passive:true });
@@ -207,17 +213,21 @@ void main(){
       tgtStop = pickStop();
 
       // mode morph: when the target differs from modeB, start a new blend
-      const tm = tgtStop.mode;
+      const inHero = tgtStop.hero && storyDrift === null;
+      const tm = inHero
+        ? HERO_MODES[Math.floor((t + DRIFT_PHASE) / 9) % HERO_MODES.length]
+        : tgtStop.mode;
       if (tm[0] !== st.modeB[0] || tm[1] !== st.modeB[1]){
         st.modeA = st.mix > .5 ? st.modeB : st.modeA;
         st.modeB = tm; st.mix = 0;
       }
-      st.mix = Math.min(1, st.mix + .012);
+      // hero morphs are languid (the breathing); section changes stay brisk
+      st.mix = Math.min(1, st.mix + (inHero ? .0045 : .012));
 
       // drift: story override, hero cycle, or calm
       let dTgt = 0;
       if (storyDrift !== null) dTgt = storyDrift;
-      else if (tgtStop.hero) dTgt = heroDriftEnv(t % DRIFT_PERIOD);
+      else if (tgtStop.hero) dTgt = heroDriftEnv((t + DRIFT_PHASE) % DRIFT_PERIOD);
       st.drift = lerp(st.drift, dTgt, .07);
 
       st.center[0] = lerp(st.center[0], tgtStop.center[0], .04);
@@ -226,7 +236,7 @@ void main(){
 
       // sense-voice ticker, hero only
       if (voiceText && tgtStop.hero && storyDrift === null){
-        const tp = t % DRIFT_PERIOD, cyc = Math.floor(t / DRIFT_PERIOD);
+        const tp = (t + DRIFT_PHASE) % DRIFT_PERIOD, cyc = Math.floor((t + DRIFT_PHASE) / DRIFT_PERIOD);
         const env = heroDriftEnv(tp);
         if (env > 0.02 && voiceMode !== 'drift'){
           voiceMode = 'drift'; typed = 0;
@@ -254,6 +264,7 @@ void main(){
       gl.uniform2f(U.uCenter, st.center[0], st.center[1]);
       gl.uniform1f(U.uDim, st.dim);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
+      if (!plateShown){ plateShown = true; cv.classList.add('on'); }
 
       // the instrument sleeps: freeze in reading sections once settled.
       // it wakes on scroll, and stays awake only where something is felt
@@ -438,6 +449,150 @@ void main(){
     }
     addEventListener('scroll', update, { passive:true });
     resize(); update();
+  }
+
+  /* ── Fig. 01, the organ: afferent overlay on the engraved plate ───── */
+  const organCv = document.getElementById('afferent');
+  if (organCv) initOrgan();
+
+  function initOrgan(){
+    const octx = organCv.getContext('2d');
+    const ostate = document.getElementById('ostate');
+    const osense = document.getElementById('osense');
+    const GANG = { x:.175, y:.44 };
+    const SENSORS = [
+      { x:.500, y:.400, sense:'a. rotation', key:'rotation', lx:-12, ly:-24, align:'right', ph:0   },
+      { x:.688, y:.268, sense:'b. thermal',  key:'thermal',  lx:-12, ly:-12, align:'right', ph:2.1 },
+      { x:.735, y:.120, sense:'c. pressure', key:'pressure', lx:-14, ly:  3, align:'right', ph:4.2 },
+      { x:.780, y:.855, sense:'d. flow',     key:'flow',     lx:-30, ly: 30, align:'right', ph:5.6 },
+    ];
+    let W, H, fibers = [];
+
+    function resize(){
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      W = organCv.clientWidth; H = organCv.clientHeight;
+      organCv.width = W*dpr; organCv.height = H*dpr;
+      octx.setTransform(dpr,0,0,dpr,0,0);
+      const gx = GANG.x*W, gy = GANG.y*H;
+      fibers = SENSORS.map(sn => {
+        const sx = sn.x*W, sy = sn.y*H;
+        const dx = gx-sx, dy = gy-sy, L = Math.hypot(dx,dy);
+        const nx = -dy/L, ny = dx/L, bow = L*.16*(sy > gy ? -1 : 1);
+        return { sn, sx, sy, cx:(sx+gx)/2+nx*bow, cy:(sy+gy)/2+ny*bow, gx, gy };
+      });
+    }
+    addEventListener('resize', () => { resize(); if (REDUCED) still(); });
+    resize();
+
+    const bez = (f,t) => {
+      const u = 1-t;
+      return [ u*u*f.sx + 2*u*t*f.cx + t*t*f.gx, u*u*f.sy + 2*u*t*f.cy + t*t*f.gy ];
+    };
+
+    function drawGanglion(t, excite){
+      const gx = GANG.x*W, gy = GANG.y*H, s = Math.min(W,H);
+      const breathe = 1 + Math.sin(t*.0014)*.05 + excite*.3;
+      octx.save();
+      octx.translate(gx,gy);
+      const col = excite > .05 ? `rgba(240,164,60,${.28+excite*.45})` : 'rgba(236,229,214,.28)';
+      for (let i=0;i<16;i++){
+        const a = i/16*Math.PI*2 + t*.00004;
+        const r0 = s*.030*breathe, r1 = s*(.055+.012*Math.sin(t*.0009+i))*breathe;
+        octx.strokeStyle = col;
+        octx.lineWidth = 1;
+        octx.beginPath();
+        octx.moveTo(Math.cos(a)*r0, Math.sin(a)*r0);
+        octx.lineTo(Math.cos(a)*r1, Math.sin(a)*r1);
+        octx.stroke();
+      }
+      const core = excite > .05 ? 'rgba(240,164,60,' : 'rgba(236,229,214,';
+      const g = octx.createRadialGradient(0,0,0, 0,0,s*.05*breathe);
+      g.addColorStop(0, core + (.75+excite*.2) + ')');
+      g.addColorStop(1, core + '0)');
+      octx.fillStyle = g;
+      octx.beginPath(); octx.arc(0,0,s*.05*breathe,0,7); octx.fill();
+      octx.font = '500 11px PlexMono, monospace';
+      octx.fillStyle = 'rgba(152,161,170,.9)';
+      octx.textAlign = 'center';
+      octx.fillText('g.', 0, s*.05*breathe + 22);
+      octx.restore();
+    }
+
+    function drawFibers(t, driftFi, driftEnv){
+      fibers.forEach((f, i) => {
+        const isDrift = i === driftFi && driftEnv > 0;
+        const col = isDrift ? 'rgba(240,164,60,' : 'rgba(236,229,214,';
+        for (const [w, a] of [[2.6,.04],[1.2,.10],[.6,.38]]){
+          octx.strokeStyle = col + (a + (isDrift ? driftEnv*.25 : 0)) + ')';
+          octx.lineWidth = w;
+          octx.beginPath();
+          octx.moveTo(f.sx,f.sy);
+          octx.quadraticCurveTo(f.cx,f.cy,f.gx,f.gy);
+          octx.stroke();
+        }
+        octx.fillStyle = col + '.9)';
+        octx.beginPath(); octx.arc(f.sx,f.sy,2.6,0,7); octx.fill();
+        if (!REDUCED){
+          const rate = isDrift ? 1500 : 3400;
+          for (let p=0;p<(isDrift?4:2);p++){
+            const tt = ((t + f.sn.ph*1000 + p*rate/(isDrift?4:2)) % rate) / rate;
+            const [x,y] = bez(f,tt);
+            const r = isDrift ? 2.8 : 2.0;
+            const g = octx.createRadialGradient(x,y,0,x,y,r*4);
+            g.addColorStop(0, col + '.9)');
+            g.addColorStop(1, col + '0)');
+            octx.fillStyle = g;
+            octx.beginPath(); octx.arc(x,y,r*4,0,7); octx.fill();
+          }
+        }
+        octx.font = '500 11px PlexMono, monospace';
+        octx.fillStyle = isDrift ? 'rgba(240,164,60,.95)' : 'rgba(152,161,170,.9)';
+        octx.textAlign = f.sn.align;
+        const tag = W < 560 ? f.sn.sense.slice(0,2) : f.sn.sense;
+        octx.fillText(tag + (isDrift && W >= 560 ? ' · surprised' : ''), f.sx + f.sn.lx, f.sy + f.sn.ly);
+      });
+    }
+
+    const still = () => { octx.clearRect(0,0,W,H); drawFibers(0, -1, 0); drawGanglion(0, 0); };
+    if (REDUCED){
+      document.fonts ? document.fonts.ready.then(still) : still();
+      return;
+    }
+
+    // the surprise fires ONCE per visit, ~1.6s after the plate first docks
+    // into view; afterwards the organ rests at healthy. Silence is the default.
+    let armedAt = null, surpriseDone = false;
+    const SURPRISE_FI = 0; // rotation — the same sense that speaks in the story
+    function surpriseEnv(now){
+      if (surpriseDone || armedAt === null) return 0;
+      const local = now - armedAt - 1600;
+      if (local < 0) return 0;
+      if (local > 3500){ surpriseDone = true; return 0; }
+      return Math.sin(local/3500*Math.PI);
+    }
+
+    let running = false, rafo = 0;
+    function frame(now){
+      octx.clearRect(0,0,W,H);
+      const env = surpriseEnv(now);
+      drawFibers(now, SURPRISE_FI, env);
+      drawGanglion(now, env);
+      const active = env > .1;
+      ostate.classList.toggle('surprised', active);
+      osense.textContent = active
+        ? SENSORS[SURPRISE_FI].key + ' · surprised'
+        : 'all senses within healthy range';
+      rafo = running ? requestAnimationFrame(frame) : 0;
+    }
+    new IntersectionObserver(es => {
+      const vis = es[0].isIntersecting;
+      if (vis && !running){
+        running = true;
+        if (armedAt === null) armedAt = performance.now();
+        rafo = requestAnimationFrame(frame);
+      }
+      if (!vis && running){ running = false; cancelAnimationFrame(rafo); }
+    }, { threshold:.25 }).observe(organCv);
   }
 
   /* ── fits band: ambient loop, desktop + motion-allowed only ───────── */

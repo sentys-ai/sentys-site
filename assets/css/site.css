@@ -64,7 +64,9 @@ h1,h2,h3 { font-family:var(--display); font-weight:500; line-height:1.06; letter
 .skip:focus { left:12px; top:12px; }
 
 /* ── the plate: fixed behind everything, with a global veil ─────────── */
-#plate { position:fixed; inset:0; width:100%; height:100%; z-index:0; }
+#plate { position:fixed; inset:0; width:100%; height:100%; z-index:0;
+  opacity:0; transition:opacity 1.1s ease; }
+#plate.on { opacity:1; }
 .plate-fallback { position:fixed; inset:0; z-index:0; background:radial-gradient(90% 70% at 64% 42%, #1c222b 0%, var(--plate) 68%); }
 .veil::after { content:""; position:absolute; inset:0; opacity:0; transition:opacity .6s ease;
   background:radial-gradient(78% 66% at 50% 46%, rgba(10,12,15,0) 40%, rgba(10,12,15,.78) 100%); }
@@ -456,10 +458,47 @@ footer a:hover { color:var(--dust); }
 footer .fbrand { font:600 13px/1 var(--display); letter-spacing:.4em; color:var(--dust); }
 footer .fbrand i { font-style:normal; color:var(--ember); }
 
+/* ── Fig. 01, the organ: engraved plate + afferent overlay ───────────── */
+#organ .organ-head { text-align:center; }
+#organ .organ-head .eyebrow { justify-content:center; }
+#organ h2 { margin:0 auto 14px; max-width:none; text-wrap:balance; }
+#organ h2 em { font-style:normal; color:var(--ember); }
+.organ-lead { color:var(--dust-dim); font-size:clamp(16px, 1.9vw, 18.5px); max-width:60ch;
+  margin:0 auto; text-align:center; text-shadow:0 1px 12px rgba(15,18,22,.9); }
+.organ-lead b { color:var(--dust); font-weight:500; }
+.fig-frame { position:relative; max-width:1000px; margin:30px auto 0; padding:0 22px; }
+.fig-stage { position:relative; aspect-ratio:1376/768; }
+.fig-stage img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  user-select:none; -webkit-user-drag:none;
+  /* the asset's blacks are baked to exactly var(--plate) (channel-max against
+     #0f1216), so the plate rectangle vanishes against the page; main's z-index
+     isolates any live blend from the shader, so baking is the honest fix.
+     Sides fade where the composition holds no ink. */
+  -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 9%, #000 96%, transparent 100%),
+                     linear-gradient(180deg, transparent 0, #000 4%, #000 97%, transparent 100%);
+          mask-image:linear-gradient(90deg, transparent 0, #000 9%, #000 96%, transparent 100%),
+                     linear-gradient(180deg, transparent 0, #000 4%, #000 97%, transparent 100%);
+  -webkit-mask-composite:source-in;
+          mask-composite:intersect; }
+#afferent { position:absolute; inset:0; width:100%; height:100%; display:block; }
+.plate-label { position:absolute; left:22px; top:0; z-index:2; font:400 11.5px/1.9 var(--mono);
+  letter-spacing:.12em; color:var(--dust-dim); text-shadow:0 1px 8px rgba(15,18,22,.9); }
+.plate-label b { color:var(--dust); font-weight:500; }
+.organ-state { text-align:center; font:400 11.5px/1.7 var(--mono); letter-spacing:.18em;
+  color:var(--dust-dim); text-transform:uppercase; margin:24px 0 0; }
+.organ-state b { color:var(--dust); font-weight:500; }
+.organ-state .dot { display:inline-block; width:7px; height:7px; border-radius:50%;
+  background:var(--ok-dark); margin-right:9px; vertical-align:1px; transition:background .4s ease; }
+.organ-state.surprised .dot { background:var(--ember); }
+.organ-state.surprised b { color:var(--ember); }
+@media (max-width:760px){
+  .plate-label { position:static; text-align:center; margin-bottom:18px; }
+}
+
 /* ── print ───────────────────────────────────────────────────────────── */
 @media print {
   .js .reveal { opacity:1 !important; transform:none !important; }
-  nav.top, #plate, .plate-fallback, .veil, .hero-scrim, .voice, .demo-embed, .story-track { display:none !important; }
+  nav.top, #plate, .plate-fallback, .veil, .hero-scrim, .voice, .demo-embed, .story-track, #afferent, .organ-state { display:none !important; }
   header.hero { min-height:auto; }
   body, footer { background:#fff !important; color:#000 !important; }
 }
