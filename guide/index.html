@@ -4,186 +4,177 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>How this site was built — Sentys</title>
-<meta name="description" content="Design notes for the sentys.ai redesign: the concept bake-off, the Chladni-plate shader, the honest-copy rule, and how to reproduce the method.">
+<meta name="description" content="Design notes for the sentys.ai redesign: four generations, three bake-offs, the annunciator console, the honest-copy rule, and how to reproduce the method.">
 <meta name="robots" content="noindex">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f1216'/%3E%3Cpath d='M6 16c3.3 0 3.3-6 6.7-6s3.3 6 6.6 6 3.4-6 6.7-6' fill='none' stroke='%23f0a43c' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='h' x1='0' y1='0' x2='.6' y2='1'%3E%3Cstop offset='0' stop-color='%23f7dfae'/%3E%3Cstop offset='.42' stop-color='%23f0a43c'/%3E%3Cstop offset='1' stop-color='%23ff6a45'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='%230f1216'/%3E%3Cg transform='matrix(0.03043,0,0,-0.03043,5.911,26.196)'%3E%3Cpath d='M344 -10Q191 -10 109.0 50.0Q27 110 27 226V232H177V214Q177 166 211.0 146.5Q245 127 344 127Q431 127 461.5 141.0Q492 155 492 190Q492 220 472.0 234.5Q452 249 400 258L212 285Q21 315 21 473Q21 559 96.5 619.5Q172 680 328 680Q478 680 554.0 617.0Q630 554 630 444V438H479V452Q479 502 444.5 522.5Q410 543 313 543Q234 543 203.0 527.5Q172 512 172 479Q172 450 189.5 437.0Q207 424 250 416L438 386Q642 353 642 197Q642 108 568.0 49.0Q494 -10 344 -10Z' fill='url(%23h)'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/css/site.css?v=6">
 <style>
-  .guide-hero { padding:120px 0 56px; }
-  .band-light { background:var(--paper); color:var(--ink); }
-  .band-light .eyebrow { color:var(--ink-dim); } .band-light .eyebrow::before { background:var(--p-accent); }
-  .band-light a { color:var(--p-accent); }
-  .guide-hero h1 { font-size:clamp(34px,4.6vw,60px); margin:0 0 16px; max-width:20ch; }
-  .guide-hero p { color:var(--dust-dim); max-width:62ch; }
-  article { max-width:760px; }
-  article h2 { font-size:clamp(24px,3vw,34px); margin:56px 0 12px; }
-  article h3 { font-size:19px; margin:32px 0 8px; }
-  article p, article li { color:var(--ink-dim); font-size:15.5px; }
-  article p b, article li b { color:var(--ink); }
-  article code { font:400 13px var(--mono); background:var(--surface); border:1px solid var(--line); border-radius:4px; padding:1px 6px; color:var(--ink); }
-  article pre { background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:16px 18px; overflow-x:auto; font:400 12.5px/1.7 var(--mono); color:var(--ink); }
-  .verdict { border:1px solid var(--line); border-radius:8px; overflow:hidden; margin:20px 0; }
-  .verdict .row { display:grid; grid-template-columns:130px 90px 1fr; gap:14px; padding:14px 18px; border-bottom:1px solid var(--line); font-size:14px; }
+  /* the guide is a paper document laid on the console */
+  .guide-hero { padding:56px 0 48px; }
+  .guide-hero h1 { font-size:clamp(32px,4.2vw,54px); line-height:1.04; margin:0 0 16px; max-width:22ch; }
+  .guide-hero p { color:var(--ink-soft); max-width:62ch; }
+  .sheet { max-width:860px; margin:0 auto 84px; padding:48px 52px 44px; }
+  article h2 { font:600 22px/1.25 var(--legend); letter-spacing:.04em; text-transform:uppercase;
+    margin:52px 0 12px; text-shadow:none; max-width:none; }
+  article h2:first-child { margin-top:0; }
+  article h3 { font:500 13px/1.4 var(--mono); letter-spacing:.08em; text-transform:uppercase; margin:28px 0 8px; }
+  article p, article li { color:#57544a; font-size:15px; line-height:1.7; }
+  article p b, article li b { color:var(--paper-ink); }
+  article a { color:var(--paper-ink); }
+  article ul { padding-left:20px; }
+  article code { font:400 13px var(--mono); background:#f3efe3; border:1px solid var(--paper-line);
+    border-radius:3px; padding:1px 6px; color:var(--paper-ink); }
+  article pre { background:#f3efe3; border:1px solid var(--paper-line); border-radius:4px;
+    padding:16px 18px; overflow-x:auto; font:400 12.5px/1.7 var(--mono); color:var(--paper-ink); }
+  .verdict { border:1px solid var(--paper-line); border-radius:4px; overflow:hidden; margin:20px 0; }
+  .verdict .row { display:grid; grid-template-columns:130px 90px 1fr; gap:14px; padding:14px 18px;
+    border-bottom:1px solid var(--paper-line); font-size:14px; }
   .verdict .row:last-child { border-bottom:0; }
-  .verdict .row > :first-child { font:500 12.5px var(--mono); color:var(--ink); }
-  .verdict .won { color:var(--ok); font:500 11px var(--mono); letter-spacing:.1em; }
-  .verdict .lost { color:var(--bad); font:500 11px var(--mono); letter-spacing:.1em; }
+  .verdict .row > :first-child { font:500 12.5px var(--mono); color:var(--paper-ink); }
+  .verdict .won { color:var(--green); font:500 11px var(--mono); letter-spacing:.1em; }
+  .verdict .lost { color:var(--red); font:500 11px var(--mono); letter-spacing:.1em; }
   .verdict .row p { margin:0; font-size:13.5px; }
-  @media (max-width:640px){ .verdict .row { grid-template-columns:1fr; gap:4px; } }
+  .credit { margin-top:48px; font:400 13px var(--mono); color:#8a8676; }
+  @media (max-width:640px){ .verdict .row { grid-template-columns:1fr; gap:4px; } .sheet{padding:32px 24px} }
 </style>
 </head>
 <body>
-<nav class="top scrolled" aria-label="Main">
+<nav class="top" aria-label="Main">
   <div class="wrap">
-    <a class="brand" href="../">SENTY<i>S</i></a>
-    <div class="nav-links"><a href="../">← back to the site</a></div>
+    <a class="brand" href="../"><span class="wordmark">SENTYS</span></a>
+    <div class="nav-links"><a class="navbtn" href="../">← back to the site</a></div>
   </div>
 </nav>
 
-<div class="band-dark">
-  <div class="wrap guide-hero">
-    <p class="eyebrow">Colophon · how this was built</p>
-    <h1>Design notes, in the same font size as the claims.</h1>
-    <p>This page is unlinked from the main navigation. It documents how the site was designed and
-      built — including the concepts that lost — so that anyone who wants to work this way can.</p>
-  </div>
+<div class="wrap guide-hero">
+  <p class="eyebrow">Colophon · how this was built</p>
+  <h1>Design notes, in the same font size as the claims.</h1>
+  <p>This page is unlinked from the main navigation. It documents how the site was designed and
+    built — four generations, including the concepts that lost — so that anyone who wants to work
+    this way can.</p>
 </div>
 
-<div class="band-light"><section><div class="wrap"><article>
+<div class="wrap"><div class="paper sheet"><article>
 
   <h2>Who made this</h2>
-  <p>This site was designed and built end-to-end by <b>Claude (Fable 5, Anthropic)</b> in a single
-    autonomous overnight session on 12 July 2026 — concept exploration, design system, WebGL shader,
-    copy, accessibility, brand kit, and these notes, working from the product's own documents and
-    evidence files. Frixos Andreou wrote the brief and merged the result; every number on the site
-    comes from Sentys's published benchmark reports, and the design was not allowed to touch them.</p>
+  <p>This site was designed and built end-to-end by <b>Claude (Fable 5, Anthropic)</b> working from
+    the product's own documents and evidence files: generations one to three in a single autonomous
+    overnight session on 12 July 2026, and the fourth — this one — in a daytime session the same
+    day, briefed to challenge the keeper from outside its own aesthetic lineage. Frixos Andreou
+    wrote the briefs and judges the results; every number on the site comes from Sentys's published
+    benchmark reports, and the design was never allowed to touch them.</p>
 
   <h2>Start from what the product is</h2>
   <p>Sentys is an interoceptive nervous system for machines: it listens to raw sensor streams, learns
     what "healthy" <i>feels</i> like without labels, and speaks up in plain language when something
     drifts. The audience is maintenance and reliability engineers — people who trust instruments and
     distrust decoration. Every aesthetic decision had to survive both facts.</p>
-  <p>The design direction was derived from the product, not applied to it: <b>vibration made
-    visible</b>. A Chladni plate — dust on a vibrating surface settling into the standing-wave
-    pattern of its resonant mode — is what "a machine's feeling of healthy" literally looks like in
-    physics. A stable pattern is health; a deforming, heating pattern is drift. That is the hero,
-    and it is also the product's pitch, wordlessly.</p>
 
-  <h2>The bake-off: three concepts, two losers</h2>
-  <p>Three genuinely different single-fold hero prototypes were built and screenshotted at desktop
-    and mobile widths, then judged with fresh eyes against the product identity and the audience.
-    The losing prototypes are preserved, working, under
-    <a href="../concepts/a/">/concepts/a</a>, <a href="../concepts/b/">/concepts/b</a> and
-    <a href="../concepts/c/">/concepts/c</a>.</p>
+  <h2>Generations one to three: the Resonance lineage</h2>
+  <p>The first bake-off (prototypes preserved under <a href="../concepts/a/">/concepts/a</a>,
+    <a href="../concepts/b/">/concepts/b</a>, <a href="../concepts/c/">/concepts/c</a>) was won by
+    <b>the Chladni plate</b>: dust on a vibrating surface settling into the standing-wave pattern of
+    its resonant mode — what "a machine's feeling of healthy" literally looks like in physics.</p>
 
   <div class="verdict">
     <div class="row">
       <span>A · "Afferent"</span><span class="lost">LOST</span>
       <p>An anatomy-atlas plate of a centrifugal pump with afferent nerve fibres converging on a
-        ganglion — the "missing organ" thesis drawn literally. The purest conceptual match, and the
-        serif plate-typography was lovely. It lost on execution ceiling: the nerve drawing read as a
-        sparse network diagram rather than an organ, and the whole direction drifted toward a moody
-        dark-AI-site cliché that would need illustration-grade drawing to escape.</p>
+        ganglion — the "missing organ" thesis drawn literally. The purest conceptual match, but the
+        nerve drawing read as a sparse network diagram, and the direction drifted toward a moody
+        dark-AI-site cliché.</p>
     </div>
     <div class="row">
       <span>B · "Recorder"</span><span class="lost">LOST</span>
-      <p>The whole page as a chart recorder: live pen trace on sprocket-holed chart paper, typed
-        red-pen annotations, a rubber stamp. Instantly credible for plant engineers and the most
-        distinctive of the three — but as a whole-site skin it is a print-nostalgia direction that
-        fights the advanced-motion brief, and its signature (the pen) didn't even land in the fold.
-        Its instrument furniture survived into the winner: the mono readouts, the threshold
-        annotation on the evidence chart, the alarm line "set from healthy data alone".</p>
+      <p>The whole page as a chart recorder: live pen trace on sprocket-holed paper, typed red-pen
+        annotations, a rubber stamp. Instantly credible for plant engineers — but as a whole-site
+        skin it was print nostalgia that fought the advanced-motion brief. Its instrument furniture
+        survived into later generations (and its central idea returns, transformed, in v4).</p>
     </div>
     <div class="row">
       <span>C · "Resonance"</span><span class="won">WON</span>
-      <p>The Chladni plate. Physically true for vibration sensing (engineers recognise it as physics,
-        not decoration), the strongest live-motion ceiling, and the clearest one-visual statement of
-        the product: healthy is a stable pattern; drift deforms it and heats it. Its known risks —
-        text legibility over the pattern, centered-hero cliché — were fixed by composition: an
-        asymmetric layout with a directional scrim, and the pattern's visual mass held right of the
-        text column.</p>
+      <p>The Chladni plate: physically true for vibration sensing, the strongest live-motion
+        ceiling, the clearest one-visual statement of the product — healthy is a stable pattern;
+        drift deforms and heats it.</p>
     </div>
   </div>
 
-  <h2>v2: the continuous instrument</h2>
-  <p>After a first full build, the founder pushed back: the visual concept was new, but the page
-    skeleton was inherited from the old site. v2 answered that. The Chladni plate became a fixed
-    layer behind the <i>entire</i> page, conducted by scroll: every section declares a resonant
-    mode and the plate morphs between them as you travel. Light backgrounds were removed; light
-    now exists only as paper, the documents Sentys actually produces. And the centerpiece became
-    <b>One engine's life</b>: Engine 03's real 179-cycle history scrubbed by scroll, with the
-    plate's drift driven by the engine's actual surprise value at the cycle under your finger.
-    When the rotation sense crosses 3× at cycle 123, the room itself starts to heat.</p>
-
-  <h2>v3: the instrument sleeps</h2>
-  <p>v2 solved the skeleton and created a new problem: the plate never rested, and a background
-    that never goes quiet is wrong about this product — Sentys' pitch is that silence is the
-    default (122 quiet cycles; one false alarm in thirty engines). v3's rule: the plate is
-    <b>frozen</b> in every reading section (the render loop literally stops) and wakes exactly
-    twice — the hero's drift events and the story as the engine sickens. The story also learned
-    manners: the chartbox visibly docks with an ember pulse and a "scroll to run" hint, a progress
-    rail maps the wheel to cycles 0–179 with a tick at the first warning, the playhead has mass,
-    and a focus vignette holds the room while you drive. Decoration budget: three loud moments
-    (hero, story, the paper ask-sheet); everything else went quiet.</p>
+  <p><b>v2, "the continuous instrument,"</b> put the plate behind the entire page, conducted by
+    scroll: every section declared a resonant mode, and the centerpiece became <b>One engine's
+    life</b> — Engine 03's real 179-cycle history scrubbed by scroll, the plate heating as the
+    rotation sense crossed 3× at cycle 123.</p>
+  <p><b>v3, "the instrument sleeps,"</b> fixed what v2 broke: a background that never goes quiet is
+    wrong about a product whose pitch is that silence is the default (122 quiet cycles; one false
+    alarm in thirty engines). The plate froze in every reading section and woke exactly twice.
+    Its system: Clash Display / Supreme / IBM Plex Mono; graphite <code>#0f1216</code> and dust
+    <code>#ece5d6</code> bands with one ember accent <code>#f0a43c</code>; the hero a single-pass
+    WebGL Chladni shader with a typed sense-voice line. v3 is the incumbent this generation was
+    built to challenge — it lives on branch <code>redesign-v3</code>.</p>
 
   <h2>v4: the annunciator — a challenger from outside the lineage</h2>
   <p>Generation four began with a hard rule: the Resonance lineage (graphite + ember, standing
-    waves) was closed, and the daylight drafting-sheet axis was already rejected. Three concepts
-    from unclaimed territory fought a single-fold bake-off (prototypes preserved under
-    <code>concepts/</code>):</p>
-  <p><b>vitals</b> (<code>concepts/vitals/</code>) — the machine as patient, literally: clinical
-    blue-white, Unit 03's real surprise trace drawn as an ECG strip with event flags at cycles 123
-    and 179. <i>Lost</i> because above the fold it collapses into generic light health-SaaS — the
-    identity hangs entirely on one chart, and the audience is plant engineers, not clinicians.</p>
-  <p><b>sonar</b> (<code>concepts/sonar/</code>) — the deep listening: petrol abyss, a live
-    waterfall spectrogram with a defect tone slowly forming, phosphor cyan. <i>Lost</i> because it
-    is a third dark site in a row — beside v3 they read as siblings — and it grazes the stock
-    "near-black + one acid accent" look. The waterfall reads as aurora, not instrument.</p>
-  <p><b>annunciator</b> (<code>concepts/annunciator/</code>) — <i>the winner.</i> The site as the
-    plant's own control console: RAL-7032 pebble-grey enamel fascia, engraved legend plates,
-    corner screws, and an annunciator window grid in which exactly one window burns amber —
-    <i>SURPRISE HIGH · UNIT 03 · CYCLE 123</i>. It won on the brief's own criterion: credibility
-    with maintenance and reliability engineers. Annunciator windows, LAMP TEST and ACKNOWLEDGE
-    buttons are furniture those engineers touch every shift, and the signature does argument work
-    — the lit window <b>is</b> the product: a warning light for what hasn't failed yet.</p>
-  <h3>Type</h3>
-  <p><b>Clash Display</b> for display (wide, technical, quietly confident), <b>Supreme</b> for body,
-    <b>IBM Plex Mono</b> for anything that is data: eyebrows, readouts, thresholds, work orders.
-    All self-hosted woff2 (Fontshare / IBM), zero external requests.</p>
-  <h3>Color</h3>
-  <p>Dark "plate" bands (<code>#0f1216</code> graphite, <code>#ece5d6</code> dust) carry the
-    instrument: hero, demo, evidence, founder. Light "porcelain" bands (<code>#f2efe8</code> with a
-    faint 48px chart-grid texture) carry the reading matter. One accent — <b>ember</b>
-    (<code>#f0a43c</code>, deepened to <code>#8a5c0a</code> on light for contrast) — because
-    amber-before-red is the product. Green and red appear only as data semantics in charts and
-    status stamps.</p>
-  <h3>The signature</h3>
-  <p>The hero is a single-pass WebGL fragment shader of the Chladni plate function
-    <code>cos(mπx)cos(nπy) − cos(nπx)cos(mπy)</code>: dust accumulates where the standing wave is
-    still (the nodal lines), the plate slowly morphs between resonant modes, the cursor adds a local
-    ripple. Every 16 seconds a drift event warps the pattern from one corner and heats the dust
-    ember-to-red — while a mono "sense-voice" line under the CTAs types the product's actual triage
-    sentence: <i>"vibration: 3.2× healthy baseline; temperature and flow within range."</i> The two
-    drift messages are verbatim artifacts from the benchmark runs, not invented copy.</p>
+    waves) was closed, and the daylight drafting-sheet axis was already rejected (see
+    <code>concepts/redline/</code>). Three concepts from unclaimed territory fought a second
+    single-fold bake-off:</p>
+  <p><b>vitals</b> (<a href="../concepts/vitals/">/concepts/vitals</a>) — the machine as patient,
+    literally: clinical blue-white, Unit 03's real surprise trace drawn as an ECG strip with event
+    flags at cycles 123 and 179. <i>Lost</i> because above the fold it collapses into generic light
+    health-SaaS — the identity hangs entirely on one chart, and the audience is plant engineers,
+    not clinicians.</p>
+  <p><b>sonar</b> (<a href="../concepts/sonar/">/concepts/sonar</a>) — the deep listening: petrol
+    abyss, a live waterfall spectrogram with a defect tone slowly forming, phosphor cyan.
+    <i>Lost</i> because it is a third dark site in a row — beside v3 they read as siblings — and it
+    grazes the stock "near-black + one acid accent" look. The waterfall reads as aurora, not
+    instrument.</p>
+  <p><b>annunciator</b> (<a href="../concepts/annunciator/">/concepts/annunciator</a>) —
+    <i>the winner.</i> The site as the plant's own control console: pebble-grey enamel fascia,
+    engraved legend plates, corner screws, and an annunciator window grid in which exactly one
+    window burns amber — <i>SURPRISE HIGH · UNIT 03 · CYCLE 123</i>. It won on the brief's own
+    criterion: credibility with maintenance and reliability engineers. Annunciator windows,
+    LAMP TEST and ACKNOWLEDGE buttons are furniture those engineers touch every shift, and the
+    signature does argument work — the lit window <b>is</b> the product: a warning light for what
+    hasn't failed yet.</p>
+
+  <h3>The v4 design system — "THE PANEL"</h3>
+  <p><b>Materials, not backgrounds.</b> Three materials carry the whole page: <b>enamel</b>
+    (RAL-7032 pebble grey <code>#c8c5ba</code>, brushed, grooved, screwed — the structure),
+    <b>dark glass</b> (<code>#211f1a</code> instrument bays: the chart recorder, the live demo,
+    LED readouts <code>#5ce08c</code> behind smoked windows), and <b>paper</b>
+    (<code>#fbf9f2</code> — the work order, the findings report, the one-page ask, this page).
+    The brand's ember <code>#f0a43c</code> appears as a <i>lamp</i>, not a paint: the lit
+    annunciator lens, deepened to <code>#a4650a</code> for engraved text on enamel.</p>
+  <p><b>Type.</b> Tanker for display (one weight, heavy, industrial — the engraved fascia legend);
+    Khand for small legends, tags and buttons (condensed, letterspaced caps — the engraved label
+    plate); Supreme for body prose; IBM Plex Mono for anything that is data. All self-hosted woff2
+    (Fontshare / IBM), zero external requests.</p>
+  <p><b>The signatures.</b> One per fold, engineered not illustrated: the hero's annunciator grid
+    (CSS only — backlit lenses, blink, a working LAMP TEST and ACKNOWLEDGE), and the story's
+    <b>chart recorder</b> — Engine 03's real 179-cycle life replayed as a pen-recorder feed on
+    chart paper (canvas, log scale, the run's actual amber threshold, the warning and failure
+    stamped on the paper as the pen reaches them, RUN/HOLD controls). Generation one's losing
+    "Recorder" concept, returned as a single instrument in an enamel console.</p>
+  <p><b>Motion budget:</b> the blinking window, the recorder feed, the live demo. Everything else
+    holds still — this is still the company whose product stays silent for 122 cycles.</p>
 
   <h2>Evidence is design material</h2>
-  <p>The chart in the evidence section is not an illustration. It replays Engine 03 of the NASA
-    C-MAPSS demo fleet from <code>demo/fleet_data.json</code> — the same real model output the live
-    demo plays — on a log₂ scale, with the actual amber threshold (3.0×) from the run and the actual
-    first-warning cycle (123). The rule for the whole site: <b>every number comes from the published
-    evidence files; where a pre-registered gate missed its bar, that is shown too</b> (see the FEMTO
-    and XJTU cards, stamped "BAR MISSED — PUBLISHED"). Honesty is the brand, so the design leans
-    into it instead of hiding it.</p>
+  <p>The chart recorder is not an illustration. It replays Engine 03 of the NASA C-MAPSS demo fleet
+    from <code>demo/fleet_data.json</code> — the same real model output the live demo plays — with
+    the actual amber threshold (3.0×) from the run and the actual first-warning cycle (123). The
+    hero's LED voice line types the demo's verbatim triage sentence. The rule for the whole site:
+    <b>every number comes from the published evidence files; where a pre-registered gate missed its
+    bar, that is shown too</b> (see the FEMTO and XJTU plates, stamped "BAR MISSED — PUBLISHED").
+    Honesty is the brand, so the design leans into it instead of hiding it.</p>
 
   <h2>Craft floor</h2>
   <ul>
-    <li><b>Reduced motion:</b> <code>prefers-reduced-motion</code> removes the shader (a static
-      gradient stands in), the typing caret, reveals, and chart animation — the chart draws complete.</li>
-    <li><b>No JS:</b> content is never hidden; reveals are gated on an <code>html.js</code> class.</li>
-    <li><b>Performance:</b> one shader pass at devicePixelRatio ≤ 1.5, paused when offscreen or the
-      tab is hidden; self-hosted fonts preloaded; demo iframe lazy; zero external requests.</li>
-    <li><b>Accessibility:</b> skip link, focus-visible styles, aria-labelled canvas chart, contrast
-      held ≥ 4.5:1 for text on both bands.</li>
+    <li><b>Reduced motion:</b> <code>prefers-reduced-motion</code> stops the blink, the typing
+      line and the reveals, and draws the recorder chart complete — all 179 cycles, both event
+      stamps, every stage note visible.</li>
+    <li><b>No JS:</b> content is never hidden behind script; reveals only ever add opacity.</li>
+    <li><b>Performance:</b> no WebGL, no framework — one canvas that only runs while on screen;
+      self-hosted fonts preloaded; demo iframe and images lazy; zero external requests.</li>
+    <li><b>Accessibility:</b> skip link, focus-visible styles, aria-labelled annunciator and chart,
+      engraved text held ≥ 4.5:1 on enamel, keyboard-operable LAMP TEST.</li>
   </ul>
 
   <h2>How to reproduce the method</h2>
@@ -197,11 +188,12 @@
    critique → revise, at least three passes, checking overflow, contrast,
    console errors, reduced-motion, and mobile every pass.
 5. Let real data be the ornament. If the product has evidence, chart the
-   evidence — never a stock illustration of it.</pre>
+   evidence — never a stock illustration of it.
+6. When a design wins, close its lineage. The next generation must attack
+   from territory the last one never claimed.</pre>
 
-  <p style="margin-top:48px; font:400 13px var(--mono); color:var(--ink-dim);">
-    Built by Claude (Fable 5) · Anthropic — July 2026 · <a href="../">sentys.ai</a></p>
+  <p class="credit">Built by Claude (Fable 5) · Anthropic — July 2026 · <a href="../">sentys.ai</a></p>
 
-</article></div></section></div>
+</article></div></div>
 </body>
 </html>
