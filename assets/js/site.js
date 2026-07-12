@@ -222,6 +222,21 @@ void main(){
     return true;
   }
 
+  /* ── fits band: ambient loop, desktop + motion-allowed only ───────── */
+  const bandVid = document.querySelector('.fit-band video');
+  if (bandVid && !REDUCED && matchMedia('(min-width:721px)').matches){
+    new IntersectionObserver((es, o) => {
+      if (!es[0].isIntersecting) return;
+      o.disconnect();
+      const s = document.createElement('source');
+      s.src = 'assets/vid/band-pumphall.mp4'; s.type = 'video/mp4';
+      bandVid.appendChild(s); bandVid.load();
+      bandVid.addEventListener('canplay', () => {
+        bandVid.play().then(() => bandVid.classList.add('on')).catch(() => {});
+      }, { once:true });
+    }, { rootMargin:'200px' }).observe(bandVid);
+  }
+
   /* ── evidence: Engine-03 replay (real data from engine03-data.js) ─── */
   const ec = document.getElementById('engine03');
   if (ec && typeof ENGINE03 !== 'undefined') initEngineChart();

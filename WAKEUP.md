@@ -75,10 +75,11 @@ M5 brand kit + og.png → M6/M7/M8 iteration passes 1–3 → M9 mirror to
 | # | When | Service | Model | What | Result |
 |---|------|---------|-------|------|--------|
 | 1 | 02:32 | Gemini API | gemini-3.1-flash-image | district-heating pump hall still, 16:9 | KEPT → assets/img/band-pumphall{,-m}.webp |
-Gemini calls used: 1/15 · Higgsfield metered credits used: 0 (trial NOT active — account shows
-free plan / 50 credits; per budget rules left untouched, Gemini primary) · Clips shipped: 0/2
-(decision: zero clips — the shader is the site's motion; a video would compete and cost mobile
-weight) · Images shipped: 1/6 (one image, two responsive sizes)
+| 2 | 02:44 | Gemini API | gemini-3.1-flash-image | living-room robot origin still, 4:3 | KEPT → assets/img/robot-origin.webp (founder band) |
+| 3 | 02:44 | Higgsfield | wan2_7 (7.5 credits) | pump-hall ambient cinemagraph, 5s 720p, from still #1 | KEPT → assets/vid/band-pumphall.mp4 (ping-pong 10s loop, 158KB, silent; desktop+motion-allowed only, JS-gated) |
+Gemini calls used: 2/15 · Higgsfield credits used: 7.5/50 (trial not active — free plan; Wan 2.7
+chosen at 7.5cr over Seedance 22.5cr) · Clips shipped: 1/2 · Images shipped: 2/6
+(post-completion media upgrade requested by user ~02:40 — "the whole point was to see something cool")
 
 ## Open problems
 - ffmpeg not on PATH (only `convert`) — check again before video work; degrade to code-driven motion if clips can't be compressed.
