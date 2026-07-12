@@ -395,10 +395,6 @@ section h2 { font-size:clamp(30px, 3.8vw, 48px); margin:0 0 14px; max-width:24ch
 .fit h3 { font-size:19px; margin:0 0 10px; }
 .fit p { margin:0; color:var(--dust-dim); font-size:14.5px; }
 .fit p b, .fit p i { color:var(--dust); }
-.dansk { margin-top:22px; display:flex; gap:14px; align-items:flex-start; background:var(--panel); border:1px solid var(--hairline); border-radius:8px; padding:18px 20px; }
-.dansk .flag { flex:none; width:26px; height:19px; border-radius:2px; overflow:hidden; margin-top:3px; }
-.dansk p { margin:0; font-size:14.5px; color:var(--dust-dim); }
-.dansk p b { color:var(--dust); }
 
 /* ── founder ─────────────────────────────────────────────────────────── */
 .founder { display:flex; gap:30px; align-items:flex-start; flex-wrap:wrap; background:var(--panel); border:1px solid var(--hairline); border-radius:8px; padding:30px; }
