@@ -94,6 +94,13 @@ body > nav, body > header, body > main, body > footer { position:relative; z-ind
 /* reveal */
 .js .reveal { opacity:0; transform:translateY(16px); transition:opacity .6s cubic-bezier(.2,.6,.25,1), transform .6s cubic-bezier(.2,.6,.25,1); }
 .js .reveal.in { opacity:1; transform:none; }
+/* the needle extends: every section eyebrow's ember dash draws itself in
+   just after the block lands (scaleX — reserves its slot, no layout shift) */
+.js .eyebrow.reveal::before { transform:scaleX(0); transform-origin:left center;
+  transition:transform .55s cubic-bezier(.2,.6,.25,1) .3s; }
+.js .eyebrow.reveal.in::before { transform:scaleX(1); }
+@media (prefers-reduced-motion: reduce){
+  .js .eyebrow.reveal::before { transform:none; transition:none; } }
 .js .reveal.d1 { transition-delay:.08s; } .js .reveal.d2 { transition-delay:.16s; } .js .reveal.d3 { transition-delay:.24s; }
 @media (prefers-reduced-motion: reduce){ .js .reveal { opacity:1; transform:none; transition:none; } }
 
