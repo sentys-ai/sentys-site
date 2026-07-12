@@ -199,7 +199,11 @@ section h2 { font-size:clamp(30px, 3.8vw, 48px); margin:0 0 14px; max-width:24ch
 .story-cycle .cyc { color:var(--dust); }
 .story-chartbox { background:var(--plate-2); border:1px solid var(--hairline); border-radius:8px; overflow:hidden;
   transition:border-color .4s ease, box-shadow .4s ease; }
-#story.docked .story-chartbox { animation:dockpulse .9s ease; border-color:#3a4450; box-shadow:0 0 0 1px rgba(240,164,60,.15), var(--shadow); }
+/* magnetic approach: the box rises and its ring warms as the lock nears */
+#story .story-chartbox { transform:translateY(calc((1 - var(--ap, 1)) * 30px));
+  box-shadow:0 0 0 1px rgba(240,164,60, calc(var(--ap, 0) * .22)); }
+#story.docked .story-chartbox { animation:dockpulse .9s ease; border-color:#3a4450; box-shadow:0 0 0 1px rgba(240,164,60,.15), var(--shadow); transform:none; }
+@media (prefers-reduced-motion: reduce){ #story .story-chartbox { transform:none; } }
 @keyframes dockpulse { 0%{ box-shadow:0 0 0 0 rgba(240,164,60,.0); border-color:var(--hairline); }
   35%{ box-shadow:0 0 0 3px rgba(240,164,60,.35); border-color:var(--ember); }
   100%{ box-shadow:0 0 0 1px rgba(240,164,60,.15); border-color:#3a4450; } }
@@ -222,6 +226,9 @@ section h2 { font-size:clamp(30px, 3.8vw, 48px); margin:0 0 14px; max-width:24ch
 .story-hint { position:absolute; right:0; top:calc(100% + 7px); font:500 11px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase;
   color:var(--ember); opacity:0; transform:translateY(-4px); transition:opacity .4s ease, transform .4s ease; white-space:nowrap; }
 .story-hint.on { opacity:1; transform:none; }
+.story-hint .ar { display:inline-block; animation:hintbob 1.1s ease-in-out infinite; }
+@keyframes hintbob { 50% { transform:translateY(3px); } }
+@media (prefers-reduced-motion: reduce){ .story-hint .ar { animation:none; } }
 @media (prefers-reduced-motion: reduce){ .story-hint { transition:none; } }
 .story-stages { position:relative; min-height:118px; margin-top:20px; }
 .story-stage { position:absolute; inset:0; opacity:0; transform:translateY(10px);

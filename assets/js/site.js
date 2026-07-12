@@ -424,11 +424,15 @@ void main(){
       inView = r.top < innerHeight && r.bottom > 0;
       targetC = p * (n-1);
       if (!inView) storyDrift = null;
+      // approach: 0 far below, 1 locked — the chart visibly rises into its dock
+      const ap = Math.min(1, Math.max(0, 1 - r.top / (innerHeight * .85)));
+      story.style.setProperty('--ap', ap.toFixed(3));
       // dock state: the sticky is engaged and driving the wheel
       const docked = inView && r.top <= 1 && r.bottom >= innerHeight - 1;
       story.classList.toggle('docked', docked);
       document.body.classList.toggle('story-focus', docked);
-      if (hintEl) hintEl.classList.toggle('on', docked && dc < 12);
+      // the hint appears on APPROACH, before the wheel changes jobs
+      if (hintEl) hintEl.classList.toggle('on', (docked || (ap > .55 && !docked)) && dc < 12);
       story.classList.toggle('done', dc >= n - 4);
       if (inView && !sRaf) sRaf = requestAnimationFrame(tick);
     }

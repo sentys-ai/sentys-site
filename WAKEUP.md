@@ -20,6 +20,9 @@ v2 architecture + v1 calm. Three moves:
       #evidence vs 120 in 2s at hero. Full-page rhythm verified: only chart/demo/papers/media
       bright, everything else rests.
 - [x] Pass 3: 1920 clean (no overflow, no errors); first-load weight 349KB incl. fonts+images.
+- [x] User pre-sleep note addressed: the scroll cue is now ANTICIPATORY — approach var (--ap)
+      lifts the chartbox into its lock and warms its ring BEFORE the dock; "SCROLL TO RUN"
+      appears from ap>.55 with a bobbing arrow; assets cache-busted (?v=3).
 - [ ] Morning: final fresh-eyes look + user verdict on v1/v2/v3 (:8320); if v3 wins → PR +
       mirror to ~/sensory. Pings at 05:15/06:45/08:15/09:45 re-verify idempotently; nothing
       paid left to do. DO NOT redo generations (Gemini 2/15, Higgsfield 7.5/50 used).
