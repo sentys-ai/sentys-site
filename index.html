@@ -90,7 +90,7 @@
     <p class="eyebrow reveal">Fig. 01 · the missing organ</p>
     <h2 class="reveal">Machines that can <em>feel</em> something is wrong.</h2>
     <p class="organ-lead reveal d1">Sentys is a nervous system for industrial equipment. Four senses
-      converge on a <b>learned baseline</b>; when one of them is surprised, it says which.</p>
+      converge on a <b>learned baseline</b>: the ganglion that remembers what healthy feels like.</p>
   </div>
   <div class="fig-frame">
     <div class="plate-label">
@@ -100,7 +100,12 @@
       g. ganglion (learned baseline)
     </div>
     <div class="fig-stage">
-      <img src="assets/img/organ-plate.webp" alt="Engraved anatomical cross-section of a centrifugal pump, drawn like a 19th-century atlas plate, with four sensor pathways converging on a ganglion." width="1376" height="768" loading="lazy">
+      <span class="screw tl" aria-hidden="true"></span><span class="screw tr" aria-hidden="true"></span>
+      <span class="screw bl" aria-hidden="true"></span><span class="screw br" aria-hidden="true"></span>
+      <img src="assets/img/organ-plate.webp"
+           srcset="assets/img/organ-plate-720.webp 720w, assets/img/organ-plate.webp 1376w"
+           sizes="(max-width:760px) 100vw, min(956px, 100vw)"
+           alt="Engraved anatomical cross-section of a centrifugal pump, drawn like a 19th-century atlas plate, with four sensor pathways converging on a ganglion." width="1376" height="768" loading="lazy">
       <canvas id="afferent" aria-hidden="true"></canvas>
     </div>
   </div>
@@ -160,10 +165,10 @@
             <p class="eyebrow" style="margin-bottom:10px;">The proof, lived once</p>
             <h2 class="story-title">One engine's life</h2>
           </div>
-          <div class="story-cycle num">NASA C-MAPSS · UNIT 03 · CYCLE <span class="cyc">0</span> / 179
-            <span class="story-hint" aria-hidden="true">scroll to run <span class="ar">▾</span></span></div>
+          <div class="story-cycle num">NASA C-MAPSS · UNIT 03 · CYCLE <span class="cyc">0</span> / 179</div>
         </div>
         <div class="story-chartbox">
+          <span class="story-hint" aria-hidden="true">scroll to run <span class="ar">▾</span></span>
           <canvas id="storychart" role="img" aria-label="Engine 03's surprise signal over its 179-cycle life, drawn as you scroll: quiet near 1× healthy for 122 cycles, the rotation sense crossing the amber threshold at cycle 123, then climbing to 27× at failure at cycle 179. Four thin per-sense traces run beneath the overall signal."></canvas>
           <div class="story-chips" role="list">
             <div class="story-chip" role="listitem" data-chip="thermal">thermal <span class="cv num">1.0×</span></div>
