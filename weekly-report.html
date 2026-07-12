@@ -61,7 +61,7 @@ footer.rep { margin-top:36px; padding-top:14px; border-top:1px solid var(--grid)
   color:var(--ink); border:1px solid var(--border); border-radius:6px;
   padding:4px 9px; font-size:12.5px; display:none; z-index:9;
   box-shadow:0 2px 8px rgba(0,0,0,.15); }
-.xclose { position:fixed; top:16px; right:16px; z-index:50; width:38px; height:38px;
+.xclose { position:fixed; top:14px; right:auto; left:min(calc(50% + 394px), calc(100vw - 54px)); z-index:50; width:38px; height:38px;
   display:flex; align-items:center; justify-content:center; font:300 20px/1 system-ui,sans-serif;
   color:var(--ink2); background:var(--surface); border:1px solid var(--border); border-radius:50%;
   text-decoration:none; box-shadow:0 2px 10px rgba(0,0,0,.08); }
@@ -86,7 +86,7 @@ h1, h2, h3 { font-family:'Clash','Supreme',sans-serif; font-weight:500; }
 <body><a class="xclose" href="./" aria-label="Close report and return to sentys.ai" title="Close" onclick="if(document.referrer.indexOf(location.host)>-1&&history.length>1){history.back();return false}">×</a><div id="tip"></div><div class="wrap">
 
 <header class="rep">
-  <div class="brand"><a class="backlink" href="./#action">← back to sentys.ai</a>SENTY<i>S</i></div>
+  <div class="brand">SENTY<i>S</i></div>
   <h1>Weekly fleet report</h1>
   <p class="sub">NASA C-MAPSS demo fleet · viewed at cycle 120 &nbsp;·&nbsp; 30 machines
   &nbsp;·&nbsp; generated 2026-07-12</p>

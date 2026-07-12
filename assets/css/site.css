@@ -209,7 +209,7 @@ section h2 { font-size:clamp(30px, 3.8vw, 48px); margin:0 0 14px; max-width:24ch
   box-shadow:0 0 0 1px rgba(240,164,60, calc(var(--ap, 0) * .22)); }
 /* three slow pulses on dock: the frame breathes ember so the job change
    (page scroll → engine scrub) cannot be missed */
-#story.docked .story-chartbox { animation:dockpulse 1.4s ease 3; border-color:#3a4450; box-shadow:0 0 0 1px rgba(240,164,60,.15), var(--shadow); transform:none; }
+#story.docked .story-chartbox { animation:dockpulse 1.4s ease 2; border-color:#3a4450; box-shadow:0 0 0 1px rgba(240,164,60,.15), var(--shadow); transform:none; }
 @media (prefers-reduced-motion: reduce){ #story .story-chartbox { transform:none; } }
 @keyframes dockpulse { 0%,100%{ box-shadow:0 0 0 1px rgba(240,164,60,.15); border-color:#3a4450; }
   40%{ box-shadow:0 0 0 4px rgba(240,164,60,.42); border-color:var(--ember); } }
