@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sentys — concept: REDLINE (as-designed vs as-running)</title>
+<meta name="description" content="Counter-concept prototype: the engineering drawing sheet, redlined by reality. Single fold only.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<style>
+@font-face{font-family:'Stencil';src:url('fonts/stencil.woff2') format('woff2');font-display:swap}
+@font-face{font-family:'Plex';src:url('fonts/plex-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Plex';src:url('fonts/plex-600.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'Checker';src:url('fonts/caveat-500.woff2') format('woff2');font-weight:500;font-display:swap}
+
+:root{
+  --vellum:#f4f4ee;
+  --ink:#1c2430;
+  --ink-dim:#4d5866;
+  --draft:#3a59a7;          /* drafting blue */
+  --draft-faint:rgba(58,89,167,.14);
+  --draft-ghost:rgba(58,89,167,.07);
+  --pencil:#d8341c;         /* red pencil */
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  min-height:100vh; color:var(--ink);
+  font:400 16px/1.6 'Plex',system-ui,sans-serif;
+  background:
+    linear-gradient(var(--draft-faint) 1px, transparent 1px),
+    linear-gradient(90deg, var(--draft-faint) 1px, transparent 1px),
+    linear-gradient(var(--draft-ghost) 1px, transparent 1px),
+    linear-gradient(90deg, var(--draft-ghost) 1px, transparent 1px),
+    var(--vellum);
+  background-size:96px 96px, 96px 96px, 12px 12px, 12px 12px, auto;
+}
+/* the sheet frame */
+.sheet{
+  position:relative; min-height:100vh;
+  display:flex; flex-direction:column;
+  margin:14px; border:2px solid var(--ink);
+  outline:1px solid var(--ink); outline-offset:3px;
+}
+.dwgno{
+  position:absolute; top:10px; right:14px;
+  font:600 11px/1 'Plex'; letter-spacing:.18em; color:var(--ink-dim);
+}
+.fold{
+  flex:1; display:grid; grid-template-columns:minmax(0,10fr) minmax(0,9fr);
+  gap:24px; align-items:center; padding:56px 56px 24px;
+}
+.eyebrow{
+  font:600 12px/1 'Plex'; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--draft); margin:0 0 22px;
+}
+.eyebrow .rl{color:var(--pencil)}
+h1{
+  font:400 clamp(40px,5.4vw,72px)/1.04 'Stencil';
+  letter-spacing:.01em; text-transform:uppercase; margin:0 0 24px;
+  text-wrap:balance;
+}
+.circled{position:relative; display:inline-block}
+.circled svg{position:absolute; inset:-22% -15%; width:130%; height:144%; overflow:visible; pointer-events:none}
+.circled path{
+  fill:none; stroke:var(--pencil); stroke-width:3.4; stroke-linecap:round; opacity:.85;
+  stroke-dasharray:620; stroke-dashoffset:620; animation:draw 1s ease-out .5s forwards;
+}
+@keyframes draw{to{stroke-dashoffset:0}}
+.sub{max-width:52ch; margin:0 0 30px; font-size:17px; color:var(--ink-dim)}
+.sub b{color:var(--ink)}
+.cta{display:flex; gap:18px; align-items:center; flex-wrap:wrap}
+.btn{
+  display:inline-block; padding:14px 22px; text-decoration:none;
+  font:600 15px/1 'Plex'; letter-spacing:.02em;
+  background:var(--ink); color:var(--vellum); border:2px solid var(--ink);
+}
+.btn:hover{background:var(--draft); border-color:var(--draft)}
+.ghost{
+  color:var(--ink); text-decoration:none; font:600 15px/1 'Plex';
+  border-bottom:2px solid var(--draft); padding-bottom:3px;
+}
+.ghost:hover{color:var(--draft)}
+:focus-visible{outline:3px solid var(--draft); outline-offset:2px}
+
+/* the schematic */
+.fig{min-width:0}
+figure{margin:0}
+.fig svg{width:100%; height:auto; display:block}
+.fig .sym{stroke:var(--ink); stroke-width:2; fill:none; stroke-linejoin:round; stroke-linecap:round}
+.fig .stem{stroke:var(--ink-dim); stroke-width:1.2}
+.fig .tagc{stroke:var(--ink); stroke-width:2; fill:var(--vellum)}
+.fig text{font:600 13px 'Plex'; fill:var(--ink); text-anchor:middle}
+.fig .arr{fill:var(--ink); stroke:none}
+.fig .redline{
+  fill:none; stroke:var(--pencil); stroke-width:3; stroke-linecap:round; opacity:.9;
+  stroke-dasharray:300; stroke-dashoffset:300; animation:draw .7s ease-out 1.5s forwards;
+}
+.fig .lead{
+  fill:none; stroke:var(--pencil); stroke-width:2; stroke-linecap:round; opacity:.75;
+  stroke-dasharray:220; stroke-dashoffset:220; animation:draw .5s ease-out 2.1s forwards;
+}
+.fig .note{
+  font:500 27px/1.15 'Checker'; fill:var(--pencil); text-anchor:start;
+  opacity:0; animation:appear .4s ease-out 2.5s forwards;
+}
+@keyframes appear{to{opacity:1}}
+figcaption{
+  margin-top:10px; font:600 11px/1.5 'Plex'; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--ink-dim);
+}
+
+/* title block */
+.titleblock{
+  display:grid; grid-template-columns:2.4fr 1fr 1.5fr 1.4fr 1.2fr 1fr .8fr;
+  border-top:2px solid var(--ink); background:rgba(255,255,255,.55);
+}
+.tb{padding:12px 16px 14px; border-left:1px solid var(--ink)}
+.tb:first-child{border-left:none}
+.tb .l{
+  display:block; font:600 10px/1 'Plex'; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--ink-dim); margin-bottom:7px;
+}
+.tb .v{font:600 15px/1.3 'Plex'; color:var(--ink)}
+.tb .v i{font-style:normal; color:var(--pencil)}
+
+@media (max-width:960px){
+  .fold{grid-template-columns:1fr; gap:34px; padding:56px 26px 24px; align-items:start}
+  .titleblock{grid-template-columns:1fr 1fr; border-top:2px solid var(--ink)}
+  .tb{border-left:none; border-top:1px solid var(--draft-faint)}
+  .tb:first-child{grid-column:1/-1}
+}
+@media (prefers-reduced-motion:reduce){
+  .circled path,.fig .redline,.fig .lead{animation:none; stroke-dashoffset:0}
+  .note{animation:none; opacity:1}
+}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <span class="dwgno">DWG NO. S-2026-001</span>
+
+  <main class="fold">
+    <div class="copy">
+      <p class="eyebrow">As-designed vs as-running · <span class="rl">field redline</span></p>
+      <h1>Every machine has a feeling of <span class="circled">healthy<svg viewBox="0 0 200 74" aria-hidden="true"><path d="M14 37 C 10 12, 62 4, 104 6 C 156 8, 196 16, 193 36 C 190 58, 148 70, 96 68 C 48 66, 8 60, 12 34 C 15 18, 40 10, 68 9"/></svg></span>.</h1>
+      <p class="sub">Sentys learns that feeling from the sensor history you already log.
+        <b>No failure labels, no data-science project on your side.</b> It tells you, in plain
+        language, which machine is drifting and which sensor felt it first.</p>
+      <div class="cta">
+        <a class="btn" href="mailto:frixos@sentys.ai">Send one export — free analysis</a>
+        <a class="ghost" href="../../sample-report.html">See a sample report</a>
+      </div>
+    </div>
+
+    <figure class="fig">
+      <svg viewBox="0 0 560 470" role="img" aria-label="Piping and instrumentation diagram of a circulation loop: pump P-201 with four instrument tags. The vibration tag VT-103 is circled in red pencil with the note: vibration 3.2 times healthy baseline — this one felt it first.">
+        <!-- pipe loop -->
+        <path class="sym" d="M120 90 H 400 M460 150 V 290 M400 350 H 180 M120 290 V 150"/>
+        <path class="sym" d="M400 90 q 60 0 60 60 M460 290 q 0 60 -60 60 M120 150 q 0 -60 60 -60 M180 350 q -60 0 -60 -60"/>
+        <!-- flow arrows -->
+        <path class="arr" d="M266 84 l 16 6 -16 6 z"/>
+        <path class="arr" d="M296 344 l -16 6 16 6 z"/>
+        <!-- heat exchanger, top right -->
+        <circle class="sym" cx="400" cy="90" r="26"/>
+        <path class="sym" d="M378 90 h 10 l 6 -10 8 20 8 -20 8 20 6 -10 h 10" stroke-width="1.6"/>
+        <text x="400" y="132">E-301</text>
+        <!-- valve, bottom -->
+        <path class="sym" d="M300 336 l 0 28 24 -14 z M324 336 l 0 28 -24 -14 z" transform="translate(-22 -14)"/>
+        <!-- pump, bottom left -->
+        <circle class="sym" cx="180" cy="350" r="30"/>
+        <path class="sym" d="M166 336 L 196 350 L 166 364 z" stroke-width="1.6"/>
+        <text x="180" y="398">P-201</text>
+        <!-- instruments on stems -->
+        <path class="stem" d="M240 90 V 48"/>
+        <circle class="tagc" cx="240" cy="30" r="20"/>
+        <text x="240" y="27">TT</text><text x="240" y="41">101</text>
+        <path class="stem" d="M460 220 H 502"/>
+        <circle class="tagc" cx="520" cy="220" r="20"/>
+        <text x="520" y="217">PT</text><text x="520" y="231">102</text>
+        <path class="stem" d="M340 350 V 308"/>
+        <circle class="tagc" cx="340" cy="290" r="20"/>
+        <text x="340" y="287">FT</text><text x="340" y="301">104</text>
+        <path class="stem" d="M158 328 L 128 298"/>
+        <circle class="tagc" cx="114" cy="284" r="20"/>
+        <text x="114" y="281">VT</text><text x="114" y="295">103</text>
+        <!-- the redline -->
+        <path class="redline" d="M114 250 C 76 252, 66 284, 84 304 C 102 324, 150 322, 158 296 C 166 270, 140 248, 108 252"/>
+        <path class="lead" d="M96 318 C 110 380, 180 420, 250 428"/>
+        <text class="note" x="262" y="432">vibration 3.2× healthy baseline —</text>
+        <text class="note" x="262" y="460">this one felt it first</text>
+      </svg>
+      <figcaption>Fig. 1 — circulation loop, as logged by your control system</figcaption>
+    </figure>
+  </main>
+
+  <div class="titleblock" role="list">
+    <div class="tb" role="listitem"><span class="l">Title</span><span class="v">Machine health, from data you already log</span></div>
+    <div class="tb" role="listitem"><span class="l">Drawn by</span><span class="v">SENTYS</span></div>
+    <div class="tb" role="listitem"><span class="l">Checked against</span><span class="v">6 public benchmarks</span></div>
+    <div class="tb" role="listitem"><span class="l">Holdout engines</span><span class="v">30/30 flagged <i>before failure</i></span></div>
+    <div class="tb" role="listitem"><span class="l">Median warning</span><span class="v">59 cycles</span></div>
+    <div class="tb" role="listitem"><span class="l">False alarms</span><span class="v">1 engine</span></div>
+    <div class="tb" role="listitem"><span class="l">Sheet</span><span class="v">1 / 1</span></div>
+  </div>
+</div>
+</body>
+</html>
