@@ -474,22 +474,28 @@ void main(){
     // ganglion at mid-left (owner's final call): fibers converge laterally
     // across the dark left third, pulses flow inward to the baseline
     const GANG = { x:.175, y:.44 };
+    // ≤760px shows organ-plate-m.webp (left 26% cropped away) — sensor x
+    // coords remap to the crop, and the ganglion takes its mobile perch
+    const CROP_X = .26, GANG_M = { x:.09, y:.40 };
     const SENSORS = [
       { x:.450, y:.385, sense:'a. rotation', key:'rotation', lx:-12, ly:-24, align:'right', ph:0   },
-      { x:.712, y:.205, sense:'b. thermal',  key:'thermal',  lx:-12, ly:-14, align:'right', ph:2.1 },
-      { x:.752, y:.085, sense:'c. pressure', key:'pressure', lx:-20, ly:  3, align:'right', ph:4.2 },
+      { x:.712, y:.205, sense:'b. thermal',  key:'thermal',  lx:-22, ly:-20, align:'right', ph:2.1 },
+      { x:.752, y:.085, sense:'c. pressure', key:'pressure', lx:-26, ly: -4, align:'right', ph:4.2 },
       { x:.700, y:.890, sense:'d. flow',     key:'flow',     lx:-16, ly: 26, align:'right', ph:5.6 },
     ];
-    let W, H, fibers = [];
+    let W, H, fibers = [], gang = GANG;
 
     function resize(){
       const dpr = Math.min(devicePixelRatio || 1, 2);
       W = organCv.clientWidth; H = organCv.clientHeight;
       organCv.width = W*dpr; organCv.height = H*dpr;
       octx.setTransform(dpr,0,0,dpr,0,0);
-      const gx = GANG.x*W, gy = GANG.y*H;
+      const cropped = matchMedia('(max-width:760px)').matches;
+      gang = cropped ? GANG_M : GANG;
+      const mapx = x => cropped ? (x - CROP_X) / (1 - CROP_X) : x;
+      const gx = gang.x*W, gy = gang.y*H;
       fibers = SENSORS.map(sn => {
-        const sx = sn.x*W, sy = sn.y*H;
+        const sx = mapx(sn.x)*W, sy = sn.y*H;
         const dx = gx-sx, dy = gy-sy, L = Math.hypot(dx,dy);
         const nx = -dy/L, ny = dx/L, bow = L*.16*(sy > gy ? -1 : 1);
         return { sn, sx, sy, cx:(sx+gx)/2+nx*bow, cy:(sy+gy)/2+ny*bow, gx, gy };
@@ -504,7 +510,7 @@ void main(){
     };
 
     function drawGanglion(t, excite){
-      const gx = GANG.x*W, gy = GANG.y*H, s = Math.min(W,H);
+      const gx = gang.x*W, gy = gang.y*H, s = Math.min(W,H);
       const breathe = 1 + Math.sin(t*.0014)*.05 + excite*.3;
       octx.save();
       octx.translate(gx,gy);

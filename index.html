@@ -16,6 +16,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://sentys.ai/">
 <meta name="theme-color" content="#0f1216">
+<script>document.documentElement.classList.add('js');/* before first paint: reveals start hidden, no flash-then-replay on refresh */</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='h' x1='0' y1='0' x2='.6' y2='1'%3E%3Cstop offset='0' stop-color='%23f7dfae'/%3E%3Cstop offset='.42' stop-color='%23f0a43c'/%3E%3Cstop offset='1' stop-color='%23ff6a45'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='%230f1216'/%3E%3Cg transform='matrix(0.03043,0,0,-0.03043,5.911,26.196)'%3E%3Cpath d='M344 -10Q191 -10 109.0 50.0Q27 110 27 226V232H177V214Q177 166 211.0 146.5Q245 127 344 127Q431 127 461.5 141.0Q492 155 492 190Q492 220 472.0 234.5Q452 249 400 258L212 285Q21 315 21 473Q21 559 96.5 619.5Q172 680 328 680Q478 680 554.0 617.0Q630 554 630 444V438H479V452Q479 502 444.5 522.5Q410 543 313 543Q234 543 203.0 527.5Q172 512 172 479Q172 450 189.5 437.0Q207 424 250 416L438 386Q642 353 642 197Q642 108 568.0 49.0Q494 -10 344 -10Z' fill='url(%23h)'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script type="application/ld+json">
@@ -31,7 +32,7 @@
 <link rel="preload" href="assets/fonts/ClashDisplay-500.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/Supreme-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/PlexMono-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/site.css?v=10">
+<link rel="stylesheet" href="assets/css/site.css?v=11">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -102,10 +103,13 @@
     <div class="fig-stage">
       <span class="screw tl" aria-hidden="true"></span><span class="screw tr" aria-hidden="true"></span>
       <span class="screw bl" aria-hidden="true"></span><span class="screw br" aria-hidden="true"></span>
-      <img src="assets/img/organ-plate.webp"
-           srcset="assets/img/organ-plate-720.webp 720w, assets/img/organ-plate.webp 1376w"
-           sizes="(max-width:760px) 100vw, min(956px, 100vw)"
-           alt="Holographic wireframe cross-section of a centrifugal pump, its four sensor pathways converging on a glowing ganglion." width="1376" height="768" loading="lazy">
+      <picture>
+        <source media="(max-width:760px)" srcset="assets/img/organ-plate-m.webp">
+        <img src="assets/img/organ-plate.webp"
+             srcset="assets/img/organ-plate-720.webp 720w, assets/img/organ-plate.webp 1376w"
+             sizes="min(956px, 100vw)"
+             alt="Holographic wireframe cross-section of a centrifugal pump, its four sensor pathways converging on a glowing ganglion." width="1376" height="768" loading="lazy">
+      </picture>
       <canvas id="afferent" aria-hidden="true"></canvas>
     </div>
   </div>
@@ -169,6 +173,7 @@
         </div>
         <div class="story-chartbox">
           <span class="story-hint" aria-hidden="true">scroll to run <span class="ar">▾</span></span>
+          <a class="story-skip" href="#demo">skip to the result ▾</a>
           <canvas id="storychart" role="img" aria-label="Engine 03's surprise signal over its 179-cycle life, drawn as you scroll: quiet near 1× healthy for 122 cycles, the rotation sense crossing the amber threshold at cycle 123, then climbing to 27× at failure at cycle 179. Four thin per-sense traces run beneath the overall signal."></canvas>
           <div class="story-chips" role="list">
             <div class="story-chip" role="listitem" data-chip="thermal">thermal <span class="cv num">1.0×</span></div>
@@ -612,6 +617,6 @@
 </footer>
 
 <script src="assets/js/engine03-data.js?v=3"></script>
-<script src="assets/js/site.js?v=8"></script>
+<script src="assets/js/site.js?v=9"></script>
 </body>
 </html>

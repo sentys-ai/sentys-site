@@ -81,37 +81,33 @@ body > nav, body > header, body > main, body > footer { position:relative; z-ind
   color:var(--dust-dim); display:flex; align-items:center; gap:11px; margin:0 0 20px;
 }
 .eyebrow::before { content:""; width:18px; height:2px; background:var(--ember); flex:none; }
-.eyebrow-seq { flex-wrap:wrap; }
-.eyebrow-seq .sep { color:var(--ember); }
-.js .eyebrow-seq .ph, .js .eyebrow-seq .sep { opacity:0; transform:translateY(5px); transition:opacity .5s ease, transform .5s ease; }
-.js .eyebrow-seq.in .ph, .js .eyebrow-seq.in .sep { opacity:1; transform:none; }
-.js .eyebrow-seq.in > :nth-child(1){ transition-delay:.15s } .js .eyebrow-seq.in > :nth-child(2){ transition-delay:.48s }
-.js .eyebrow-seq.in > :nth-child(3){ transition-delay:.60s } .js .eyebrow-seq.in > :nth-child(4){ transition-delay:.93s }
-.js .eyebrow-seq.in > :nth-child(5){ transition-delay:1.05s }
-@media (prefers-reduced-motion: reduce){ .js .eyebrow-seq .ph, .js .eyebrow-seq .sep { opacity:1; transform:none; transition:none; } }
+/* ── unified eyebrow entrance (hero + every section): the bar draws
+      itself first, then each phrase lands in sequence ── */
+.eyebrow-seq, .eyebrow.reveal { flex-wrap:wrap; }
+.eyebrow .sep { color:var(--ember); }
+.js .eyebrow-seq::before, .js .eyebrow.reveal::before {
+  transform:scaleX(0); transform-origin:left center;
+  transition:transform .5s cubic-bezier(.2,.6,.25,1) .1s; }
+.js .eyebrow-seq.in::before, .js .eyebrow.reveal.in::before { transform:scaleX(1); }
+.js .eyebrow-seq .ph, .js .eyebrow-seq .sep,
+.js .eyebrow.reveal .ph, .js .eyebrow.reveal .sep {
+  opacity:0; transform:translateY(5px); transition:opacity .45s ease, transform .45s ease; }
+.js .eyebrow-seq.in .ph, .js .eyebrow-seq.in .sep,
+.js .eyebrow.reveal.in .ph, .js .eyebrow.reveal.in .sep { opacity:1; transform:none; }
+.js .eyebrow-seq.in > :nth-child(1), .js .eyebrow.reveal.in > :nth-child(1){ transition-delay:.6s }
+.js .eyebrow-seq.in > :nth-child(2), .js .eyebrow.reveal.in > :nth-child(2){ transition-delay:.82s }
+.js .eyebrow-seq.in > :nth-child(3), .js .eyebrow.reveal.in > :nth-child(3){ transition-delay:.93s }
+.js .eyebrow-seq.in > :nth-child(4), .js .eyebrow.reveal.in > :nth-child(4){ transition-delay:1.15s }
+.js .eyebrow-seq.in > :nth-child(5), .js .eyebrow.reveal.in > :nth-child(5){ transition-delay:1.26s }
+@media (prefers-reduced-motion: reduce){
+  .js .eyebrow-seq::before, .js .eyebrow.reveal::before { transform:none; transition:none; }
+  .js .eyebrow-seq .ph, .js .eyebrow-seq .sep,
+  .js .eyebrow.reveal .ph, .js .eyebrow.reveal .sep { opacity:1; transform:none; transition:none; } }
 @media (max-width:480px){ .eyebrow { letter-spacing:.13em; font-size:11.5px; gap:9px; } }
 
 /* reveal */
 .js .reveal { opacity:0; transform:translateY(16px); transition:opacity .6s cubic-bezier(.2,.6,.25,1), transform .6s cubic-bezier(.2,.6,.25,1); }
 .js .reveal.in { opacity:1; transform:none; }
-/* the needle extends, then the phrases land — the hero's eyebrow pattern,
-   applied to every section eyebrow (phrases are wrapped at runtime) */
-.eyebrow.reveal { flex-wrap:wrap; }
-.eyebrow.reveal .sep { color:var(--ember); }
-.js .eyebrow.reveal::before { transform:scaleX(0); transform-origin:left center;
-  transition:transform .55s cubic-bezier(.2,.6,.25,1) .15s; }
-.js .eyebrow.reveal.in::before { transform:scaleX(1); }
-.js .eyebrow.reveal .ph, .js .eyebrow.reveal .sep { opacity:0; transform:translateY(5px);
-  transition:opacity .5s ease, transform .5s ease; }
-.js .eyebrow.reveal.in .ph, .js .eyebrow.reveal.in .sep { opacity:1; transform:none; }
-.js .eyebrow.reveal.in > :nth-child(1){ transition-delay:.4s }
-.js .eyebrow.reveal.in > :nth-child(2){ transition-delay:.68s }
-.js .eyebrow.reveal.in > :nth-child(3){ transition-delay:.8s }
-.js .eyebrow.reveal.in > :nth-child(4){ transition-delay:1.02s }
-.js .eyebrow.reveal.in > :nth-child(5){ transition-delay:1.14s }
-@media (prefers-reduced-motion: reduce){
-  .js .eyebrow.reveal::before { transform:none; transition:none; }
-  .js .eyebrow.reveal .ph, .js .eyebrow.reveal .sep { opacity:1; transform:none; transition:none; } }
 .js .reveal.d1 { transition-delay:.08s; } .js .reveal.d2 { transition-delay:.16s; } .js .reveal.d3 { transition-delay:.24s; }
 @media (prefers-reduced-motion: reduce){ .js .reveal { opacity:1; transform:none; transition:none; } }
 
@@ -258,6 +254,14 @@ section h2 { font-size:clamp(30px, 3.8vw, 48px); margin:0 0 14px; max-width:24ch
   color:var(--ember); background:rgba(15,18,22,.88); border:1px solid rgba(240,164,60,.45); border-radius:999px; padding:9px 16px;
   opacity:0; transform:translate(-50%,-6px); transition:opacity .4s ease, transform .4s ease; white-space:nowrap; pointer-events:none; }
 .story-hint.on { opacity:1; transform:translate(-50%,0); }
+/* the polite exit: visible only while the story owns the wheel */
+.story-skip { position:absolute; right:12px; top:12px; z-index:3; font:500 11px/1 var(--mono);
+  letter-spacing:.14em; text-transform:uppercase; color:var(--dust-dim); text-decoration:none;
+  padding:7px 11px; border:1px solid transparent; border-radius:999px;
+  opacity:0; transition:opacity .4s ease; pointer-events:none; }
+#story.docked .story-skip { opacity:1; pointer-events:auto; }
+#story.done .story-skip { opacity:0; pointer-events:none; }
+.story-skip:hover { color:var(--dust); border-color:var(--hairline); background:rgba(15,18,22,.7); }
 .story-hint .ar { display:inline-block; animation:hintbob 1.1s ease-in-out infinite; }
 @keyframes hintbob { 50% { transform:translateY(3px); } }
 @media (prefers-reduced-motion: reduce){ .story-hint .ar { animation:none; } }
@@ -505,6 +509,9 @@ footer .fbrand i { font-style:normal; color:var(--ember); }
 .organ-state.surprised b { color:var(--ember); }
 @media (max-width:760px){
   .plate-label { position:static; text-align:center; margin-bottom:18px; }
+  /* art-directed mobile plate: left third cropped away (organ-plate-m),
+     taller stage so the pump reads at phone size */
+  .fig-stage { aspect-ratio:1018/768; }
 }
 
 /* ── print ───────────────────────────────────────────────────────────── */
