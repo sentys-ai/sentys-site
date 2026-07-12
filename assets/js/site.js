@@ -22,6 +22,23 @@
   }), { rootMargin:'0px 0px -8% 0px', threshold:.08 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
+  /* ── nav scrollspy: ember tick under the section you're in ────────── */
+  const spyLinks = new Map();
+  document.querySelectorAll('.nav-links a[href^="#"]').forEach(a => {
+    const sec = document.querySelector(a.getAttribute('href'));
+    if (sec) spyLinks.set(sec, a);
+  });
+  if (spyLinks.size){
+    const spy = new IntersectionObserver(es => es.forEach(e => {
+      const a = spyLinks.get(e.target);
+      if (e.isIntersecting) {
+        document.querySelectorAll('.nav-links a.current').forEach(x => x.classList.remove('current'));
+        a.classList.add('current');
+      }
+    }), { rootMargin:'-30% 0px -55% 0px' });
+    spyLinks.forEach((a, sec) => spy.observe(sec));
+  }
+
   /* ── hero: Chladni plate ──────────────────────────────────────────── */
   const cv = document.getElementById('plate');
   const voiceEl = document.querySelector('.voice');

@@ -2,16 +2,21 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sentys — Findings: fd001_export.csv</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f1216'/%3E%3Cpath d='M6 16c3.3 0 3.3-6 6.7-6s3.3 6 6.6 6 3.4-6 6.7-6' fill='none' stroke='%23f0a43c' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
-:root { --surface:#fcfcfb;--page:#f9f9f7;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--grid:#e1e0d9;--axis:#c3c2b7;--series:#2a78d6;--good:#0ca30c;--border:rgba(11,11,11,0.10); }
-@media (prefers-color-scheme: dark) { :root { --surface:#1a1a19;--page:#0d0d0d;--ink:#ffffff;--ink2:#c3c2b7;--muted:#898781;--grid:#2c2c2a;--axis:#383835;--series:#3987e5;--good:#0ca30c;--border:rgba(255,255,255,0.10); } }
+@font-face { font-family:'Clash'; src:url('assets/fonts/ClashDisplay-500.woff2') format('woff2'); font-weight:500; font-display:swap; }
+@font-face { font-family:'Supreme'; src:url('assets/fonts/Supreme-Regular.woff2') format('woff2'); font-weight:400; font-display:swap; }
+@font-face { font-family:'Supreme'; src:url('assets/fonts/Supreme-Bold.woff2') format('woff2'); font-weight:700; font-display:swap; }
+:root { --surface:#fbfaf6;--page:#f2efe8;--ink:#181b1f;--ink2:#565f68;--muted:#7d868f;--grid:#ddd8ca;--axis:#c4bfae;--series:#8a5c0a;--good:#3d8f5c;--border:rgba(24,27,31,0.12); }
+@media (prefers-color-scheme: dark) { :root { --surface:#151a21;--page:#0f1216;--ink:#ece5d6;--ink2:#98a1aa;--muted:#98a1aa;--grid:#242b35;--axis:#3a4450;--series:#f0a43c;--good:#57c07e;--border:rgba(236,229,214,0.12); } }
 * { box-sizing: border-box; }
 body { margin:0; background:var(--page); color:var(--ink);
-  font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  font:15px/1.55 'Supreme',system-ui,-apple-system,"Segoe UI",sans-serif; }
+h1, h2, h3 { font-family:'Clash','Supreme',sans-serif; font-weight:500; }
 .wrap { max-width: 880px; margin: 0 auto; padding: 28px 20px 56px; }
 header.rep { padding: 8px 0 20px; border-bottom: 1px solid var(--grid); }
-.brand { font-size:13px; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--ink2); font-weight:600; }
+.brand { font:500 13px 'Clash',sans-serif; letter-spacing:.4em; text-transform:uppercase;
+  color:var(--ink2); }
 h1 { font-size:26px; margin:6px 0 2px; }
 h2 { font-size:19px; margin:34px 0 10px; }
 h3 { font-size:16px; margin:22px 0 8px; }

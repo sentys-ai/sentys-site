@@ -4,7 +4,7 @@
 **Prompt:** RUN_PROMPT.md (untracked, kept out of git via .git/info/exclude along with sensory/)
 
 ## Current milestone
-M7 — Iteration pass 2 (pass 1 done)
+M8 — Iteration pass 3 (passes 1–2 done)
 
 ## Done
 - [x] M0 Setup: read ONE_PAGER/VISION/MANIFESTO/EVIDENCE/WORLD_MODEL + current site copy;
@@ -25,6 +25,13 @@ M7 — Iteration pass 2 (pass 1 done)
       Engine-03 chart label moved clear of trace; 4 hand-drawn line icons on fit cards; ONE
       Gemini still (pump hall) shipped as fits-band with honest "(Illustration.)" caption; old
       design's webp images removed; favicon added. No overflow, no console errors.
+- [x] M7 Iteration pass 2: nav scrollspy (ember tick), val-card hover, footer nodal-wave
+      sign-off + Colophon link, print stylesheet, demo embed restored to
+      ?embed=1&autoplay=1&loop=1&select=3 (old site's params — demo now plays itself with
+      Engine 03 selected), sample-report.html light-touch reskin to brand tokens (ember bars,
+      Clash headings — structure untouched), favicons on child pages, README rewritten.
+      Full-page screenshot artifact NOTE: reveal-on-scroll + lazy images make stitched fullPage
+      shots look empty below the fold — the harness now forces .in + eager; not a site bug.
 - [x] M2 Full site built: index.html + assets/css/site.css + assets/js/site.js +
       assets/js/engine03-data.js (real Engine-03 series from demo/fleet_data.json, log2 chart).
       Founder pic extracted to assets/img/founder.jpg. Chladni hero + sense-voice ticker +
