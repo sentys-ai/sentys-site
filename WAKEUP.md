@@ -4,7 +4,7 @@
 **Prompt:** RUN_PROMPT.md (untracked, kept out of git via .git/info/exclude along with sensory/)
 
 ## Current milestone
-M8 — Iteration pass 3 (passes 1–2 done)
+M9 — Mirror to ~/sensory/docs/product/website/ + open PR (all 3 iteration passes done)
 
 ## Done
 - [x] M0 Setup: read ONE_PAGER/VISION/MANIFESTO/EVIDENCE/WORLD_MODEL + current site copy;
@@ -25,6 +25,10 @@ M8 — Iteration pass 3 (passes 1–2 done)
       Engine-03 chart label moved clear of trace; 4 hand-drawn line icons on fit cards; ONE
       Gemini still (pump hall) shipped as fits-band with honest "(Illustration.)" caption; old
       design's webp images removed; favicon added. No overflow, no console errors.
+- [x] M8 Iteration pass 3: tablet 1024 + ultrawide 1920 + guide-mobile verified clean (no
+      overflow/errors anywhere); drift-moment captured live at 12s (plate heats, sense-voice
+      types verbatim triage line, dot flips amber — all in sync); unused Nippo fonts removed;
+      og:image dimensions meta; core page weight measured 257KB incl. fonts+images.
 - [x] M7 Iteration pass 2: nav scrollspy (ember tick), val-card hover, footer nodal-wave
       sign-off + Colophon link, print stylesheet, demo embed restored to
       ?embed=1&autoplay=1&loop=1&select=3 (old site's params — demo now plays itself with
