@@ -422,6 +422,12 @@ section h2 { font-size:clamp(30px, 3.8vw, 48px); margin:0 0 14px; max-width:24ch
 .spec ol { margin:0 0 14px; padding-left:20px; color:var(--ink-dim); font-size:15px; display:grid; gap:7px; }
 .spec ol b { color:var(--ink); }
 .spec .spec-link { font-size:14.5px; padding-bottom:14px; margin:0; }
+.aicard { margin:24px 0 4px; padding:18px 20px 16px; background:var(--paper-2);
+  border:1px solid var(--p-line); border-left:4px solid var(--p-accent); border-radius:4px; }
+.aicard .ai-stamp { font:500 10.5px/1 var(--mono); letter-spacing:.14em; color:var(--p-accent); text-transform:uppercase; margin-bottom:10px; }
+.aicard h3 { font-size:16.5px; margin:0 0 8px; }
+.aicard p { margin:0; color:var(--ink-dim); font-size:14px; line-height:1.65; }
+.aicard b { color:var(--ink); }
 .handling { padding:22px 0 8px; }
 .handling h3 { font-size:16px; margin:0 0 10px; }
 .handling ul { margin:0; padding-left:18px; color:var(--ink-dim); font-size:14px; display:grid; gap:7px; }
