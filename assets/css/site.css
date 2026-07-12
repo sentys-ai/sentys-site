@@ -274,9 +274,14 @@ section h2 { font-size:clamp(30px, 3.8vw, 48px); margin:0 0 14px; max-width:24ch
 .report-thumb .rt-line { display:flex; justify-content:space-between; margin-top:8px; }
 
 /* ── fits ────────────────────────────────────────────────────────────── */
+.fit-band { margin:0 0 26px; }
+.fit-band picture, .fit-band img { display:block; width:100%; height:auto; border-radius:8px; border:1px solid var(--line); }
+.fit-band figcaption { font:400 12.5px/1.6 var(--mono); color:var(--ink-dim); margin-top:10px; letter-spacing:.02em; }
 .fit-grid { display:grid; grid-template-columns:1fr; gap:18px; }
 @media (min-width:840px){ .fit-grid { grid-template-columns:1fr 1fr; gap:22px; } }
-.fit { background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:26px; }
+.fit { background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:26px; position:relative; }
+.fit .fico { position:absolute; top:22px; right:22px; color:var(--ink-dim); opacity:.75; }
+.fit .fico .em { stroke:var(--accent-deep); }
 .fit .tag { font:500 11.5px/1 var(--mono); letter-spacing:.14em; text-transform:uppercase; color:var(--accent-deep); margin-bottom:14px; }
 .fit h3 { font-size:19px; margin:0 0 10px; }
 .fit p { margin:0; color:var(--ink-dim); font-size:14.5px; }

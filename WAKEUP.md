@@ -4,7 +4,7 @@
 **Prompt:** RUN_PROMPT.md (untracked, kept out of git via .git/info/exclude along with sensory/)
 
 ## Current milestone
-M4 — Guide page + concepts notes (then M5 brand kit + og.png, then iteration passes)
+M7 — Iteration pass 2 (pass 1 done)
 
 ## Done
 - [x] M0 Setup: read ONE_PAGER/VISION/MANIFESTO/EVIDENCE/WORLD_MODEL + current site copy;
@@ -19,6 +19,12 @@ M4 — Guide page + concepts notes (then M5 brand kit + og.png, then iteration p
       alarm annotations, strip-chart evidence device), as is A's plain-language sense-voice.
       User mid-run note: fetched ui-ux-pro-max-skill.nextlevelbuilder.io — page empty, nothing taken.
 
+- [x] M4 /guide colophon (unlinked) + bake-off verdicts. M5 brand kit: brand/logo.png (1024²,
+      48px-legible), brand/linkedin-cover.png (1128×191), new og.png — all hand-built shader/SVG.
+- [x] M6 Iteration pass 1: reduced-motion now renders a static plate frame (identity kept);
+      Engine-03 chart label moved clear of trace; 4 hand-drawn line icons on fit cards; ONE
+      Gemini still (pump hall) shipped as fits-band with honest "(Illustration.)" caption; old
+      design's webp images removed; favicon added. No overflow, no console errors.
 - [x] M2 Full site built: index.html + assets/css/site.css + assets/js/site.js +
       assets/js/engine03-data.js (real Engine-03 series from demo/fleet_data.json, log2 chart).
       Founder pic extracted to assets/img/founder.jpg. Chladni hero + sense-voice ticker +
@@ -53,8 +59,11 @@ M5 brand kit + og.png → M6/M7/M8 iteration passes 1–3 → M9 mirror to
 ## Spend tally (paid/credit generations)
 | # | When | Service | Model | What | Result |
 |---|------|---------|-------|------|--------|
-| — | — | — | — | nothing spent yet | — |
-Gemini calls used: 0/15 · Higgsfield metered credits used: 0 · Clips shipped: 0/2 · Images shipped: 0/6
+| 1 | 02:32 | Gemini API | gemini-3.1-flash-image | district-heating pump hall still, 16:9 | KEPT → assets/img/band-pumphall{,-m}.webp |
+Gemini calls used: 1/15 · Higgsfield metered credits used: 0 (trial NOT active — account shows
+free plan / 50 credits; per budget rules left untouched, Gemini primary) · Clips shipped: 0/2
+(decision: zero clips — the shader is the site's motion; a video would compete and cost mobile
+weight) · Images shipped: 1/6 (one image, two responsive sizes)
 
 ## Open problems
 - ffmpeg not on PATH (only `convert`) — check again before video work; degrade to code-driven motion if clips can't be compressed.

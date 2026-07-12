@@ -36,7 +36,7 @@
   ];
 
   let plateOK = false;
-  if (cv && !REDUCED) plateOK = initPlate();
+  if (cv) plateOK = initPlate();                        // reduced motion → one static frame
   if (!plateOK && cv) cv.remove();                      // CSS fallback gradient shows
   if (REDUCED && voiceText) voiceText.textContent = IDLE_MSG;
 
@@ -109,6 +109,22 @@ void main(){
       gl.viewport(0, 0, cv.width, cv.height);
     };
     addEventListener('resize', resize); resize();
+
+    // reduced motion: one still frame of the resting plate, then done
+    if (REDUCED){
+      const portrait = W < H * .9;
+      gl.uniform2f(U.uRes, cv.width, cv.height);
+      gl.uniform1f(U.uT, 4.2);
+      gl.uniform2f(U.uMouse, -10, -10);
+      gl.uniform1f(U.uDrift, 0);
+      gl.uniform4f(U.uMode, 5, 3, 5, 3);
+      gl.uniform1f(U.uMix, 0);
+      gl.uniform2f(U.uCenter, portrait ? .5 : .62, portrait ? .58 : .48);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      addEventListener('resize', () => { resize();
+        gl.uniform2f(U.uRes, cv.width, cv.height); gl.drawArrays(gl.TRIANGLES, 0, 3); });
+      return true;
+    }
 
     let mouse = [.5,.5], tgt = [.5,.5];
     addEventListener('pointermove', e => {
@@ -281,10 +297,12 @@ void main(){
       if (upto >= fa){
         const ax = X(fa), ay = Y(D.overall[fa]);
         ctx.strokeStyle = COL.ember; ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(ax, ay-6); ctx.lineTo(ax, ay-38); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(ax, ay-6); ctx.lineTo(ax, ay-30); ctx.stroke();
         ctx.fillStyle = COL.ember;
         ctx.font = '500 11.5px PlexMono, monospace';
-        ctx.fillText('first warning — cycle ' + fa, ax-40, ay-46);
+        ctx.textAlign = 'right';                     // label sits left of the rising trace
+        ctx.fillText('first warning — cycle ' + fa, ax-8, ay-34);
+        ctx.textAlign = 'left';
         ctx.beginPath(); ctx.arc(ax, ay, 3.2, 0, 7); ctx.fill();
       }
       if (upto >= n-1){
