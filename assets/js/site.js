@@ -477,20 +477,23 @@ void main(){
     // ≤760px shows organ-plate-m.webp (left 26% cropped away) — sensor x
     // coords remap to the crop, and the ganglion takes its mobile perch
     const CROP_X = .26, GANG_M = { x:.09, y:.40 };
+    // the short cropped canvas can't fit the desktop label offsets: b/c
+    // crowd the top edge and d falls off the bottom — m{} moves each label
+    // beside its dot (fibers exit toward the ganglion, so that side is clear)
     const SENSORS = [
       { x:.450, y:.385, sense:'a. rotation', key:'rotation', lx:-12, ly:-24, align:'right', ph:0   },
-      { x:.712, y:.205, sense:'b. thermal',  key:'thermal',  lx:-22, ly:-20, align:'right', ph:2.1 },
-      { x:.752, y:.085, sense:'c. pressure', key:'pressure', lx:-34, ly: -8, align:'right', ph:4.2 },
-      { x:.700, y:.890, sense:'d. flow',     key:'flow',     lx:-26, ly: 34, align:'right', ph:5.6 },
+      { x:.712, y:.205, sense:'b. thermal',  key:'thermal',  lx:-22, ly:-20, m:{lx:10, ly:4, align:'left'}, align:'right', ph:2.1 },
+      { x:.752, y:.085, sense:'c. pressure', key:'pressure', lx:-34, ly: -8, m:{lx:10, ly:4, align:'left'}, align:'right', ph:4.2 },
+      { x:.700, y:.890, sense:'d. flow',     key:'flow',     lx:-26, ly: 34, m:{lx:10, ly:4, align:'left'}, align:'right', ph:5.6 },
     ];
-    let W, H, fibers = [], gang = GANG;
+    let W, H, fibers = [], gang = GANG, cropped = false;
 
     function resize(){
       const dpr = Math.min(devicePixelRatio || 1, 2);
       W = organCv.clientWidth; H = organCv.clientHeight;
       organCv.width = W*dpr; organCv.height = H*dpr;
       octx.setTransform(dpr,0,0,dpr,0,0);
-      const cropped = matchMedia('(max-width:760px)').matches;
+      cropped = matchMedia('(max-width:760px)').matches;
       gang = cropped ? GANG_M : GANG;
       const mapx = x => cropped ? (x - CROP_X) / (1 - CROP_X) : x;
       const gx = gang.x*W, gy = gang.y*H;
@@ -534,7 +537,8 @@ void main(){
       octx.font = '500 11px PlexMono, monospace';
       octx.fillStyle = 'rgba(152,161,170,.9)';
       octx.textAlign = 'center';
-      octx.fillText('g.', 0, s*.05*breathe + 22);
+      const bw = octx.measureText('Sentys').width;
+      octx.fillText('Sentys', Math.max(0, bw/2 + 4 - gx), s*.05*breathe + 22);
       octx.restore();
     }
 
@@ -567,9 +571,15 @@ void main(){
         }
         octx.font = '500 11px PlexMono, monospace';
         octx.fillStyle = isDrift ? 'rgba(240,164,60,.95)' : 'rgba(152,161,170,.9)';
-        octx.textAlign = f.sn.align;
-        const tag = W < 560 ? f.sn.sense.slice(0,2) : f.sn.sense;
-        octx.fillText(tag + (isDrift && W >= 560 ? ' · surprised' : ''), f.sx + f.sn.lx, f.sy + f.sn.ly);
+        const mo = cropped && f.sn.m ? f.sn.m : f.sn;
+        octx.textAlign = mo.align;
+        const tag = (W < 560 ? f.sn.sense.slice(0,2) : f.sn.sense)
+          + (isDrift && W >= 560 ? ' · surprised' : '');
+        const tw = octx.measureText(tag).width;
+        let tx = f.sx + mo.lx;
+        tx = mo.align === 'right' ? Math.max(tx, tw + 2) : Math.min(tx, W - tw - 2);
+        const ty = Math.max(11, Math.min(H - 4, f.sy + mo.ly));
+        octx.fillText(tag, tx, ty);
       });
     }
 
