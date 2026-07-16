@@ -282,7 +282,7 @@ body.embed .democlose { display:none; }
   const LOOP = qp.get('loop') === '1';
   const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (qp.get('embed') === '1') document.body.classList.add('embed');
-  let loopT = null;
+  let loopT = null, visible = true, wasPlaying = false;
 
   function setCycle(c) {
     cycle = Math.max(1, Math.min(maxLife, c));
@@ -292,6 +292,7 @@ body.embed .democlose { display:none; }
   }
   function play() {
     if (timer) return stop();
+    if (!visible) { wasPlaying = true; return; }
     if (cycle >= maxLife) setCycle(1);
     document.getElementById('play').textContent = '⏸ Pause';
     timer = setInterval(() => {
@@ -311,6 +312,14 @@ body.embed .democlose { display:none; }
   document.getElementById('play').onclick = play;
   document.getElementById('reset').onclick = () => { stop(); sel=null; setCycle(1); renderDetail(); };
   scrub.oninput = () => { stop(); setCycle(+scrub.value); };
+
+  // playback idles offscreen: the embed's autoplay loop otherwise keeps
+  // stepping the fleet DOM at 60ms forever below the fold
+  new IntersectionObserver(es => {
+    visible = es[0].isIntersecting;
+    if (!visible && (timer || loopT)) { wasPlaying = true; stop(); }
+    else if (visible && wasPlaying) { wasPlaying = false; play(); }
+  }).observe(document.body);
 
   const selId = parseInt(qp.get('select'), 10);
   if (engines.some(e => e.id === selId)) sel = selId;
