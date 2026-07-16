@@ -475,11 +475,12 @@ void main(){
     // across the dark left third, pulses flow inward to the baseline
     const GANG = { x:.175, y:.44 };
     // ≤760px shows organ-plate-m.webp (left 26% cropped away) — sensor x
-    // coords remap to the crop, and the ganglion takes its mobile perch
-    const CROP_X = .26, GANG_M = { x:.09, y:.40 };
-    // the short cropped canvas can't fit the desktop label offsets: b/c
-    // crowd the top edge and d falls off the bottom — m{} moves each label
-    // beside its dot (fibers exit toward the ganglion, so that side is clear)
+    // coords remap to the crop. The crop removes the open field the lateral
+    // gesture needs, so the mobile stage letterboxes a plate-dark band below
+    // the image (CSS) and the ganglion perches there, centered in clear
+    // field, fibers converging downward. Desktop lateral is untouched.
+    const CROP_X = .26, IMG_AR = 1018/768;
+    // m{} moves each label beside its dot on the small stage
     const SENSORS = [
       { x:.450, y:.385, sense:'a. rotation', key:'rotation', lx:-12, ly:-24, align:'right', ph:0   },
       { x:.712, y:.205, sense:'b. thermal',  key:'thermal',  lx:-22, ly:-20, m:{lx:10, ly:4, align:'left'}, align:'right', ph:2.1 },
@@ -494,11 +495,13 @@ void main(){
       organCv.width = W*dpr; organCv.height = H*dpr;
       octx.setTransform(dpr,0,0,dpr,0,0);
       cropped = matchMedia('(max-width:760px)').matches;
-      gang = cropped ? GANG_M : GANG;
+      // fraction of the stage the image occupies (mobile letterboxes a band below)
+      const imgFrac = cropped ? Math.min(1, (W / IMG_AR) / H) : 1;
+      gang = cropped ? { x:.5, y: imgFrac + (1 - imgFrac)*.52 } : GANG;
       const mapx = x => cropped ? (x - CROP_X) / (1 - CROP_X) : x;
       const gx = gang.x*W, gy = gang.y*H;
       fibers = SENSORS.map(sn => {
-        const sx = mapx(sn.x)*W, sy = sn.y*H;
+        const sx = mapx(sn.x)*W, sy = sn.y*imgFrac*H;
         const dx = gx-sx, dy = gy-sy, L = Math.hypot(dx,dy);
         const nx = -dy/L, ny = dx/L, bow = L*.16*(sy > gy ? -1 : 1);
         return { sn, sx, sy, cx:(sx+gx)/2+nx*bow, cy:(sy+gy)/2+ny*bow, gx, gy };
@@ -535,10 +538,13 @@ void main(){
       octx.fillStyle = g;
       octx.beginPath(); octx.arc(0,0,s*.05*breathe,0,7); octx.fill();
       octx.font = '500 11px PlexMono, monospace';
-      octx.fillStyle = 'rgba(152,161,170,.9)';
       octx.textAlign = 'center';
       const bw = octx.measureText('Sentys').width;
-      octx.fillText('Sentys', Math.max(0, bw/2 + 4 - gx), s*.05*breathe + 22);
+      const lx = Math.max(0, bw/2 + 4 - gx), ly = s*.05*breathe + 22;
+      octx.fillStyle = 'rgba(15,18,22,.72)';
+      octx.fillRect(lx - bw/2 - 4, ly - 11, bw + 8, 15);
+      octx.fillStyle = 'rgba(162,171,181,.9)';
+      octx.fillText('Sentys', lx, ly);
       octx.restore();
     }
 
@@ -570,15 +576,17 @@ void main(){
           }
         }
         octx.font = '500 11px PlexMono, monospace';
-        octx.fillStyle = isDrift ? 'rgba(240,164,60,.95)' : 'rgba(152,161,170,.9)';
         const mo = cropped && f.sn.m ? f.sn.m : f.sn;
         octx.textAlign = mo.align;
-        const tag = (W < 560 ? f.sn.sense.slice(0,2) : f.sn.sense)
-          + (isDrift && W >= 560 ? ' · surprised' : '');
+        const tag = f.sn.sense + (isDrift && W >= 560 ? ' · surprised' : '');
         const tw = octx.measureText(tag).width;
         let tx = f.sx + mo.lx;
         tx = mo.align === 'right' ? Math.max(tx, tw + 2) : Math.min(tx, W - tw - 2);
         const ty = Math.max(11, Math.min(H - 4, f.sy + mo.ly));
+        // backing plate: full sense names stay legible over the linework
+        octx.fillStyle = 'rgba(15,18,22,.72)';
+        octx.fillRect((mo.align === 'right' ? tx - tw : tx) - 4, ty - 11, tw + 8, 15);
+        octx.fillStyle = isDrift ? 'rgba(240,164,60,.95)' : 'rgba(162,171,181,.9)';
         octx.fillText(tag, tx, ty);
       });
     }
@@ -616,7 +624,7 @@ void main(){
       ostate.classList.toggle('surprised', active);
       osense.textContent = active
         ? SENSORS[s.fi].key + ' · surprised'
-        : 'all senses within healthy range';
+        : (W < 560 ? 'all senses healthy' : 'all senses within healthy range');
       rafo = running ? requestAnimationFrame(frame) : 0;
     }
     new IntersectionObserver(es => {
