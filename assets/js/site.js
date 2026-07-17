@@ -79,6 +79,7 @@
 precision highp float;
 uniform vec2 uRes; uniform float uT; uniform vec2 uMouse; uniform float uDrift;
 uniform vec4 uMode; uniform float uMix; uniform vec2 uCenter; uniform float uDim;
+uniform float uScale;
 
 float chladni(vec2 p, float m, float n){
   return cos(m*3.14159*p.x)*cos(n*3.14159*p.y) - cos(n*3.14159*p.x)*cos(m*3.14159*p.y);
@@ -88,15 +89,15 @@ float hash(vec2 q){ return fract(sin(dot(q, vec2(127.1,311.7)))*43758.5453); }
 void main(){
   vec2 uv = gl_FragCoord.xy / uRes;
   float asp = uRes.x / uRes.y;
-  vec2 p = (uv - uCenter) * vec2(asp, 1.0) * 2.05;
+  vec2 p = (uv - uCenter) * vec2(asp, 1.0) * uScale;
 
-  vec2 warpC = vec2(.55*asp, .38);
+  vec2 warpC = vec2(.55*asp, .38) * (uScale/2.05);
   float wd = length(p - warpC);
   vec2 pw = p + uDrift * .24 * exp(-wd*1.5) * vec2(sin(uT*.9+wd*5.), cos(uT*.7+wd*4.));
 
   float c = mix(chladni(pw, uMode.x, uMode.y), chladni(pw, uMode.z, uMode.w), uMix);
 
-  vec2 m = (uMouse - uCenter) * vec2(asp,1.) * 2.05;
+  vec2 m = (uMouse - uCenter) * vec2(asp,1.) * uScale;
   float md = length(p - m);
   c += .32 * exp(-md*3.2) * sin(uT*6. - md*13.);
 
@@ -130,14 +131,17 @@ void main(){
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
     const loc = gl.getAttribLocation(prog, 'p');
     gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    const U = {}; ['uRes','uT','uMouse','uDrift','uMode','uMix','uCenter','uDim'].forEach(n => U[n] = gl.getUniformLocation(prog, n));
+    const U = {}; ['uRes','uT','uMouse','uDrift','uMode','uMix','uCenter','uDim','uScale'].forEach(n => U[n] = gl.getUniformLocation(prog, n));
 
-    let W = 0, H = 0, raf = 0, plateShown = false;
+    // pattern scale: phones get coarser cells (1.5 vs 2.05) so the dust
+    // figures stay legible at hand-held size instead of shrinking with px
+    let W = 0, H = 0, raf = 0, plateShown = false, scale = 2.05;
     const resize = () => {
       const dpr = Math.min(devicePixelRatio || 1, 1.5);
       W = cv.clientWidth; H = cv.clientHeight;
       cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr);
       gl.viewport(0, 0, cv.width, cv.height);
+      scale = W <= 760 ? 1.5 : 2.05;
     };
     addEventListener('resize', () => { resize();
       if (!REDUCED && !raf && !document.hidden) raf = requestAnimationFrame(frame); });
@@ -170,10 +174,12 @@ void main(){
       gl.uniform1f(U.uMix, 0);
       gl.uniform2f(U.uCenter, portrait ? .5 : .62, portrait ? .58 : .48);
       gl.uniform1f(U.uDim, .8);
+      gl.uniform1f(U.uScale, scale);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       cv.classList.add('on');
       addEventListener('resize', () => { resize();
-        gl.uniform2f(U.uRes, cv.width, cv.height); gl.drawArrays(gl.TRIANGLES, 0, 3); });
+        gl.uniform2f(U.uRes, cv.width, cv.height); gl.uniform1f(U.uScale, scale);
+        gl.drawArrays(gl.TRIANGLES, 0, 3); });
       return true;
     }
 
@@ -275,6 +281,7 @@ void main(){
       gl.uniform1f(U.uMix, st.mix);
       gl.uniform2f(U.uCenter, st.center[0], st.center[1]);
       gl.uniform1f(U.uDim, st.dim);
+      gl.uniform1f(U.uScale, scale);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       if (!plateShown){ plateShown = true; cv.classList.add('on'); }
 
@@ -331,7 +338,7 @@ void main(){
     const PX = 54, PR = 16, PT = 22, PB = 30;
     const X = i => PX + (W-PX-PR) * (i/(n-1));
     const Y = v => PT + (H-PT-PB) * (1 - (L(v)-L(VMIN)) / (L(VMAX)-L(VMIN)));
-    const COL = { dim:'rgba(152,161,170,.9)', hair:'rgba(56,66,80,.8)',
+    const COL = { dim:'rgba(162,171,181,.9)', hair:'rgba(56,66,80,.8)',
       ember:'#f0a43c', heat:'#ff6a45', dust:'rgba(236,229,214,.95)',
       sense:'rgba(152,161,170,.30)' };
 

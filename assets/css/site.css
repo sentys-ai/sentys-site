@@ -508,21 +508,25 @@ footer .fbrand i { font-style:normal; color:var(--ember); }
 .organ-state.surprised .dot { background:var(--ember); }
 .organ-state.surprised b { color:var(--ember); }
 @media (max-width:760px){
-  .plate-label { position:static; text-align:center; margin-bottom:18px; }
+  .plate-label { position:static; text-align:center; margin-bottom:18px; padding:0 16px; }
   /* art-directed mobile plate: left third cropped away (organ-plate-m).
      The crop removes the open lateral field the ganglion lives in, so the
      stage letterboxes a band below the image (asset blacks are baked to
      var(--plate); the seam is invisible) and the overlay perches the
      ganglion there — fibers converge downward into clear field.
-     .7544 = 768/1018, the mobile image ratio; 44px = frame padding */
-  .fig-stage { aspect-ratio:auto; height:calc((100vw - 44px)*.7544 + clamp(130px, 24vw, 190px)); }
+     .7544 = 768/1018, the mobile image ratio. The plate goes full-bleed
+     here: on a phone every pixel of width goes to the drawing. */
+  .fig-frame { padding:0; }
+  .fig-stage { aspect-ratio:auto; height:calc(100vw*.7544 + clamp(130px, 24vw, 190px));
+    border-left:0; border-right:0; border-radius:0; }
   .fig-stage img { object-fit:contain; object-position:top center; }
 }
 @media (max-width:480px){
   /* the status line is wider than a phone at .18em tracking */
   .organ-state { font-size:10.5px; letter-spacing:.12em; padding:0 16px; }
-  /* narrow the legend so the sense list wraps 2+2, not 3 + orphaned d. */
-  .plate-label { max-width:260px; margin-left:auto; margin-right:auto; }
+  /* narrow the legend so the sense list wraps 2+2, not 3 + orphaned d.
+     (292 = 260 of content + the 2×16 side padding, border-box) */
+  .plate-label { max-width:292px; margin-left:auto; margin-right:auto; }
 }
 
 /* ── print ───────────────────────────────────────────────────────────── */
