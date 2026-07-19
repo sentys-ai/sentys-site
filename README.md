@@ -32,8 +32,7 @@ failure labels — and reports drift in plain language, per sensor.
 - `og-src.html` — source for `og.png` (render at 1200×630 in headless Chrome
   and screenshot; text lives in HTML, never in generated pixels).
 - `brand/` — logo + LinkedIn cover (`brand/src/` holds the HTML sources).
-- `guide/` — colophon: how the site was built, incl. the concept bake-off
-  (`concepts/` holds the losing hero prototypes).
+- `concepts/` — the losing hero prototypes from the design bake-off.
 
 The platform itself lives in a private repository. Contact:
 frixos@sentys.ai
