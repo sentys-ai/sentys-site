@@ -543,3 +543,11 @@ header.hero h1.h1-claim { font-size:clamp(38px, 4.7vw, 68px); max-width:19ch; }
 .hero-tag::before { content:"— "; color:var(--ember); }
 #dansk .g-name { color:var(--ember); }
 #dansk .qa { margin-top:0; }
+
+/* ── evidence fold (2026-09-07) ── */
+.fold { margin:0 0 26px; }
+.fold summary { cursor:pointer; list-style:none; font:500 12px/1.5 var(--mono); letter-spacing:.14em; text-transform:uppercase; color:var(--ember); padding:12px 0; }
+.fold summary::-webkit-details-marker { display:none; }
+.fold summary::before { content:"+ "; }
+.fold[open] summary::before { content:"\2212 "; }
+.fold[open] summary { margin-bottom:12px; }

@@ -32,7 +32,7 @@
 <link rel="preload" href="assets/fonts/ClashDisplay-500.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/Supreme-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/PlexMono-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/site.css?v=13">
+<link rel="stylesheet" href="assets/css/site.css?v=14">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -116,7 +116,8 @@
     <div class="qa reveal">
       <h3>Ærligt talt</h3>
       <p>Sentys har endnu ikke analyseret et fjernvarmeværk. Det er præcis det, den gratis første
-        analyse er til. Resten af siden er på engelsk; skriv gerne på dansk:
+        analyse er til. Og for en god ordens skyld: jeg er ikke dansker. Jeg bor i København og arbejder
+        på engelsk, så resten af siden er på engelsk. Skriv gerne på dansk, så svarer jeg på engelsk:
         <a href="mailto:frixos@sentys.ai">frixos@sentys.ai</a>.</p>
     </div>
   </div>
@@ -135,17 +136,19 @@
       <div class="pw-cell">
         <div class="tag">Learns healthy · flags drift</div>
         <h3>A baseline per machine, from its own history</h3>
-        <p>It trains on your machine's own healthy operation and reports degradation as a rising
-          deviation from that baseline, decomposed per sensor. It doesn't need failure labels;
-          most sites don't have any.</p>
+        <p>It learns what healthy looks like from your machine's own history, including its different
+          running modes (winter load, summer load), so a change of mode is not mistaken for a fault.
+          Two identical pumps are not identical to Sentys: each gets its own healthy. It doesn't need
+          failure labels; most sites don't have any.</p>
         <p>Instead of an anomaly score, the output reads like triage:
           <i>“Vibration: 3.2× healthy baseline; temperature and flow within range.”</i></p>
       </div>
       <div class="pw-cell">
         <div class="tag">Sensor-agnostic</div>
         <h3>Any tags your system logs</h3>
-        <p>Temperatures, pressures, flow, current or vibration, from a SCADA export, a historian,
-          or a plain spreadsheet. Adding a sensor type is a configuration change.</p>
+        <p>Temperatures, pressures, flow, current or vibration, exported from your control system
+          (SCADA or SRO), its history database, or a plain spreadsheet. A new sensor type is a
+          settings change, not new software.</p>
         <p>European exports parse natively: semicolons, decimal commas, your column names in your
           language. CSV or JSON, straight from the system you have.</p>
       </div>
@@ -154,10 +157,11 @@
         <h3>Where it stands today</h3>
         <p><b>Today:</b> an export is enough. Send one machine's history, get a written analysis
           back, with zero integration on your side.</p>
-        <p><b>A pilot:</b> the same pipeline runs on-prem (Docker, no GPU) reading your exports or
-          a live stream; your data never leaves the plant.</p>
-        <p><b>Not built yet:</b> OPC-UA/Modbus connectors and hardened remote access. That's
-          pilot-stage work we do together.</p>
+        <p><b>A pilot:</b> the same system runs on one ordinary server at your plant, read-only, on
+          your exports or a live feed. Your data never leaves the building.</p>
+        <p><b>Not built yet:</b> live connections to the standard industrial data buses (OPC-UA,
+          Modbus) and hardened remote access. Pilot-stage work, done together. The first analysis
+          needs none of it.</p>
       </div>
     </div>
   </div>
@@ -199,39 +203,19 @@
 <section id="stakes" data-plate data-plate-mode="6,2" data-plate-center=".5,.5" data-plate-dim=".2">
   <div class="wrap">
     <p class="eyebrow reveal">Why this matters</p>
-    <h2 class="reveal">Your alarms fire after the fact</h2>
-    <p class="section-lead reveal d1">A district-heating plant runs its pumps and exchangers unattended
-      most hours of the year, and the control system logs every minute of it. The alarms it ships trip
-      when one value crosses a threshold somebody set by hand. The slow, multi-signal drift that comes
-      before a failure sits in the history for weeks, read by no one. <b>Your alarms are the smoke
-      detector. Sentys is the smell of smoke.</b></p>
-
-    <div class="wall reveal">
-      <div class="wall-row">
-        <div class="wall-metric"><div class="m num">1<small>value per alarm, set by hand</small></div></div>
-        <div class="wall-body">
-          <h3>The alarm bank watches one value at a time</h3>
-          <p>A bearing that runs slightly warm while its vibration climbs and its flow dips trips
-            nothing, because no single value is out of range yet. Sentys watches all of a machine's
-            sensors against that machine's own healthy, and sits beside the alarms you have. It
-            replaces none of them.</p>
-        </div>
-        <div class="wall-tech">Checked against the product pages of the Danish SRO integrators (Coseno, DME)
-          and IGSS: condition monitoring is delivered as threshold and template alarms on single tags.
-          None of them learns what normal looks like.</div>
-      </div>
-      <div class="wall-row">
-        <div class="wall-metric"><div class="m num">17%<small>have any predictive maintenance</small></div></div>
-        <div class="wall-body">
-          <h3>Most plants still run without this</h3>
-          <p>Across Belgium, Germany, the Netherlands and Norway, only about <b>17%</b> of industrial
-            companies use predictive maintenance of any kind. If you're still reacting to breakdowns,
-            you're in the majority.</p>
-        </div>
-        <div class="wall-tech">PwC/Mainnovation, 2023 predictive-maintenance survey (BE/DE/NL/NO).
-          Roughly double the 2018 level, still a small minority.</div>
-      </div>
-    </div>
+    <h2 class="reveal">Alarms watch one gauge at a time</h2>
+    <p class="section-lead reveal d1" style="margin-bottom:18px;">The alarms in your control room are
+      lines drawn on single gauges: fire when a temperature passes a set point, when a pressure drops
+      below one. Drawn loose, the line is crossed late, when the damage is done. Drawn tight, it fires
+      so often that people stop looking. Neither sees the way machines actually fail: slowly, on
+      several gauges at once, each still inside its line.</p>
+    <p class="section-lead reveal d1">Servicing on a calendar doesn't close the gap either. It replaces
+      healthy parts and still gets surprised by the one machine that fails early. <b>Sentys learns what
+      all of a machine's gauges look like together when it is healthy, and reports how far they have
+      drifted from that, gauge by gauge.</b> It sits beside your alarms and replaces none of them.</p>
+    <p class="flow-cap reveal d2">Checked against the product pages of the Danish SRO integrators
+      (Coseno, DME) and IGSS: condition monitoring there means threshold and template alarms on single
+      tags. None of them learns what normal looks like for a machine.</p>
   </div>
 </section>
 
@@ -374,28 +358,31 @@
       </div>
     </div>
 
-    <div class="gates reveal">
-      <div class="gate">
-        <div class="g-head"><span class="g-name">PHM 2010 · CNC tool wear</span><span class="g-stamp pass">GATE PASS</span></div>
-        <p>Raw 50 kHz data from a physical CNC rig: the same pipeline tracked a <b>measured</b>
-          tool-wear curve on 3 unseen cutters and alarmed on all three with zero false alarms,
-          at 46–62% of end-of-life wear.</p>
-        <p style="margin-top:8px; font:400 12px/1.65 var(--mono);">For your advisor: the signal tracked measured wear at 0.972 / 0.975 / 0.955 out of 1.0 (Spearman ρ) · AUC 1.000 · pass marks set before the run.</p>
+    <details class="fold reveal">
+      <summary>The other three: a CNC pass and the two bearing tests we failed, with the numbers</summary>
+      <div class="gates reveal">
+        <div class="gate">
+          <div class="g-head"><span class="g-name">PHM 2010 · CNC tool wear</span><span class="g-stamp pass">GATE PASS</span></div>
+          <p>Raw 50 kHz data from a physical CNC rig: the same pipeline tracked a <b>measured</b>
+            tool-wear curve on 3 unseen cutters and alarmed on all three with zero false alarms,
+            at 46–62% of end-of-life wear.</p>
+          <p style="margin-top:8px; font:400 12px/1.65 var(--mono);">For your advisor: the signal tracked measured wear at 0.972 / 0.975 / 0.955 out of 1.0 (Spearman ρ) · AUC 1.000 · pass marks set before the run.</p>
+        </div>
+        <div class="gate">
+          <div class="g-head"><span class="g-name">FEMTO · bearing run-to-failure</span><span class="g-stamp fail">BAR MISSED — PUBLISHED</span></div>
+          <p>Detection worked: <b>10 of 11 unseen bearings</b> flagged, one false alarm in healthy
+            windows, and the rig's operating conditions were found without being told. One of our own
+            pass marks, set before the run, was missed (a pooled score of AUC 0.665 against a higher bar
+            we had set), so the run is reported as a fail, with the number.</p>
+        </div>
+        <div class="gate">
+          <div class="g-head"><span class="g-name">XJTU-SY · bearing run-to-failure</span><span class="g-stamp fail">BAR MISSED — PUBLISHED</span></div>
+          <p>Detection worked here too: <b>9 of 9 unseen bearings</b> flagged, one false alarm, with
+            no labels of any kind. The same pooled score missed our bar (AUC 0.659). Published as
+            measured.</p>
+        </div>
       </div>
-      <div class="gate">
-        <div class="g-head"><span class="g-name">FEMTO · bearing run-to-failure</span><span class="g-stamp fail">BAR MISSED — PUBLISHED</span></div>
-        <p>Detection worked: <b>10 of 11 unseen bearings</b> flagged, one false alarm in healthy
-          windows, and the rig's operating conditions were found without being told. One of our own
-          pass marks, set before the run, was missed (a pooled score of AUC 0.665 against a higher bar
-          we had set), so the run is reported as a fail, with the number.</p>
-      </div>
-      <div class="gate">
-        <div class="g-head"><span class="g-name">XJTU-SY · bearing run-to-failure</span><span class="g-stamp fail">BAR MISSED — PUBLISHED</span></div>
-        <p>Detection worked here too: <b>9 of 9 unseen bearings</b> flagged, one false alarm, with
-          no labels of any kind. The same pooled score missed our bar (AUC 0.659). Published as
-          measured.</p>
-      </div>
-    </div>
+    </details>
 
     <div class="honest reveal">
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8.5" stroke="currentColor" stroke-width="1.6"/><path d="M10 5.8v5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="13.9" r=".9" fill="currentColor"/></svg>
@@ -411,7 +398,8 @@
         weeks. What Sentys does <i>not</i> do yet is date the failure. It ranks which machine is
         drifting and shows which sensor saw it first, so you inspect the right asset while there is
         still time to schedule the work. “Fails in 12 days” is a claim we can't prove yet, so we
-        don't make it.</p>
+        don't make it. The number we watch hardest is false alarms: a tool that cries wolf gets
+        switched off, and then it catches nothing.</p>
     </div>
   </div>
 </section>
@@ -430,7 +418,7 @@
         <ul>
           <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Health-over-life chart for every machine in the data, with the warning point marked</li>
           <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Which sensor group saw the drift first, and how far from healthy it moved</li>
-          <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Findings in plain language, with every caveat stated in the same font size</li>
+          <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Findings in plain language, every caveat in the same font size, including “nothing found” if that is the truth</li>
           <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Every number read mechanically from the run's artifacts: no hand-tuning, no cherry-picking</li>
         </ul>
         <a class="btn btn-primary" href="sample-report.html">Open the sample report</a>
@@ -443,7 +431,7 @@
         <div class="rt-bar"><i style="width:88%; background:linear-gradient(90deg,#3d8f5c,#f0a43c 62%,#c94a36)"></i></div>
         <div class="rt-bar"><i style="width:64%; background:linear-gradient(90deg,#3d8f5c,#f0a43c)"></i></div>
         <div class="rt-bar"><i style="width:38%; background:#3d8f5c"></i></div>
-        <div class="rt-line"><span>surprise vs healthy</span><span class="num">27×</span></div>
+        <div class="rt-line"><span>drift vs healthy</span><span class="num">27×</span></div>
         <div class="rt-line"><span>caveats stated</span><span>all of them</span></div>
       </div>
     </div>
@@ -563,7 +551,7 @@
             Twenty minutes, no project.</p></div>
         <div class="step"><h3>Within a week you get the report.</h3>
           <p>What drifted, which sensor saw it first, and whether your last breakdown had warning in
-            the data. <b>Free. One machine, no strings.</b></p></div>
+            the data. <b>Free. One machine, no strings.</b> Worst case, you've lost an hour.</p></div>
         <div class="step"><h3>That's it.</h3>
           <p>If the report earns it, the next conversation is a paid three-month pilot: fixed price,
             written success criteria, up to 20 machines. A separate decision, made on the evidence in your hands.</p></div>
@@ -598,9 +586,11 @@
           <li><b>Processed on a single machine in Denmark.</b> Your raw data is never uploaded to any
             public cloud; if you prefer a hosted setup, a dedicated European server (Hetzner) is
             available on request.</li>
-          <li><b>Stated up front:</b> schema inference sends column names, per-column statistics, and a
-            handful of sample values to an AI API, never your bulk data. If even that is too much,
-            say so and it's done by hand.</li>
+          <li><b>Read-only, no control path.</b> Sentys reads sensor data and never touches your
+            controls. For a utility under NIS2, that keeps it out of the critical path.</li>
+          <li><b>Stated up front:</b> to work out what each column is, Sentys sends column names,
+            per-column statistics and a handful of sample values to an AI service, never your bulk
+            data. If even that is too much, say so and it's done by hand.</li>
           <li><b>Used for your analysis only.</b> Never used to train models for anyone else. Deleted
             when you say so, confirmed in writing.</li>
         </ul>
