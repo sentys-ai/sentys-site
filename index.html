@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sentys — Every machine has a feeling of healthy</title>
+<title>Sentys — The data you already log knows what's about to break</title>
 <meta name="description" content="Sentys learns each machine's healthy behaviour from the sensor history you already log: any machine, any sensors, no failure labels. It tells you in plain language which machine is drifting and which sensor felt it first.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Sentys — every machine has a feeling of healthy">
@@ -32,7 +32,7 @@
 <link rel="preload" href="assets/fonts/ClashDisplay-500.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/Supreme-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/PlexMono-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/site.css?v=12">
+<link rel="stylesheet" href="assets/css/site.css?v=13">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -45,6 +45,7 @@
   <div class="wrap">
     <a class="brand" href="#top">SENTY<i>S</i></a>
     <div class="nav-links">
+      <a href="#dansk">På dansk</a>
       <a href="#how">How it works</a>
       <a href="#demo">Demo</a>
       <a href="#evidence">Evidence</a>
@@ -61,7 +62,8 @@
     <div class="wrap">
       <div class="hero-copy">
         <p class="eyebrow eyebrow-seq"><span class="ph">Predictive maintenance</span><span class="sep">·</span><span class="ph">any machine</span><span class="sep">·</span><span class="ph">any sensors</span></p>
-        <h1>Every machine has a <em>feeling</em> of healthy.</h1>
+        <h1 class="h1-claim">The data you already log knows what's about to <em>break</em>.</h1>
+        <p class="hero-tag">Every machine has a feeling of healthy. Sentys learns it.</p>
         <p class="hero-sub">Sentys reads the sensor history your control system already logs and tells
           you which pump, motor or heat exchanger is starting to drift, and which sensor saw it
           first. <b>No new sensors, no failure history needed, nothing to install for the first
@@ -85,7 +87,41 @@
   </div>
 </header>
 
-<main id="main">
+<main id="main"><!-- ═══ KORT FORTALT (Danish summary for Danish prospects) ═══ -->
+<section id="dansk" lang="da" data-plate data-plate-mode="4,3" data-plate-center=".5,.5" data-plate-dim=".2">
+  <div class="wrap">
+    <p class="eyebrow reveal">Kort fortalt · på dansk</p>
+    <h2 class="reveal">Én eksport fra jeres SRO. Én rapport retur. Gratis.</h2>
+    <p class="section-lead reveal d1">Sentys læser den sensorhistorik, jeres SRO allerede logger, og
+      fortæller jer, hvilken pumpe, motor eller veksler der er ved at skride, og hvilken sensor der så
+      det først. <b>Ingen nye sensorer, ingen havarihistorik, intet der skal installeres.</b></p>
+    <div class="gates reveal">
+      <div class="gate">
+        <div class="g-head"><span class="g-name">01 · I sender</span></div>
+        <p>Én maskines historik som CSV eller JSON, 6–12 måneder, gerne hen over et havari eller en
+          reparation, I husker. 1-minuts gennemsnit er rigeligt. Gensidig NDA først, klar til underskrift.</p>
+      </div>
+      <div class="gate">
+        <div class="g-head"><span class="g-name">02 · I får</span></div>
+        <p>Inden for en uge en skriftlig rapport: hvad der skred, hvilken sensor så det først, og om
+          jeres seneste havari havde varsel i data. Alle forbehold står med samme skriftstørrelse som
+          fundene.</p>
+      </div>
+      <div class="gate">
+        <div class="g-head"><span class="g-name">03 · Det koster</span></div>
+        <p>Ingenting. Én maskine, ingen forpligtelser. Hvis rapporten fortjener det, er næste skridt et
+          betalt pilotforløb på tre måneder med faste succeskriterier. En separat beslutning.</p>
+      </div>
+    </div>
+    <div class="qa reveal">
+      <h3>Ærligt talt</h3>
+      <p>Sentys har endnu ikke analyseret et fjernvarmeværk. Det er præcis det, den gratis første
+        analyse er til. Resten af siden er på engelsk; skriv gerne på dansk:
+        <a href="mailto:frixos@sentys.ai">frixos@sentys.ai</a>.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ═══ WHAT IT IS: the spec plate ═══ -->
 <section id="how" data-plate data-plate-mode="4,3" data-plate-center=".5,.4" data-plate-dim=".28">
   <div class="wrap">
@@ -163,31 +199,37 @@
 <section id="stakes" data-plate data-plate-mode="6,2" data-plate-center=".5,.5" data-plate-dim=".2">
   <div class="wrap">
     <p class="eyebrow reveal">Why this matters</p>
-    <h2 class="reveal">Most plants still run without this sense</h2>
-    <p class="section-lead reveal d1">Reacting to breakdowns is still the norm across northwest
-      Europe. Two numbers say what the norm costs.</p>
+    <h2 class="reveal">Your alarms fire after the fact</h2>
+    <p class="section-lead reveal d1">A district-heating plant runs its pumps and exchangers unattended
+      most hours of the year, and the control system logs every minute of it. The alarms it ships trip
+      when one value crosses a threshold somebody set by hand. The slow, multi-signal drift that comes
+      before a failure sits in the history for weeks, read by no one. <b>Your alarms are the smoke
+      detector. Sentys is the smell of smoke.</b></p>
 
     <div class="wall reveal">
       <div class="wall-row">
+        <div class="wall-metric"><div class="m num">1<small>value per alarm, set by hand</small></div></div>
+        <div class="wall-body">
+          <h3>The alarm bank watches one value at a time</h3>
+          <p>A bearing that runs slightly warm while its vibration climbs and its flow dips trips
+            nothing, because no single value is out of range yet. Sentys watches all of a machine's
+            sensors against that machine's own healthy, and sits beside the alarms you have. It
+            replaces none of them.</p>
+        </div>
+        <div class="wall-tech">Checked against the product pages of the Danish SRO integrators (Coseno, DME)
+          and IGSS: condition monitoring is delivered as threshold and template alarms on single tags.
+          None of them learns what normal looks like.</div>
+      </div>
+      <div class="wall-row">
         <div class="wall-metric"><div class="m num">17%<small>have any predictive maintenance</small></div></div>
         <div class="wall-body">
-          <h3>Running blind is the rule: about 8 in 10 plants still do it</h3>
+          <h3>Most plants still run without this</h3>
           <p>Across Belgium, Germany, the Netherlands and Norway, only about <b>17%</b> of industrial
-            companies have adopted predictive maintenance. If you're still reacting to breakdowns,
+            companies use predictive maintenance of any kind. If you're still reacting to breakdowns,
             you're in the majority.</p>
         </div>
         <div class="wall-tech">PwC/Mainnovation, 2023 predictive-maintenance survey (BE/DE/NL/NO).
           Roughly double the 2018 level, still a small minority.</div>
-      </div>
-      <div class="wall-row">
-        <div class="wall-metric"><div class="m num">$36k<small>per hour of downtime · low end</small></div></div>
-        <div class="wall-body">
-          <h3>And the stoppages you don't see coming are the expensive ones</h3>
-          <p>For large manufacturers, a single hour of unplanned downtime starts around
-            <b>$36,000</b> and climbs steeply from there.</p>
-        </div>
-        <div class="wall-tech">Siemens, <i>True Cost of Downtime</i> 2024. $36k/hr is the bottom of the
-          surveyed range (consumer goods); heavy industry and automotive run far higher.</div>
       </div>
     </div>
   </div>
@@ -281,7 +323,7 @@
 <section id="evidence" data-plate data-plate-mode="7,2" data-plate-center=".45,.5" data-plate-dim=".28">
   <div class="wrap">
     <p class="eyebrow reveal">Evidence, translated</p>
-    <h2 class="reveal">The data you already log knows what's about to break</h2>
+    <h2 class="reveal">Tested on six public datasets, published in full</h2>
     <p class="section-lead reveal"><b>Most predictive-maintenance tools need a catalogue of past
       failures to learn from, the one thing a well-run plant rarely has.</b> Sentys learns the
       shape of healthy operation instead. Whether that works is a question for held-out data,
