@@ -551,3 +551,11 @@ header.hero h1.h1-claim { font-size:clamp(38px, 4.7vw, 68px); max-width:19ch; }
 .fold summary::before { content:"+ "; }
 .fold[open] summary::before { content:"\2212 "; }
 .fold[open] summary { margin-bottom:12px; }
+
+/* ── three fit cards (2026-09-08) ── */
+@media (min-width:900px){
+  .fit-grid { grid-template-columns:repeat(3,1fr); }
+  .fit:nth-child(-n+2){ border-bottom:0; }
+  .fit:nth-child(odd){ border-right:0; }
+  .fit:not(:last-child){ border-right:1px solid var(--hairline); }
+}
